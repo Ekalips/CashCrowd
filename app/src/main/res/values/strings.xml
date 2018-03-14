@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Skeleton</string>
+    <string name="app_name">Cash Crowd</string>
 
     <string name="server_error">Server error</string>
     <string name="malformed_json">Malformed server response</string>
