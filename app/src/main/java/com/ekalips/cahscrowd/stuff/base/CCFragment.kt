@@ -5,12 +5,12 @@ import android.databinding.ViewDataBinding
 import android.os.Bundle
 import com.ekalips.cahscrowd.providers.GlobalNavigationProvider
 import com.ekalips.cahscrowd.stuff.navigation.Place
-import com.ekalips.base.fragment.BaseDialogFragment
+import com.ekalips.base.fragment.BaseFragment
 import com.ekalips.base.state.BaseViewState
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
-abstract class GHDialogFragment<VM : GHViewModel<BaseViewState>, ParentVM : GHViewModel<BaseViewState>, DataBinding : ViewDataBinding> : BaseDialogFragment<VM, ParentVM, DataBinding>() {
+abstract class CCFragment<VM : CCViewModel<BaseViewState>, ParentVM : CCViewModel<BaseViewState>, DataBinding : ViewDataBinding> : BaseFragment<VM, ParentVM, DataBinding>() {
 
     @Inject
     lateinit var navigator: GlobalNavigationProvider
@@ -20,7 +20,6 @@ abstract class GHDialogFragment<VM : GHViewModel<BaseViewState>, ParentVM : GHVi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.navigationTrigger.observe(this, Observer { it?.place?.let { place -> handleBaseNavigation(place, it.payload) } })
-        viewModel.state.back.observe(this, Observer { dismiss() })
     }
 
     override fun onDestroy() {

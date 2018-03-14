@@ -2,9 +2,10 @@ package com.ekalips.cahscrowd.di.modules
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
-import com.ekalips.cahscrowd.welcome.mvvm.vm.SplashScreenViewModel
 import com.ekalips.base.di.ViewModelKey
 import com.ekalips.base.vm.BaseViewModelFactory
+import com.ekalips.cahscrowd.auth.mvvm.vm.AuthScreenViewModel
+import com.ekalips.cahscrowd.welcome.mvvm.vm.SplashScreenViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -17,9 +18,14 @@ import dagger.multibindings.IntoMap
 abstract class ViewModelModule {
 
     @Binds
-    @ViewModelKey(value = SplashScreenViewModel::class)
     @IntoMap
+    @ViewModelKey(value = SplashScreenViewModel::class)
     internal abstract fun bindSplasVM(splashScreenViewModel: SplashScreenViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(value = AuthScreenViewModel::class)
+    internal abstract fun bindAuthVM(authScreenViewModel: AuthScreenViewModel): ViewModel
 
     @Binds
     internal abstract fun bindViewModelFactory(factory: BaseViewModelFactory): ViewModelProvider.Factory

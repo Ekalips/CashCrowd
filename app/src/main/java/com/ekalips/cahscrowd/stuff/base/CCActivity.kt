@@ -3,17 +3,17 @@ package com.ekalips.cahscrowd.stuff.base
 import android.arch.lifecycle.Observer
 import android.databinding.ViewDataBinding
 import android.os.Bundle
-import com.ekalips.cahscrowd.providers.GlobalNavigationProvider
-import com.ekalips.cahscrowd.stuff.navigation.Place
 import com.ekalips.base.activity.BaseActivity
 import com.ekalips.base.state.BaseViewState
+import com.ekalips.cahscrowd.providers.GlobalNavigationProvider
+import com.ekalips.cahscrowd.stuff.navigation.Place
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 /**
  * Created by Ekalips on 2/7/18.
  */
-abstract class GHActivity<VM : GHViewModel<BaseViewState>, DataBinding : ViewDataBinding> : BaseActivity<VM, DataBinding>() {
+abstract class CCActivity<VM : CCViewModel<BaseViewState>, DataBinding : ViewDataBinding> : BaseActivity<VM, DataBinding>() {
 
     @Inject
     lateinit var navigator: GlobalNavigationProvider
@@ -34,6 +34,7 @@ abstract class GHActivity<VM : GHViewModel<BaseViewState>, DataBinding : ViewDat
         if (payload == null) {
             when (place) {
                 Place.SPLASH -> navigator navigateToSplashScreen this
+                Place.AUTH -> navigator navigateToAuthScreen this
                 else -> handleNavigation(place, payload)
             }
         } else {

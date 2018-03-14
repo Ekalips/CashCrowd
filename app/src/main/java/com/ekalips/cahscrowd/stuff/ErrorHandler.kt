@@ -1,8 +1,8 @@
 package com.ekalips.cahscrowd.stuff
 
+import com.ekalips.base.providers.ToastProvider
 import com.ekalips.cahscrowd.R
 import com.squareup.moshi.JsonDataException
-import com.ekalips.base.providers.ToastProvider
 import java.io.IOException
 import java.io.InterruptedIOException
 import java.net.ConnectException
@@ -50,6 +50,9 @@ class ErrorHandler @Inject constructor(private val toastProvider: ToastProvider)
 }
 
 
-class InsignificantError : RuntimeException()
+class InsignificantError : RuntimeException {
+    constructor(cause: Throwable) : super(cause)
+    constructor() : super()
+}
 
 class ServerError(val code: Int) : RuntimeException("Unexpected server error with code: $code")
