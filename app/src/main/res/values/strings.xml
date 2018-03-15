@@ -6,5 +6,5 @@
     <string name="unable_to_communicate_to_server">Unable to communicate to server</string>
     <string name="no_internet_connection">No internet connection</string>
     <string name="sign_in">Sign In</string>
-    <string name="error_sign_in">Sign in failed</string>
+    <string name="error_auth">Error during authorization</string>
 </resources>

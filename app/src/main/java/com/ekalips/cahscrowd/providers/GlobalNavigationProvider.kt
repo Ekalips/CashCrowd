@@ -3,6 +3,7 @@ package com.ekalips.cahscrowd.providers
 import android.content.Context
 import android.content.Intent
 import com.ekalips.cahscrowd.auth.mvvm.view.AuthActivity
+import com.ekalips.cahscrowd.main.mvvm.view.MainActivity
 import com.ekalips.cahscrowd.welcome.mvvm.view.SplashActivity
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,5 +22,9 @@ class GlobalNavigationProvider @Inject constructor() {
 
     infix fun navigateToAuthScreen(context: Context) {
         context.startActivity(Intent(context, AuthActivity::class.java))
+    }
+
+    infix fun navigateToMainScreen(context: Context) {
+        context.startActivity(Intent(context, MainActivity::class.java))
     }
 }

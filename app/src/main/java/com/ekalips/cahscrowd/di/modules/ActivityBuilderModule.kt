@@ -3,6 +3,7 @@ package com.ekalips.cahscrowd.di.modules
 
 import com.ekalips.cahscrowd.auth.mvvm.view.AuthActivity
 import com.ekalips.cahscrowd.di.scopes.ActivityScope
+import com.ekalips.cahscrowd.main.mvvm.view.MainActivity
 import com.ekalips.cahscrowd.welcome.mvvm.view.SplashActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -21,4 +22,8 @@ abstract class ActivityBuilderModule {
     @ActivityScope
     @ContributesAndroidInjector
     internal abstract fun authActivity(): AuthActivity
+
+    @ActivityScope
+    @ContributesAndroidInjector
+    internal abstract fun mainActivity(): MainActivity
 }

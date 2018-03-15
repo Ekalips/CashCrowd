@@ -5,7 +5,7 @@ import com.ekalips.cahscrowd.data.user.model.BaseUser
 import com.ekalips.cahscrowd.data.user.model.ThisUser
 import com.ekalips.cahscrowd.data.user.remote.RemoteUserDataSource
 import com.ekalips.cahscrowd.stuff.ErrorHandler
-import com.ekalips.cahscrowd.stuff.utils.RxUtils.Companion.wrap
+import com.ekalips.cahscrowd.stuff.utils.wrap
 import io.reactivex.Observable
 import io.reactivex.Single
 import javax.inject.Inject
@@ -15,6 +15,11 @@ import javax.inject.Singleton
 class UserDataProvider @Inject constructor(private val localUserDataSource: LocalUserDataSource,
                                            private val remoteUserDataSource: RemoteUserDataSource,
                                            private val errorHandler: ErrorHandler) {
+
+    fun authenticate(idToken: String, deviceToken: String?): Single<ThisUser> {
+        return remoteUserDataSource.authenticate(idToken, deviceToken).wrap(errorHandler.getHandler())
+                .doOnSuccess { localUserDataSource.saveMyUser(it) }
+    }
 
     private fun getAccessToken(): Single<String> {
         return localUserDataSource.getMyToken()

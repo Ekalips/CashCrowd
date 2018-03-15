@@ -35,6 +35,7 @@ abstract class CCActivity<VM : CCViewModel<BaseViewState>, DataBinding : ViewDat
             when (place) {
                 Place.SPLASH -> navigator navigateToSplashScreen this
                 Place.AUTH -> navigator navigateToAuthScreen this
+                Place.MAIN -> navigator navigateToMainScreen this
                 else -> handleNavigation(place, payload)
             }
         } else {

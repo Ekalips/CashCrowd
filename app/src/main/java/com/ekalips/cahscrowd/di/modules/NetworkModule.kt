@@ -58,7 +58,7 @@ class NetworkModule {
         return Retrofit.Builder()
                 .client(client)
                 .addConverterFactory(moshiConverterFactory)
-                .baseUrl("http://google.com/") //todo: replace with real server url
+                .baseUrl(BuildConfig.SERVER_URL)
                 .build()
     }
 

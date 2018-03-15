@@ -22,6 +22,22 @@ android {
         }
     }
     dataBinding.enabled = true
+
+    flavorDimensions "server"
+
+    productFlavors.all {
+        ext.serverUrl = null
+    }
+
+    productFlavors {
+        devServer {
+            serverUrl = devServerUrl
+            dimension "server"
+        }
+        all {
+            buildConfigField 'String', "SERVER_URL", "\"" + serverUrl + "\""
+        }
+    }
 }
 
 dependencies {
