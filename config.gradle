@@ -1,4 +1,7 @@
 ext {
+
+    devServerUrl = "http://api.airei.co/"
+
     appCompatVersion = "27.1.0"
     rxJavaVersion = "2.1.9"
     rxAndroidVersion = "2.0.1"
