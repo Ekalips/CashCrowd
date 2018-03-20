@@ -1,5 +1,6 @@
 package com.ekalips.cahscrowd.network
 
+import com.ekalips.cahscrowd.data.event.remote.RemoteEvent
 import com.ekalips.cahscrowd.data.user.remote.model.RemoteBaseUser
 import com.ekalips.cahscrowd.data.user.remote.model.RemoteThisUser
 import com.ekalips.cahscrowd.network.request.AuthBody
@@ -20,5 +21,8 @@ interface Api {
 
     @GET("me")
     fun getMe(@Header(TOKEN_FIELD) token: String): Call<RemoteThisUser>
+
+    @GET("events")
+    fun getEvents(@Header(TOKEN_FIELD) token: String, @Query("limit") limit: Int, @Query("after") afterEventId: String?): Call<List<RemoteEvent>>
 
 }

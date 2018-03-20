@@ -21,7 +21,7 @@ class UserDataProvider @Inject constructor(private val localUserDataSource: Loca
                 .doOnSuccess { localUserDataSource.saveMyUser(it) }
     }
 
-    private fun getAccessToken(): Single<String> {
+    fun getAccessToken(): Single<String> {
         return localUserDataSource.getMyToken()
     }
 

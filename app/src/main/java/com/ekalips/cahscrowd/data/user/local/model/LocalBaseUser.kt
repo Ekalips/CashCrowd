@@ -5,7 +5,9 @@ import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 
 @Entity
-open class LocalBaseUser(@Id var boxId: Long = 0,
+data class LocalBaseUser(@Id(assignable = true) var boxId: Long = 0,
                          override var id: String,
                          override var name: String,
                          override var avatar: String?) : BaseUser
+
+fun BaseUser.toLocal() = LocalBaseUser(0, this.id, this.name, this.avatar)

@@ -3,6 +3,7 @@ package com.ekalips.cahscrowd.data.user.local
 import com.ekalips.cahscrowd.data.user.local.model.LocalBaseUser
 import com.ekalips.cahscrowd.data.user.local.model.LocalBaseUser_
 import com.ekalips.cahscrowd.data.user.local.model.LocalThisUser
+import com.ekalips.cahscrowd.data.user.local.model.toLocal
 import com.ekalips.cahscrowd.data.user.model.BaseUser
 import com.ekalips.cahscrowd.data.user.model.ThisUser
 import com.ekalips.cahscrowd.providers.SharedPreferencesProvider
@@ -55,7 +56,6 @@ class LocalUserDataSource @Inject constructor(private val box: Box<LocalBaseUser
         private const val PREF_USER_ACCESS_TOKEN = "access_token"
         private const val PREF_USER_DEVICE_TOKEN = "device_token"
 
-        fun BaseUser.toLocal() = LocalBaseUser(0, this.id, this.name, this.avatar)
     }
 
 }
