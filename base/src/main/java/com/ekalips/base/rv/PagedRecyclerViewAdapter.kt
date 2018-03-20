@@ -1,12 +1,12 @@
 package com.ekalips.base.rv
 
+import android.arch.paging.PagedListAdapter
 import android.databinding.ViewDataBinding
-import android.support.v7.recyclerview.extensions.ListAdapter
 import android.support.v7.util.DiffUtil
 import android.view.ViewGroup
 
 abstract class PagedRecyclerViewAdapter<ViewBinding : ViewDataBinding, DataType>(comparator: DiffUtil.ItemCallback<DataType>) :
-        ListAdapter<DataType, BindingViewHolder<ViewBinding>>(comparator) {
+        PagedListAdapter<DataType, BindingViewHolder<ViewBinding>>(comparator) {
 
     abstract val resId: Int
 
