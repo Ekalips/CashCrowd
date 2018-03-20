@@ -1,13 +1,11 @@
 package com.ekalips.cahscrowd.data.event.local
 
-import android.arch.lifecycle.LiveData
-import android.util.Log
+import android.arch.paging.DataSource
+import com.ekalips.cahscrowd.data.action.Action
 import com.ekalips.cahscrowd.data.action.local.LocalAction
 import com.ekalips.cahscrowd.data.event.Event
-import com.ekalips.cahscrowd.data.event.paginate.EventsDataSourceFactory
+import com.ekalips.cahscrowd.data.event.paginate.EventsPaginateDataSource
 import io.objectbox.Box
-import io.objectbox.android.ObjectBoxLiveData
-import io.objectbox.rx.RxQuery
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -15,15 +13,10 @@ import javax.inject.Singleton
 class LocalEventsDataStore @Inject constructor(private val actionsBox: Box<LocalAction>,
                                                private val box: Box<LocalEvent>) {
 
-    init {
-        RxQuery.observable(box.query().build()).subscribe { Log.d(javaClass.simpleName, "eventsCount: ${it.size}") }
-    }
 
-    fun getEvents(): LiveData<List<LocalEvent>> {
-        return ObjectBoxLiveData<LocalEvent>(box.query().build())
+    fun getEventsDataSourceFactory() = DataSource.Factory<Int, Event> {
+        EventsPaginateDataSource(box as Box<Event>, actionsBox as Box<Action>)
     }
-
-    fun getEventsDataSourceFactory() = EventsDataSourceFactory(box)
 
     fun saveEvents(events: List<Event>?, clear: Boolean = false) {
         events?.let {

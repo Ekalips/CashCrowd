@@ -4,6 +4,7 @@ import com.ekalips.cahscrowd.data.user.model.BaseUser
 
 interface Action {
 
+    var id: String
     var name: String
     var amount: Double
     var userId: String

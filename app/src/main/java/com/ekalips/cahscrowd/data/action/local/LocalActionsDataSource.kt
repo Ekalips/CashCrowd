@@ -24,4 +24,25 @@ class LocalActionsDataSource @Inject constructor(private val userBox: Box<LocalB
                 })
     }
 
+    fun saveActions(vararg actions: Action) {
+        val mapped = actions.map { it.toLocal() }
+        val current = box.all
+        mapped.forEach {
+            it.boxId = current.find { local -> it.id == local.id }?.boxId ?: 0
+        }
+        box.put(mapped)
+    }
+
+    fun saveActionsForEvent(vararg actions: Action, eventId: String, clear: Boolean = false) {
+        val current = box.find(LocalAction_.eventId, eventId)
+        if (clear) {
+            box.remove(current)
+        }
+        val mapped = actions.map { it.toLocal() }
+        mapped.forEach {
+            it.boxId = current.find { local -> it.id == local.id }?.boxId ?: 0
+        }
+        box.put(mapped)
+    }
+
 }

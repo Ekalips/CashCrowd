@@ -1,4 +1,4 @@
-package com.ekalips.cahscrowd.stuff.paging
+package com.ekalips.cahscrowd.stuff.paging.data_source
 
 import android.arch.paging.PositionalDataSource
 import android.util.Log
@@ -6,16 +6,14 @@ import io.objectbox.Box
 import io.objectbox.query.Query
 import io.objectbox.reactive.DataSubscription
 
-class LimitOffsetDataSource<T> constructor(box: Box<T>) : PositionalDataSource<T>() {
 
-    private val query: Query<T> = box.query().build()
-    private val dataSubscription: DataSubscription
+open class BoxLimitOffsetDataSource<T> constructor(private val query: Query<T>) : PositionalDataSource<T>() {
+    constructor(box: Box<T>) : this(box.query().build())
 
-    init {
-        dataSubscription = query.subscribe().onlyChanges().observer {
-            Log.d(javaClass.simpleName, "${it.count()}")
-            invalidate()
-        }
+
+    private val dataSubscription: DataSubscription = query.subscribe().onlyChanges().observer {
+        Log.d(javaClass.simpleName, "${it.count()}")
+        invalidate()
     }
 
     /**
