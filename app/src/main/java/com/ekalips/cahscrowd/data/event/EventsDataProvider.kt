@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.paging.LivePagedListBuilder
-import com.ekalips.cahscrowd.data.action.Action
 import com.ekalips.cahscrowd.data.action.ActionsDataProvider
 import com.ekalips.cahscrowd.data.event.local.LocalEventsDataStore
 import com.ekalips.cahscrowd.data.event.paginate.EventsBoundaryCallback
@@ -64,20 +63,7 @@ class EventsDataProvider @Inject constructor(private val userDataProvider: UserD
     private fun fetchEventsRemotely(afterEventId: String?): Observable<List<Event>> {
         return userDataProvider.getAccessToken().flatMap { remoteEventDataStore.getEvents(it, afterEventId, DEFAULT_NETWORK_PAGE_SIZE) }
                 .wrap(errorHandler.getHandler())
-                .doOnSuccess { saveActionsForEvents(it) }
                 .toObservable()
-    }
-
-
-    private fun saveActionsForEvents(events: List<Event>?) {
-        events?.let {
-            Completable.fromAction {
-                val actionsListsList = it.map { it.actions }
-                val result = ArrayList<Action>(actionsListsList.size)
-                actionsListsList.forEach { it?.forEach { result.add(it) } }
-                actionsDataProvider.saveActions(*result.toTypedArray())
-            }.wrap().subscribe()
-        }
     }
 
     private fun saveEvents(events: List<Event>?, clear: Boolean = false) {
