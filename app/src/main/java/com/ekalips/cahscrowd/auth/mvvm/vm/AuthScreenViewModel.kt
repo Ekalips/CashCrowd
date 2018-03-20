@@ -1,5 +1,6 @@
 package com.ekalips.cahscrowd.auth.mvvm.vm
 
+import android.util.Log
 import com.ekalips.base.state.BaseViewState
 import com.ekalips.base.vm.SingleLiveEvent
 import com.ekalips.cahscrowd.R
@@ -50,6 +51,7 @@ class AuthScreenViewModel @Inject constructor(private val userDataProvider: User
     }
 
     override fun handleUncommonError(throwable: Throwable?) {
+        Log.e(javaClass.simpleName, "handleCommonError", throwable)
         state.toast.postValue(resourceProvider.getString(R.string.error_auth))
     }
 }

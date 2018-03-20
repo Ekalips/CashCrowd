@@ -17,8 +17,7 @@ class UserDataProvider @Inject constructor(private val localUserDataSource: Loca
                                            private val errorHandler: ErrorHandler) {
 
     fun authenticate(idToken: String, deviceToken: String?): Single<ThisUser> {
-        return remoteUserDataSource.authenticate(idToken, deviceToken).wrap(errorHandler.getHandler())
-                .doOnSuccess { localUserDataSource.saveMyUser(it) }
+        return remoteUserDataSource.authenticate(idToken, deviceToken).map { it.also { localUserDataSource.saveMyUser(it) } }.wrap(errorHandler.getHandler())
     }
 
     fun getAccessToken(): Single<String> {

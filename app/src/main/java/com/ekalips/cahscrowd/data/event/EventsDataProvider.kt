@@ -4,7 +4,9 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.paging.LivePagedListBuilder
+import com.ekalips.cahscrowd.data.event.local.LocalEvent
 import com.ekalips.cahscrowd.data.event.local.LocalEventsDataStore
+import com.ekalips.cahscrowd.data.event.local.toLocal
 import com.ekalips.cahscrowd.data.event.paginate.EventsBoundaryCallback
 import com.ekalips.cahscrowd.data.event.remote.RemoteEventDataStore
 import com.ekalips.cahscrowd.data.user.UserDataProvider
@@ -12,7 +14,7 @@ import com.ekalips.cahscrowd.stuff.ErrorHandler
 import com.ekalips.cahscrowd.stuff.paging.Listing
 import com.ekalips.cahscrowd.stuff.paging.NetworkState
 import com.ekalips.cahscrowd.stuff.utils.wrap
-import com.firebase.ui.auth.viewmodel.SingleLiveEvent
+import io.reactivex.Completable
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -23,18 +25,22 @@ class EventsDataProvider @Inject constructor(private val userDataProvider: UserD
                                              private val errorHandler: ErrorHandler) {
 
     companion object {
-        private const val DEFAULT_NETWORK_PAGE_SIZE = 10
+        private const val DEFAULT_NETWORK_PAGE_SIZE = 30
     }
 
-    fun getEvents(): Listing<Event> {
+    fun getEvents(): Listing<LocalEvent> {
         val boundaryCallback = EventsBoundaryCallback({ lastId ->
-            userDataProvider.getAccessToken().flatMap { remoteEventDataStore.getEvents(it, lastId, DEFAULT_NETWORK_PAGE_SIZE) }.toObservable().wrap(errorHandler.getHandler())
+            userDataProvider.getAccessToken()
+                    .flatMap { remoteEventDataStore.getEvents(it, lastId, DEFAULT_NETWORK_PAGE_SIZE) }.toObservable()
+                    .wrap(errorHandler.getHandler())
+                    .map { it.map { it.toLocal() } }
         }, {
             saveEvents(it, false)
         })
         val factory = localEventsDataStore.getEventsDataSourceFactory()
-        val builder = LivePagedListBuilder(factory, DEFAULT_NETWORK_PAGE_SIZE).setBoundaryCallback(boundaryCallback)
-        val refreshTrigger = SingleLiveEvent<Void>()
+        val builder = LivePagedListBuilder(factory, DEFAULT_NETWORK_PAGE_SIZE)
+                .setBoundaryCallback(boundaryCallback)
+        val refreshTrigger = MutableLiveData<Void>()
         val refreshState = Transformations.switchMap(refreshTrigger, { refresh() })
         return Listing(pagedList = builder.build(),
                 networkState = boundaryCallback.networkState,
@@ -42,7 +48,7 @@ class EventsDataProvider @Inject constructor(private val userDataProvider: UserD
                     boundaryCallback.helper.retryAllFailed()
                 },
                 refresh = {
-                    refreshTrigger.call()
+                    refreshTrigger.value = null
                 },
                 refreshState = refreshState)
     }
@@ -60,7 +66,9 @@ class EventsDataProvider @Inject constructor(private val userDataProvider: UserD
     }
 
     private fun saveEvents(events: List<Event>?, clear: Boolean = false) {
-        localEventsDataStore.saveEvents(events, clear)
+        Completable.fromCallable {
+            localEventsDataStore.saveEvents(events, clear)
+        }.wrap(errorHandler.getHandler()).subscribe()
     }
 
 }

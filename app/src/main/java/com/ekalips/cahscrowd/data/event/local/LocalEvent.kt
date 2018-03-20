@@ -1,19 +1,18 @@
 package com.ekalips.cahscrowd.data.event.local
 
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 import com.ekalips.cahscrowd.data.action.Action
 import com.ekalips.cahscrowd.data.event.Event
-import io.objectbox.annotation.Entity
-import io.objectbox.annotation.Id
 
-@Entity
-data class LocalEvent(@Id var boxId: Long = 0,
-                      override var id: String,
+@Entity(tableName = "events")
+data class LocalEvent(@PrimaryKey override var id: String,
                       override var name: String,
                       override var description: String,
                       @Transient override var actions: List<Action>?) : Event {
 
-    constructor() : this(0, "", "", "", emptyList())
+    constructor() : this("", "", "", emptyList())
 
 }
 
-fun Event.toLocal() = LocalEvent(0, id, name, description, actions)
+fun Event.toLocal() = LocalEvent(id, name, description, actions)

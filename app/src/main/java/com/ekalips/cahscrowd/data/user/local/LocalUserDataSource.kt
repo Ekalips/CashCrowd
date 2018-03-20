@@ -1,17 +1,15 @@
 package com.ekalips.cahscrowd.data.user.local
 
 import com.ekalips.cahscrowd.data.user.local.model.LocalBaseUser
-import com.ekalips.cahscrowd.data.user.local.model.LocalBaseUser_
 import com.ekalips.cahscrowd.data.user.local.model.LocalThisUser
 import com.ekalips.cahscrowd.data.user.local.model.toLocal
 import com.ekalips.cahscrowd.data.user.model.BaseUser
 import com.ekalips.cahscrowd.data.user.model.ThisUser
 import com.ekalips.cahscrowd.providers.SharedPreferencesProvider
-import io.objectbox.Box
 import io.reactivex.Single
 import javax.inject.Inject
 
-class LocalUserDataSource @Inject constructor(private val box: Box<LocalBaseUser>,
+class LocalUserDataSource @Inject constructor(private val userDao: LocalUserDao,
                                               sharedPreferencesProvider: SharedPreferencesProvider) {
 
     private val userSharedPrefs = sharedPreferencesProvider.getNamedPreferences(USER_PREFS_NAME)
@@ -30,14 +28,12 @@ class LocalUserDataSource @Inject constructor(private val box: Box<LocalBaseUser
 
     fun getUser(userId: String): Single<BaseUser> {
         return Single.fromCallable {
-            box.find(LocalBaseUser_.id, userId).firstOrNull() ?: LocalBaseUser(0, "", "", null)
+            userDao.getUser(userId) ?: LocalBaseUser("", "", null)
         }
     }
 
     fun saveUser(user: BaseUser) {
-        val current = box.find(LocalBaseUser_.id, user.id) ?: ArrayList()
-        box.remove(current)
-        box.put(user.toLocal())
+        userDao.insertUsers(user.toLocal())
     }
 
     fun saveMyUser(user: ThisUser) {
