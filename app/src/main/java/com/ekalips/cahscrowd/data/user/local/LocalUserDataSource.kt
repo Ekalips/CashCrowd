@@ -49,6 +49,12 @@ class LocalUserDataSource @Inject constructor(private val box: Box<LocalBaseUser
         }.apply()
     }
 
+    fun getAll(): Single<List<BaseUser>> = Single.fromCallable { box.all }
+
+    fun saveUsers(vararg users: BaseUser) {
+        users.forEach { saveUser(it) }
+    }
+
     companion object {
         private const val USER_PREFS_NAME = "com.ekalips.cahscrowd.USER_DATA"
 

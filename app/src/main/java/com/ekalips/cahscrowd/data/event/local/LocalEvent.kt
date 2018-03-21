@@ -10,7 +10,7 @@ data class LocalEvent(@Id var boxId: Long = 0,
                       override var id: String,
                       override var name: String,
                       override var description: String,
-                      override var actions: List<Action>? = emptyList()) : Event {
+                      @Transient override var actions: List<Action>? = emptyList()) : Event {
 
     constructor() : this(0, "", "", "")
 

@@ -29,7 +29,7 @@
     },
     {
       "id": "4:962470061679959709",
-      "lastPropertyId": "6:5513478711730002966",
+      "lastPropertyId": "8:3790035725364221548",
       "name": "LocalAction",
       "properties": [
         {
@@ -51,6 +51,15 @@
         {
           "id": "6:5513478711730002966",
           "name": "eventId"
+        },
+        {
+          "id": "7:3547728747220876200",
+          "indexId": "2:816386056828630658",
+          "name": "boxEventId"
+        },
+        {
+          "id": "8:3790035725364221548",
+          "name": "boxId"
         }
       ],
       "relations": []
@@ -81,7 +90,7 @@
     }
   ],
   "lastEntityId": "5:1330521307272488",
-  "lastIndexId": "1:6006010054710759585",
+  "lastIndexId": "2:816386056828630658",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 4,

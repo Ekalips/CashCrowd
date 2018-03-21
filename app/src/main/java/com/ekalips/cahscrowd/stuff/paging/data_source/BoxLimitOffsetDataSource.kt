@@ -54,7 +54,7 @@ open class BoxLimitOffsetDataSource<T> constructor(private val query: Query<T>) 
     /**
      * Return the rows from startPos to startPos + loadCount
      */
-    fun loadRange(startPosition: Int, loadCount: Int): List<T>? {
+    open fun loadRange(startPosition: Int, loadCount: Int): List<T>? {
         return query.find(startPosition.toLong(), loadCount.toLong())
     }
 }

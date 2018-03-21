@@ -1,7 +1,7 @@
 package com.ekalips.cahscrowd.data.action.local
 
 import com.ekalips.cahscrowd.data.action.Action
-import com.ekalips.cahscrowd.data.user.local.model.LocalBaseUser
+import com.ekalips.cahscrowd.data.user.local.LocalUserDataSource
 import com.ekalips.cahscrowd.data.user.model.BaseUser
 import io.objectbox.Box
 import io.objectbox.rx.RxQuery
@@ -11,38 +11,41 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class LocalActionsDataSource @Inject constructor(private val userBox: Box<LocalBaseUser>,
+class LocalActionsDataSource @Inject constructor(private val localUserDataSource: LocalUserDataSource,
                                                  private val box: Box<LocalAction>) {
 
     fun getActions(): Observable<List<Action>> {
-        return Observable.combineLatest(RxQuery.observable(box.query().build()).map { it as List<Action> }, RxQuery.observable(userBox.query().build()).map { it as List<BaseUser> },
-                BiFunction<List<Action>, List<BaseUser>, List<Action>> { actions, users ->
-                    for (action in actions) {
-                        action.user = users.firstOrNull { it.id == action.userId }
-                    }
-                    actions
-                })
+        return Observable.combineLatest(RxQuery.observable(box.query().build()).map { it as List<Action> }, localUserDataSource.getAll().toObservable(),
+                BiFunction<List<Action>, List<BaseUser>, List<Action>> { actions, users -> mapActionsWithUsers(actions, users) })
+    }
+
+    fun getActionsForEvent(eventId: String): Observable<List<Action>> {
+        return Observable.combineLatest(RxQuery.observable(box.query().equal(LocalAction_.eventId, eventId).build()).map { it as List<Action> },
+                localUserDataSource.getAll().toObservable(),
+                BiFunction<List<Action>, List<BaseUser>, List<Action>> { actions, users -> mapActionsWithUsers(actions, users) })
     }
 
     fun saveActions(vararg actions: Action) {
         val mapped = actions.map { it.toLocal() }
+        val users = ArrayList<BaseUser>()
         val current = box.all
         mapped.forEach {
             it.boxId = current.find { local -> it.id == local.id }?.boxId ?: 0
+            it.user?.let { users.add(it) }
         }
         box.put(mapped)
+        localUserDataSource.saveUsers(*users.toTypedArray())
     }
 
-    fun saveActionsForEvent(vararg actions: Action, eventId: String, clear: Boolean = false) {
-        val current = box.find(LocalAction_.eventId, eventId)
-        if (clear) {
-            box.remove(current)
+    fun clear() {
+        box.removeAll()
+    }
+
+    private fun mapActionsWithUsers(actions: List<Action>, users: List<BaseUser>): List<Action> {
+        for (action in actions) {
+            action.user = users.firstOrNull { it.id == action.userId }
         }
-        val mapped = actions.map { it.toLocal() }
-        mapped.forEach {
-            it.boxId = current.find { local -> it.id == local.id }?.boxId ?: 0
-        }
-        box.put(mapped)
+        return actions
     }
 
 }
