@@ -37,4 +37,11 @@ class UserDataProvider @Inject constructor(private val localUserDataSource: Loca
                 .wrap(errorHandler.getHandler())
     }
 
+    fun getUsers(vararg userIds: String): Observable<List<BaseUser>> {
+        return Observable.fromIterable(userIds.toList())
+                .switchMap { getUser(it) }
+                .map { it.also { localUserDataSource.saveUser(it) } }
+                .wrap(errorHandler.getHandler()).toList().toObservable()
+    }
+
 }

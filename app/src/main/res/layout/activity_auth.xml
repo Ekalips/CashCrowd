@@ -27,7 +27,8 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.7">
+            android:layout_weight="0.7"
+            android:paddingBottom="36dp">
 
             <Button
                 android:id="@+id/signInBtn"
@@ -35,8 +36,14 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:onClick="@{() -> vm.signIn()}"
-                android:layout_marginBottom="36dp"
-                android:text="@string/sign_in" />
+                android:text="@string/sign_in"
+                android:visibility="@{!vm.state.loading}" />
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="@{vm.state.loading}" />
 
         </FrameLayout>
 

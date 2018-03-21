@@ -1,22 +1,23 @@
 package com.ekalips.cahscrowd.data.event.local
 
 import android.arch.paging.DataSource
-import com.ekalips.cahscrowd.data.action.Action
 import com.ekalips.cahscrowd.data.action.local.LocalAction
 import com.ekalips.cahscrowd.data.action.local.toLocal
 import com.ekalips.cahscrowd.data.event.Event
 import com.ekalips.cahscrowd.data.event.paginate.EventsPaginateDataSource
 import io.objectbox.Box
+import io.objectbox.BoxStore
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class LocalEventsDataStore @Inject constructor(private val actionsBox: Box<LocalAction>,
+class LocalEventsDataStore @Inject constructor(private val boxStore: BoxStore,
+                                               private val actionsBox: Box<LocalAction>,
                                                private val box: Box<LocalEvent>) {
 
 
     fun getEventsDataSourceFactory() = DataSource.Factory<Int, Event> {
-        EventsPaginateDataSource(box as Box<Event>, actionsBox as Box<Action>)
+        EventsPaginateDataSource(box as Box<Event>, boxStore)
     }
 
     fun saveEvents(events: List<Event>?, clear: Boolean = false) {

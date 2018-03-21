@@ -38,6 +38,7 @@ class AuthScreenViewModel @Inject constructor(private val userDataProvider: User
 
     private fun checkUserAndProceed(user: FirebaseUser?) {
         user?.let {
+            state.loading.postValue(true)
             user.getIdToken(true).addOnCompleteListener {
                 val idToken = it.result.token ?: ""
                 userDataProvider.authenticate(idToken, FirebaseInstanceId.getInstance().token)
@@ -45,6 +46,9 @@ class AuthScreenViewModel @Inject constructor(private val userDataProvider: User
                         .doFinally { state.loading.postValue(false) }
                         .subscribe({ navigate(Place.MAIN) }, { handleError(it) })
                         .disposeBy(disposer)
+            }.addOnFailureListener {
+                handleError(it)
+                state.loading.postValue(false)
             }
         }
     }

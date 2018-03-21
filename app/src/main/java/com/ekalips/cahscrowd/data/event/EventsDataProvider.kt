@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.paging.LivePagedListBuilder
-import com.ekalips.cahscrowd.data.action.ActionsDataProvider
 import com.ekalips.cahscrowd.data.event.local.LocalEventsDataStore
 import com.ekalips.cahscrowd.data.event.paginate.EventsBoundaryCallback
 import com.ekalips.cahscrowd.data.event.remote.RemoteEventDataStore
@@ -23,7 +22,6 @@ import javax.inject.Singleton
 class EventsDataProvider @Inject constructor(private val userDataProvider: UserDataProvider,
                                              private val localEventsDataStore: LocalEventsDataStore,
                                              private val remoteEventDataStore: RemoteEventDataStore,
-                                             private val actionsDataProvider: ActionsDataProvider,
                                              private val errorHandler: ErrorHandler) {
 
     companion object {
@@ -62,8 +60,26 @@ class EventsDataProvider @Inject constructor(private val userDataProvider: UserD
 
     private fun fetchEventsRemotely(afterEventId: String?): Observable<List<Event>> {
         return userDataProvider.getAccessToken().flatMap { remoteEventDataStore.getEvents(it, afterEventId, DEFAULT_NETWORK_PAGE_SIZE) }
+                .doAfterSuccess { fetchUnknownUsers(it) }
                 .wrap(errorHandler.getHandler())
                 .toObservable()
+    }
+
+    private fun fetchUnknownUsers(events: List<Event>?) {
+        Observable.fromCallable {
+            val unknownUserIds = ArrayList<String>()
+            events?.forEach {
+                it.actions?.forEach {
+                    if (it.user == null) {
+                        unknownUserIds.add(it.userId)
+                    }
+                }
+            }
+            unknownUserIds
+        }.switchMap { userDataProvider.getUsers(*it.toTypedArray()) }
+                .wrap(errorHandler.getHandler())
+                .subscribe()
+
     }
 
     private fun saveEvents(events: List<Event>?, clear: Boolean = false) {
