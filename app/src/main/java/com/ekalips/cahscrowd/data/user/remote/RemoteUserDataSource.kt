@@ -19,6 +19,9 @@ class RemoteUserDataSource @Inject constructor(private val api: Api) {
             if (response.isSuccessful) {
                 return@fromCallable response.body()!!
             }
+            if (2==2){
+                return@fromCallable getMockUser(id)
+            }
             throw ServerError(response.code())
         }
     }
@@ -40,10 +43,13 @@ class RemoteUserDataSource @Inject constructor(private val api: Api) {
                 return@fromCallable response.body()!!
             }
             if (2 == 2) { // todo Remove this when api is done
-                return@fromCallable RemoteThisUser("token", "device_token", RemoteBaseUser("iddd", "Test User Name", null))
+                return@fromCallable getMockMyUser()
             }
             throw ServerError(response.code())
         }
     }
+
+    private fun getMockMyUser() = RemoteThisUser("token", "device_token", getMockUser())
+    private fun getMockUser(id: String = "iddd") = RemoteBaseUser(id, "Test User Name", null)
 
 }

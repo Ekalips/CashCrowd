@@ -13,6 +13,8 @@ class MainScreenViewState : BaseViewState() {
 
     val events = MediatorLiveData<PagedList<Event>>()
     val error = MediatorLiveData<String>()
+    val refreshing = MediatorLiveData<Boolean>()
+
 }
 
 class MainScreenViewModel @Inject constructor(eventsDataProvider: EventsDataProvider) : CCViewModel<MainScreenViewState>() {
@@ -21,6 +23,11 @@ class MainScreenViewModel @Inject constructor(eventsDataProvider: EventsDataProv
 
     init {
         state.events.addSource(listing.pagedList, { state.events.postValue(it) })
-        state.loading.addSource(listing.networkState, { state.loading.postValue(it != NetworkState.LOADED) })
+        state.loading.addSource(listing.networkState, { state.loading.postValue(it == NetworkState.LOADING) })
+        state.refreshing.addSource(listing.refreshState, { state.refreshing.postValue(it == NetworkState.LOADING) })
+    }
+
+    fun refresh() {
+        listing.refresh()
     }
 }

@@ -16,7 +16,7 @@ interface Api {
     @POST("auth")
     fun auth(@Body authBody: AuthBody): Call<RemoteThisUser>
 
-    @GET("user/{user_id)")
+    @GET("user/{user_id}")
     fun getUser(@Header(TOKEN_FIELD) token: String, @Path("user_id") id: String): Call<RemoteBaseUser>
 
     @GET("me")

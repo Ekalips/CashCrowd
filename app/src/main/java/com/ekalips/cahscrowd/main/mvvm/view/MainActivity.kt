@@ -22,5 +22,8 @@ class MainActivity : CCActivity<MainScreenViewModel, ActivityMainBinding>() {
         binding?.recyclerView?.adapter = adapter
         viewModel.state.events.observe(this, Observer { adapter.submitList(it) })
         viewModel.state.loading.observe(this, Observer { Log.d(javaClass.simpleName, "Loading: $it") })
+
+        viewModel.state.refreshing.observe(this, Observer { binding?.swipeLay?.isRefreshing = it ?: false })
+        binding?.swipeLay?.setOnRefreshListener { viewModel.refresh() }
     }
 }
