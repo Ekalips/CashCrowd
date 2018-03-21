@@ -1,6 +1,5 @@
 package com.ekalips.cahscrowd.auth.mvvm.vm
 
-import android.util.Log
 import com.ekalips.base.state.BaseViewState
 import com.ekalips.base.vm.SingleLiveEvent
 import com.ekalips.cahscrowd.R
@@ -33,12 +32,14 @@ class AuthScreenViewModel @Inject constructor(private val userDataProvider: User
     }
 
     fun signIn() {
+        FirebaseAuth.getInstance().signOut()
         state.signInTrigger.call()
     }
 
 
     private fun checkUserAndProceed(user: FirebaseUser?) {
         user?.let {
+            state.loading.postValue(true)
             user.getIdToken(true).addOnCompleteListener {
                 val idToken = it.result.token ?: ""
                 userDataProvider.authenticate(idToken, FirebaseInstanceId.getInstance().token)
@@ -46,12 +47,14 @@ class AuthScreenViewModel @Inject constructor(private val userDataProvider: User
                         .doFinally { state.loading.postValue(false) }
                         .subscribe({ navigate(Place.MAIN) }, { handleError(it) })
                         .disposeBy(disposer)
+            }.addOnFailureListener {
+                handleError(it)
+                state.loading.postValue(false)
             }
         }
     }
 
     override fun handleUncommonError(throwable: Throwable?) {
-        Log.e(javaClass.simpleName, "handleCommonError", throwable)
         state.toast.postValue(resourceProvider.getString(R.string.error_auth))
     }
 }

@@ -12,7 +12,6 @@ class EventsRecyclerViewAdapter : PagedRecyclerViewAdapter<RvItemEventBinding, E
 
     override fun onBindViewHolder(holder: BindingViewHolder<RvItemEventBinding>, position: Int) {
         holder.binding.event = getItem(holder.adapterPosition)
-        holder.binding.position = holder.adapterPosition
     }
 
     companion object {

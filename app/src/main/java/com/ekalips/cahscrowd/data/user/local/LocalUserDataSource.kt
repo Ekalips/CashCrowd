@@ -23,12 +23,12 @@ class LocalUserDataSource @Inject constructor(private val userDao: LocalUserDao,
             val userToken = userSharedPrefs.getString(PREF_USER_ACCESS_TOKEN, "")
             val deviceToken = userSharedPrefs.getString(PREF_USER_DEVICE_TOKEN, "")
             return@fromCallable Triple(userId, userToken, deviceToken)
-        }.flatMap({ (id, token, deviceToken) -> getUser(id).map { LocalThisUser(id, it.name, it.avatar, token, deviceToken) } })
+        }.flatMap({ (id, token, deviceToken) -> getUser(id).map { LocalThisUser(id, it.name, it.avatar, token, deviceToken, it.loaded) } })
     }
 
     fun getUser(userId: String): Single<BaseUser> {
         return Single.fromCallable {
-            userDao.getUser(userId) ?: LocalBaseUser("", "", null)
+            userDao.getUser(userId) ?: LocalBaseUser("", "", null, false)
         }
     }
 

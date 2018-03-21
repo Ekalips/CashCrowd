@@ -5,8 +5,8 @@
     <data>
 
         <variable
-            name="position"
-            type="int"/>
+            name="newCount"
+            type="int" />
 
         <variable
             name="event"
@@ -46,7 +46,7 @@
                         android:layout_toStartOf="@id/expandIv"
                         android:paddingLeft="16dp"
                         android:paddingRight="16dp"
-                        android:text="@{String.valueOf(position)}"
+                        android:text="@{event.name}"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                         android:textColor="#000"
                         tools:text="Event title" />
@@ -60,6 +60,7 @@
                         android:layout_toStartOf="@id/expandIv"
                         android:paddingLeft="16dp"
                         android:paddingRight="16dp"
+                        android:text="@{event.description}"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                         android:textColor="#AA000000"
                         tools:text="Event description" />
@@ -109,15 +110,16 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/ic_call_to_action"
-                        android:tint="@color/colorAccent" />
+                        app:alpha="@{newCount > 0 ? 1f : 0.3F}"
+                        app:tint="@{newCount > 0 ? @color/colorAccent : @color/black}" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="4dp"
                         android:paddingRight="4dp"
-                        android:textColor="@color/colorAccent"
-                        tools:text="+2" />
+                        android:text="@{String.valueOf(event.actions.size())}"
+                        android:textColor="@{newCount > 0 ? @color/colorAccent : @color/black}" />
 
                     <LinearLayout
                         android:layout_width="0dp"

@@ -3,8 +3,8 @@ package com.ekalips.cahscrowd.data.event
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
+import android.arch.paging.DataSource
 import android.arch.paging.LivePagedListBuilder
-import com.ekalips.cahscrowd.data.event.local.LocalEvent
 import com.ekalips.cahscrowd.data.event.local.LocalEventsDataStore
 import com.ekalips.cahscrowd.data.event.local.toLocal
 import com.ekalips.cahscrowd.data.event.paginate.EventsBoundaryCallback
@@ -28,7 +28,7 @@ class EventsDataProvider @Inject constructor(private val userDataProvider: UserD
         private const val DEFAULT_NETWORK_PAGE_SIZE = 30
     }
 
-    fun getEvents(): Listing<LocalEvent> {
+    fun getEvents(): Listing<Event> {
         val boundaryCallback = EventsBoundaryCallback({ lastId ->
             userDataProvider.getAccessToken()
                     .flatMap { remoteEventDataStore.getEvents(it, lastId, DEFAULT_NETWORK_PAGE_SIZE) }.toObservable()
@@ -37,7 +37,7 @@ class EventsDataProvider @Inject constructor(private val userDataProvider: UserD
         }, {
             saveEvents(it, false)
         })
-        val factory = localEventsDataStore.getEventsDataSourceFactory()
+        val factory = localEventsDataStore.getEventsDataSourceFactory() as DataSource.Factory<Int, Event>
         val builder = LivePagedListBuilder(factory, DEFAULT_NETWORK_PAGE_SIZE)
                 .setBoundaryCallback(boundaryCallback)
         val refreshTrigger = MutableLiveData<Void>()

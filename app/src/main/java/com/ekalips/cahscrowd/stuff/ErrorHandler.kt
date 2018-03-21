@@ -3,6 +3,8 @@ package com.ekalips.cahscrowd.stuff
 import com.ekalips.base.providers.ToastProvider
 import com.ekalips.cahscrowd.R
 import com.squareup.moshi.JsonDataException
+import io.reactivex.exceptions.OnErrorNotImplementedException
+import io.reactivex.exceptions.UndeliverableException
 import java.io.IOException
 import java.io.InterruptedIOException
 import java.net.ConnectException
@@ -16,9 +18,16 @@ class ErrorHandler @Inject constructor(private val toastProvider: ToastProvider)
 
     fun handleError(throwable: Throwable): Boolean {
         throwable.printStackTrace()
-        return when (throwable) {
+
+        val errror = when (throwable) {
+            is OnErrorNotImplementedException -> throwable.cause
+            is UndeliverableException -> throwable.cause
+            else -> throwable
+        }
+
+        return when (errror) {
             is IOException -> {
-                when (throwable) {
+                when (errror) {
                     is ConnectException -> toastProvider.showToast(R.string.unable_to_communicate_to_server)
                     is SocketTimeoutException -> toastProvider.showToast(R.string.unable_to_communicate_to_server)
                     is SocketException -> toastProvider.showToast(R.string.unable_to_communicate_to_server)
@@ -32,7 +41,7 @@ class ErrorHandler @Inject constructor(private val toastProvider: ToastProvider)
             }
             is ServerError -> {
                 return when {
-                    throwable.code >= 500 -> {
+                    errror.code >= 500 -> {
                         toastProvider.showToast(R.string.server_error)
                         true
                     }

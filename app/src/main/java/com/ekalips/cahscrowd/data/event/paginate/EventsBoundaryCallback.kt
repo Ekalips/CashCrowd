@@ -4,7 +4,6 @@ import android.arch.paging.PagedList
 import android.support.annotation.MainThread
 import android.util.Log
 import com.ekalips.cahscrowd.data.event.Event
-import com.ekalips.cahscrowd.data.event.local.LocalEvent
 import com.ekalips.cahscrowd.stuff.paging.PagingRequestHelper
 import com.ekalips.cahscrowd.stuff.paging.createStatusLiveData
 import com.ekalips.cahscrowd.stuff.utils.wrap
@@ -17,8 +16,8 @@ import io.reactivex.Observable
  * @param remoteFetcher This must execute async function to fetch new events from network. `String?` is value for "lastEventId", `List<Event>` value for events response
  * @param save This must save values to local store
  */
-class EventsBoundaryCallback(private val remoteFetcher: ((String?) -> Observable<List<LocalEvent>>),
-                             private val save: ((List<Event>) -> Unit)) : PagedList.BoundaryCallback<LocalEvent>() {
+class EventsBoundaryCallback(private val remoteFetcher: ((String?) -> Observable<List<Event>>),
+                             private val save: ((List<Event>) -> Unit)) : PagedList.BoundaryCallback<Event>() {
 
     val helper = PagingRequestHelper(::retry)
     val networkState = helper.createStatusLiveData()
@@ -34,7 +33,7 @@ class EventsBoundaryCallback(private val remoteFetcher: ((String?) -> Observable
     }
 
     @MainThread
-    override fun onItemAtEndLoaded(itemAtEnd: LocalEvent) {
+    override fun onItemAtEndLoaded(itemAtEnd: Event) {
         Log.d("PAGING", "onItemAtEndLoaded $itemAtEnd")
         helper.runIfNotRunning(PagingRequestHelper.RequestType.AFTER, {
             remoteFetcher(itemAtEnd.id).subscribe({ result ->
@@ -49,7 +48,7 @@ class EventsBoundaryCallback(private val remoteFetcher: ((String?) -> Observable
     }
 
     @MainThread
-    override fun onItemAtFrontLoaded(itemAtFront: LocalEvent) {
+    override fun onItemAtFrontLoaded(itemAtFront: Event) {
         Log.d("PAGING", "onItemAtFrontLoaded $itemAtFront")
     }
 

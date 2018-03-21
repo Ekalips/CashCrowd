@@ -21,7 +21,7 @@ class MainScreenViewModel @Inject constructor(eventsDataProvider: EventsDataProv
     private val listing = eventsDataProvider.getEvents()
 
     init {
-        state = MainScreenViewState(listing.pagedList as LiveData<PagedList<Event>>)
+        state = MainScreenViewState(listing.pagedList)
 
         state.loading.addSource(listing.networkState, { state.loading.postValue(it == NetworkState.LOADING) })
         state.refreshing.addSource(listing.refreshState, { state.refreshing.postValue(it == NetworkState.LOADING) })

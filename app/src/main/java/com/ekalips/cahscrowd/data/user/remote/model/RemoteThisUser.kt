@@ -5,6 +5,11 @@ import com.ekalips.cahscrowd.data.user.model.ThisUser
 data class RemoteThisUser(override var accessToken: String,
                           override var deviceToken: String?,
                           var user: RemoteBaseUser) : ThisUser {
+    override var loaded: Boolean
+        get() = user.loaded
+        set(value) {
+            user.loaded = value
+        }
     override var id: String
         get() = user.id
         set(value) {

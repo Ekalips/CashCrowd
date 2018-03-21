@@ -5,13 +5,13 @@ import io.reactivex.Flowable
 
 @Dao
 interface LocalActionsDao {
-    @Query("SELECT * FROM actions")
+    @Query("SELECT * FROM actions, users")
     fun getActions(): List<LocalAction>
 
-    @Query("SELECT * FROM actions")
+    @Query("SELECT * FROM actions, users")
     fun getActionsAsync(): Flowable<List<LocalAction>>
 
-    @Query("SELECT * FROM actions WHERE id = :id")
+    @Query("SELECT * FROM actions,users WHERE actionId = :id")
     fun getAction(id: String): LocalAction?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -20,7 +20,7 @@ interface LocalActionsDao {
     @Query("DELETE FROM actions")
     fun deleteAll()
 
-    @Query("DELETE FROM actions WHERE id IN(:ids)")
+    @Query("DELETE FROM actions WHERE actionId IN(:ids)")
     fun delete(vararg ids: String)
 
     @Delete

@@ -6,4 +6,5 @@ class LocalThisUser(override var id: String,
                     override var name: String,
                     override var avatar: String?,
                     override var accessToken: String,
-                    override var deviceToken: String?) : ThisUser
+                    override var deviceToken: String?,
+                    override var loaded: Boolean) : ThisUser

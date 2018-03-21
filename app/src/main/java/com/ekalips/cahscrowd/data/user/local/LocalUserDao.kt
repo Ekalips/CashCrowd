@@ -12,16 +12,19 @@ interface LocalUserDao {
     @Query("SELECT * FROM users")
     fun getUsersAsync(): Flowable<List<LocalBaseUser>>
 
-    @Query("SELECT * FROM users WHERE id = :uId")
+    @Query("SELECT * FROM users WHERE userId = :uId")
     fun getUser(uId: String): LocalBaseUser?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertUsers(vararg users: LocalBaseUser)
 
+    @Query("SELECT * FROM users")
+    fun getAllUsers(): List<LocalBaseUser>
+
     @Query("DELETE FROM users")
     fun deleteAll()
 
-    @Query("DELETE FROM users WHERE id IN(:ids)")
+    @Query("DELETE FROM users WHERE userId IN(:ids)")
     fun delete(vararg ids: String)
 
     @Delete

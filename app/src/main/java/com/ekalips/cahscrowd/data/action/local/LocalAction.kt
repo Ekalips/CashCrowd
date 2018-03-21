@@ -1,18 +1,50 @@
 package com.ekalips.cahscrowd.data.action.local
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.*
 import com.ekalips.cahscrowd.data.action.Action
+import com.ekalips.cahscrowd.data.event.local.LocalEvent
+import com.ekalips.cahscrowd.data.user.local.model.LocalBaseUser
+import com.ekalips.cahscrowd.data.user.local.model.toLocal
 import com.ekalips.cahscrowd.data.user.model.BaseUser
 
-@Entity(tableName = "actions")
-data class LocalAction(@PrimaryKey override var id: String,
+@Entity(tableName = "actions", foreignKeys = arrayOf(
+        ForeignKey(
+                entity = LocalBaseUser::class,
+                onUpdate = ForeignKey.CASCADE,
+                onDelete = ForeignKey.CASCADE,
+                parentColumns = arrayOf("userId"),
+                childColumns = arrayOf("relatedUserId"),
+                deferred = true),
+        ForeignKey(entity = LocalEvent::class,
+                onUpdate = ForeignKey.CASCADE,
+                onDelete = ForeignKey.CASCADE,
+                parentColumns = arrayOf("eventId"),
+                childColumns = arrayOf("relatedEventId"),
+                deferred = true)),
+        indices = arrayOf(Index("relatedUserId"), Index("relatedEventId")))
+data class LocalAction(@PrimaryKey
+                       @ColumnInfo(name = "actionId")
+                       override var id: String,
+                       @ColumnInfo(name = "actionName")
                        override var name: String,
                        override var amount: Double,
+                       @ColumnInfo(name = "relatedUserId")
                        override var userId: String,
+                       @ColumnInfo(name = "relatedEventId")
                        override var eventId: String,
-                       @Transient override var user: BaseUser? = null) : Action {
+                       override var newAction: Boolean) : Action {
 
-    constructor() : this("", "", 0.0, "", "")
+    @Embedded
+    var localUser: LocalBaseUser? = null
+
+    override var user: BaseUser?
+        get() = localUser
+        set(value) {
+            localUser = value?.toLocal()
+        }
+
+    constructor() : this("", "", 0.0, "", "", true)
 
 }
+
+fun Action.toLocal() = LocalAction(id, name, amount, userId, eventId, newAction)
