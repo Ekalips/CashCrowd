@@ -6,7 +6,6 @@ import android.arch.lifecycle.Transformations
 import android.arch.paging.DataSource
 import android.arch.paging.LivePagedListBuilder
 import com.ekalips.cahscrowd.data.event.local.LocalEventsDataStore
-import com.ekalips.cahscrowd.data.event.local.toLocal
 import com.ekalips.cahscrowd.data.event.paginate.EventsBoundaryCallback
 import com.ekalips.cahscrowd.data.event.remote.RemoteEventDataStore
 import com.ekalips.cahscrowd.data.user.UserDataProvider
@@ -15,6 +14,7 @@ import com.ekalips.cahscrowd.stuff.paging.Listing
 import com.ekalips.cahscrowd.stuff.paging.NetworkState
 import com.ekalips.cahscrowd.stuff.utils.wrap
 import io.reactivex.Completable
+import io.reactivex.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,14 +29,8 @@ class EventsDataProvider @Inject constructor(private val userDataProvider: UserD
     }
 
     fun getEvents(): Listing<Event> {
-        val boundaryCallback = EventsBoundaryCallback({ lastId ->
-            userDataProvider.getAccessToken()
-                    .flatMap { remoteEventDataStore.getEvents(it, lastId, DEFAULT_NETWORK_PAGE_SIZE) }.toObservable()
-                    .wrap(errorHandler.getHandler())
-                    .map { it.map { it.toLocal() } }
-        }, {
-            saveEvents(it, false)
-        })
+        val boundaryCallback = EventsBoundaryCallback({ lastId -> fetchEventsRemotely(lastId) },
+                { saveEvents(it, false) })
         val factory = localEventsDataStore.getEventsDataSourceFactory() as DataSource.Factory<Int, Event>
         val builder = LivePagedListBuilder(factory, DEFAULT_NETWORK_PAGE_SIZE)
                 .setBoundaryCallback(boundaryCallback)
@@ -56,13 +50,18 @@ class EventsDataProvider @Inject constructor(private val userDataProvider: UserD
     private fun refresh(): LiveData<NetworkState> {
         val state = MutableLiveData<NetworkState>()
         state.value = NetworkState.LOADING
-        userDataProvider.getAccessToken().flatMap { remoteEventDataStore.getEvents(it, null, DEFAULT_NETWORK_PAGE_SIZE) }
-                .wrap(errorHandler.getHandler())
+        fetchEventsRemotely(null)
                 .subscribe({
                     saveEvents(it, true)
                     state.postValue(NetworkState.LOADED)
                 }, { state.postValue(NetworkState.error(it.message)) })
         return state
+    }
+
+    private fun fetchEventsRemotely(afterEventId: String?): Observable<List<Event>> {
+        return userDataProvider.getAccessToken().flatMap { remoteEventDataStore.getEvents(it, afterEventId, DEFAULT_NETWORK_PAGE_SIZE) }
+                .wrap(errorHandler.getHandler())
+                .toObservable()
     }
 
     private fun saveEvents(events: List<Event>?, clear: Boolean = false) {

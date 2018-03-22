@@ -1,5 +1,6 @@
 package com.ekalips.cahscrowd.data.event.local
 
+import com.ekalips.base.stuff.ifThen
 import com.ekalips.cahscrowd.data.action.local.LocalAction
 import com.ekalips.cahscrowd.data.action.local.toLocal
 import com.ekalips.cahscrowd.data.db.CashDB
@@ -20,9 +21,10 @@ class LocalEventsDataStore @Inject constructor(private val cashDB: CashDB,
     fun saveEvents(events: List<Event>?, clear: Boolean = false) {
         events?.let {
             val actions = ArrayList<LocalAction>()
-            val mapped = events.map {
+            val mappedEvents = ArrayList<LocalEvent>()
+            events.forEach {
                 actions.addAll((it.actions ?: ArrayList()).map { it.toLocal() })
-                it.toLocal()
+                mappedEvents.add(it.toLocal())
             }
 
             val users = usersDao.getAllUsers()
@@ -35,14 +37,12 @@ class LocalEventsDataStore @Inject constructor(private val cashDB: CashDB,
                 }
             }
 
-            if (clear) {
-                eventsDao.deleteAll()
-            }
 
             cashDB.runInTransaction {
-                usersDao.insertUsers(*absentUserIds.map { LocalBaseUser(it, "", null, false) }.toTypedArray())
+                clear.ifThen { eventsDao.deleteAll() }
+                eventsDao.insert(*mappedEvents.toTypedArray())
                 eventsDao.insertEventActions(*actions.toTypedArray())
-                eventsDao.insert(*mapped.toTypedArray())
+                usersDao.insertUsers(*absentUserIds.map { LocalBaseUser(it, "", null, false) }.toTypedArray())
             }
         }
     }
