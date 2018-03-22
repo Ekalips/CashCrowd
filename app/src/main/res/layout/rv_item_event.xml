@@ -1,19 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.view.View" />
 
         <variable
             name="newCount"
             type="int" />
 
         <variable
+            name="lastActionTime"
+            type="String" />
+
+        <variable
             name="event"
             type="com.ekalips.cahscrowd.data.event.Event" />
+
+        <variable
+            name="expanded"
+            type="boolean" />
     </data>
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
@@ -71,6 +82,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
+                        android:visibility="@{event.actions.size() > 0}"
                         android:background="?selectableItemBackgroundBorderless"
                         android:clickable="true"
                         android:focusable="true"
@@ -78,7 +90,7 @@
                         android:paddingEnd="16dp"
                         android:paddingStart="16dp"
                         android:paddingTop="8dp"
-                        android:src="@drawable/ic_down_arrow" />
+                        android:src="@drawable/ic_arrow_up_down" />
 
                 </RelativeLayout>
 
@@ -90,11 +102,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:alpha="0.1"
-                    android:background="#000" />
+                    android:background="#000"
+                    android:visibility="@{event.actions.size() > 0}" />
 
                 <Space
                     android:layout_width="0dp"
-                    android:layout_height="10dp" />
+                    android:layout_height="10dp"
+                    android:visibility="@{event.actions.size() > 0}" />
 
 
                 <LinearLayout
@@ -103,93 +117,54 @@
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
-
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_call_to_action"
-                        app:alpha="@{newCount > 0 ? 1f : 0.3F}"
-                        app:tint="@{newCount > 0 ? @color/colorAccent : @color/black}" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="4dp"
-                        android:paddingRight="4dp"
-                        android:text="@{String.valueOf(event.actions.size())}"
-                        android:textColor="@{newCount > 0 ? @color/colorAccent : @color/black}" />
+                    android:paddingRight="16dp"
+                    android:visibility="@{event.actions.size() > 0}">
 
                     <LinearLayout
+                        android:id="@+id/actionsCounterContainer"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_call_to_action"
+                            app:alpha="@{newCount > 0 ? 1f : 0.3F}"
+                            app:tint="@{newCount > 0 ? @color/colorAccent : @color/black}" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:paddingLeft="4dp"
+                            android:paddingRight="4dp"
+                            android:text='@{newCount > 0 ? ("+" + newCount) : String.valueOf(event.actions.size())}'
+                            android:textColor="@{newCount > 0 ? @color/colorAccent : @color/black}"
+                            tools:text="+1" />
+                    </LinearLayout>
+
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/actionsRv"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="center">
-
-                        <Space
-                            android:layout_width="8dp"
-                            android:layout_height="0dp" />
-
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:foreground="@drawable/test_higlight"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/person_test" />
-
-                        <Space
-                            android:layout_width="4dp"
-                            android:layout_height="0dp" />
-
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:foreground="@drawable/test_higlight"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/person_test" />
-
-                        <Space
-                            android:layout_width="4dp"
-                            android:layout_height="0dp" />
-
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/person_test" />
-
-                        <Space
-                            android:layout_width="4dp"
-                            android:layout_height="0dp" />
-
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/person_test" />
-
-                        <Space
-                            android:layout_width="4dp"
-                            android:layout_height="0dp" />
-
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/person_test" />
-
-                        <Space
-                            android:layout_width="8dp"
-                            android:layout_height="0dp" />
-                    </LinearLayout>
+                        android:orientation="horizontal"
+                        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                        tools:listitem="@layout/rv_item_event_action" />
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/lastActionTimeTv"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
                         android:alpha="0.3"
-                        android:gravity="center|end"
+                        android:gravity="center"
+                        android:text="@{lastActionTime}"
                         android:textColor="#000000"
+                        android:visibility="@{lastActionTime == null ? View.INVISIBLE : View.VISIBLE}"
                         tools:text="May 24" />
 
 

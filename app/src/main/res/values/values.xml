@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="HighlightableTextView">
+        <attr name="highlightText" format="string" />
+        <attr name="highlightStyle">
+            <flag name="none" value="0" />
+            <flag name="bold" value="1" />
+            <flag name="color" value="2" />
+            <flag name="size" value="4" />
+        </attr>
+        <attr name="highlightColor" format="color" />
+        <attr name="highlightSize" format="float" />
+    </declare-styleable>
+
+
+</resources>
