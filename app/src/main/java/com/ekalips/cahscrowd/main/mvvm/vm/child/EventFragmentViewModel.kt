@@ -7,6 +7,7 @@ import com.ekalips.cahscrowd.data.event.Event
 import com.ekalips.cahscrowd.data.event.EventsDataProvider
 import com.ekalips.cahscrowd.stuff.base.CCViewModel
 import com.ekalips.cahscrowd.stuff.paging.NetworkState
+import com.firebase.ui.auth.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
 class EventFragmentViewState : BaseViewState() {
@@ -14,6 +15,8 @@ class EventFragmentViewState : BaseViewState() {
     val events = MediatorLiveData<PagedList<Event>>()
     val error = MediatorLiveData<String>()
     val refreshing = MediatorLiveData<Boolean>()
+
+    val addEventTrigger = SingleLiveEvent<Void>()
 
 }
 
@@ -29,5 +32,9 @@ class EventFragmentViewModel @Inject constructor(eventsDataProvider: EventsDataP
 
     fun refresh() {
         listing.refresh()
+    }
+
+    fun onAddClick(){
+        state.addEventTrigger.call()
     }
 }

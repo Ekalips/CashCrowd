@@ -3,8 +3,8 @@ package com.ekalips.cahscrowd.main.mvvm.view.child
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.util.TypedValue
+import android.view.View
 import com.ekalips.cahscrowd.BR
 import com.ekalips.cahscrowd.R
 import com.ekalips.cahscrowd.databinding.FragmentEventsBinding
@@ -27,10 +27,7 @@ class EventsFragment : CCFragment<EventFragmentViewModel, MainScreenViewModel, F
         super.onCreate(savedInstanceState)
         appBarElevationThreshold = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8F, resources.displayMetrics)
         viewModel.state.events.observe(this, Observer { adapter.submitList(it) })
-        viewModel.state.loading.observe(this, Observer { Log.d(javaClass.simpleName, "Loading: $it") })
-        viewModel.state.error.observe(this, Observer {
-            Log.e(javaClass.simpleName, "error from get events: $it")
-        })
+        viewModel.state.addEventTrigger.observe(this, Observer { openAddEventDialog() })
     }
 
     override fun onBindingReady(binding: FragmentEventsBinding) {
@@ -51,12 +48,14 @@ class EventsFragment : CCFragment<EventFragmentViewModel, MainScreenViewModel, F
         })
     }
 
-    private fun getRvScrollAmount(): Int {
-        val pos = IntArray(2, { 0 })
-        binding?.swipeLay?.getLocationInWindow(pos)
-        return pos[1] - (binding?.swipeLay?.top ?: 0)
+    private fun openAddEventDialog() {
+        val dialog = CreateEventDialogFragment.newInstance()
+        dialog.show(childFragmentManager, "CreateEventFragment")
     }
 
+    private fun showFab(show: Boolean) {
+        binding?.addFab?.visibility = if (show) View.VISIBLE else View.INVISIBLE
+    }
 
     companion object {
         fun newInstance() = EventsFragment()
