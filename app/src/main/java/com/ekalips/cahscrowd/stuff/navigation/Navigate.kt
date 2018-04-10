@@ -1,7 +1,7 @@
 package com.ekalips.cahscrowd.stuff.navigation
 
 enum class Place {
-    SPLASH, AUTH, MAIN
+    SPLASH, AUTH, MAIN, CREATE_EVENT
 }
 
 

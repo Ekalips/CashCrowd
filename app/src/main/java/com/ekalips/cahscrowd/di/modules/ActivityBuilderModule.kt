@@ -2,6 +2,7 @@ package com.ekalips.cahscrowd.di.modules
 
 
 import com.ekalips.cahscrowd.auth.mvvm.view.AuthActivity
+import com.ekalips.cahscrowd.create_event.mvvm.view.CreateEventActivity
 import com.ekalips.cahscrowd.di.scopes.ActivityScope
 import com.ekalips.cahscrowd.main.di.MainFragmentsProvider
 import com.ekalips.cahscrowd.main.mvvm.view.MainActivity
@@ -27,4 +28,8 @@ abstract class ActivityBuilderModule {
     @ActivityScope
     @ContributesAndroidInjector(modules = [MainFragmentsProvider::class])
     internal abstract fun mainActivity(): MainActivity
+
+    @ActivityScope
+    @ContributesAndroidInjector
+    internal abstract fun createEventActivity(): CreateEventActivity
 }

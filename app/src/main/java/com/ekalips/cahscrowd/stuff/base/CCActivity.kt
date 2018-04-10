@@ -3,6 +3,7 @@ package com.ekalips.cahscrowd.stuff.base
 import android.arch.lifecycle.Observer
 import android.databinding.ViewDataBinding
 import android.os.Bundle
+import android.view.MenuItem
 import com.ekalips.base.activity.BaseActivity
 import com.ekalips.base.state.BaseViewState
 import com.ekalips.cahscrowd.providers.GlobalNavigationProvider
@@ -25,6 +26,13 @@ abstract class CCActivity<VM : CCViewModel<BaseViewState>, DataBinding : ViewDat
         viewModel.navigationTrigger.observe(this, Observer { it?.place?.let { place -> handleBaseNavigation(place, it.payload) } })
     }
 
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            android.R.id.home -> onBackPressed()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         disposer.dispose()
@@ -36,6 +44,7 @@ abstract class CCActivity<VM : CCViewModel<BaseViewState>, DataBinding : ViewDat
                 Place.SPLASH -> navigator navigateToSplashScreen this
                 Place.AUTH -> navigator navigateToAuthScreen this
                 Place.MAIN -> navigator navigateToMainScreen this
+                Place.CREATE_EVENT -> navigator navigateToCreateEventScreen this
                 else -> handleNavigation(place, payload)
             }
         } else {

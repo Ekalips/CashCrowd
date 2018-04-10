@@ -3,6 +3,7 @@ package com.ekalips.cahscrowd.providers
 import android.content.Context
 import android.content.Intent
 import com.ekalips.cahscrowd.auth.mvvm.view.AuthActivity
+import com.ekalips.cahscrowd.create_event.mvvm.view.CreateEventActivity
 import com.ekalips.cahscrowd.main.mvvm.view.MainActivity
 import com.ekalips.cahscrowd.welcome.mvvm.view.SplashActivity
 import javax.inject.Inject
@@ -26,5 +27,9 @@ class GlobalNavigationProvider @Inject constructor() {
 
     infix fun navigateToMainScreen(context: Context) {
         context.startActivity(Intent(context, MainActivity::class.java))
+    }
+
+    infix fun navigateToCreateEventScreen(context: Context) {
+        context.startActivity(CreateEventActivity.getIntentFor(context))
     }
 }

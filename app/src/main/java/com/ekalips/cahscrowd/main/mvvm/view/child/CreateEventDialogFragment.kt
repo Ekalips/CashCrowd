@@ -16,26 +16,52 @@ import com.ekalips.cahscrowd.R
 import com.ekalips.cahscrowd.databinding.DialogAddEventBinding
 import com.ekalips.cahscrowd.stuff.TransitionListenerAdapter
 import com.ekalips.cahscrowd.stuff.transition.CardViewChangeRadiusTransition
+import com.ekalips.cahscrowd.stuff.utils.disposeBy
+import com.jakewharton.rxbinding2.view.RxView
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import java.lang.ref.WeakReference
+import java.util.concurrent.TimeUnit
 
 class CreateEventDialogFragment : DialogFragment() {
 
-    lateinit var binding: DialogAddEventBinding
+    private lateinit var binding: DialogAddEventBinding
 
-    var dissmissed = false
-    var isCollapseInProgress = false
-    var isExpandInProgress = false
+    private val disposer = CompositeDisposable()
+
+    private var dismissed = false
+    private var isCollapseInProgress = false
+    private var isExpandInProgress = false
+
+    private var fragmetnCallback: WeakReference<Callback>? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return Dialog(context, R.style.UnlimitedDialog)
+        return Dialog(context, R.style.UnlimitedDialog).also {
+            it.setOnShowListener {
+                fragmetnCallback?.get()?.onDialogOpen()
+            }
+            it.setOnDismissListener {
+                onClose()
+            }
+            it.setOnCancelListener {
+                onClose()
+            }
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.dialog_add_event, container, false)
-        binding.backgroundView.setOnClickListener { dismiss() }
+        RxView.clicks(binding.backgroundView).debounce(200, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe { dismiss() }.disposeBy(disposer)
+        RxView.clicks(binding.createBtn).debounce(200, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe { onCreateEventClicked() }.disposeBy(disposer)
+        RxView.clicks(binding.inviteBtn).debounce(200, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe { onInviteClicked() }.disposeBy(disposer)
         collapseView()
         return binding.root.also { it.post { expandView() } }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        disposer.dispose()
+    }
 
     private fun collapseView(animate: Boolean = false, animationCallback: (() -> Unit)? = null) {
         if (animate && !isCollapseInProgress) {
@@ -70,7 +96,6 @@ class CreateEventDialogFragment : DialogFragment() {
 
         binding.createBtnContainer.radius = fabSize / 2F
         binding.createBtn.text = ""
-
     }
 
     private fun expandView() {
@@ -109,14 +134,19 @@ class CreateEventDialogFragment : DialogFragment() {
     }
 
     override fun dismiss() {
-        if (!dissmissed) {
+        if (!dismissed) {
             collapseView(true, {
-                (!dissmissed).ifThen {
-                    dissmissed = true
+                (!dismissed).ifThen {
+                    onClose()
+                    dismissed = true
                     super.dismiss()
                 }
             })
         }
+    }
+
+    private fun onClose() {
+        fragmetnCallback?.get()?.onDialogClose()
     }
 
     private fun getChangeTransition(speed: Long = DEFAULT_ANIM_SPEED): Transition =
@@ -140,8 +170,30 @@ class CreateEventDialogFragment : DialogFragment() {
         change()
     }
 
+    private fun onCreateEventClicked() {
+        fragmetnCallback?.get()?.onCreateEventSelected()
+        dismiss()
+    }
+
+    private fun onInviteClicked() {
+        fragmetnCallback?.get()?.onInviteSelected()
+        dismiss()
+    }
+
+    fun setCallback(callback: Callback) {
+        this.fragmetnCallback = WeakReference(callback)
+    }
+
     companion object {
+        const val TAG = "CreateEventDialogFragment"
         fun newInstance() = CreateEventDialogFragment()
         private const val DEFAULT_ANIM_SPEED = 250L
+
+        interface Callback {
+            fun onDialogOpen()
+            fun onDialogClose()
+            fun onCreateEventSelected()
+            fun onInviteSelected()
+        }
     }
 }

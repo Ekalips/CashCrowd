@@ -35,6 +35,7 @@ class EventsFragment : CCFragment<EventFragmentViewModel, MainScreenViewModel, F
         binding.eventsRecyclerView.adapter = adapter
         binding.swipeLay.setOnRefreshListener { viewModel.refresh() }
         setUpToolbarScrolling(binding)
+        setUpCreateDialogCallback(null)
     }
 
     private var rvScrollY = 0F
@@ -50,11 +51,39 @@ class EventsFragment : CCFragment<EventFragmentViewModel, MainScreenViewModel, F
 
     private fun openAddEventDialog() {
         val dialog = CreateEventDialogFragment.newInstance()
-        dialog.show(childFragmentManager, "CreateEventFragment")
+        setUpCreateDialogCallback(dialog)
+        dialog.show(childFragmentManager, CreateEventDialogFragment.TAG)
+    }
+
+    private fun setUpCreateDialogCallback(dialog: CreateEventDialogFragment?) {
+        if (dialog != null) {
+            dialog.setCallback(fragmentCallback)
+        } else {
+            val fragment = childFragmentManager.findFragmentByTag(CreateEventDialogFragment.TAG) as CreateEventDialogFragment?
+            fragment?.setCallback(fragmentCallback)
+        }
     }
 
     private fun showFab(show: Boolean) {
         binding?.addFab?.visibility = if (show) View.VISIBLE else View.INVISIBLE
+    }
+
+    private val fragmentCallback = object : CreateEventDialogFragment.Companion.Callback {
+        override fun onDialogOpen() {
+            showFab(false)
+        }
+
+        override fun onDialogClose() {
+            showFab(true)
+        }
+
+        override fun onCreateEventSelected() {
+            //todo implement this
+        }
+
+        override fun onInviteSelected() {
+            //todo implement this
+        }
     }
 
     companion object {

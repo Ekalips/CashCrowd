@@ -5,8 +5,9 @@ import android.arch.lifecycle.ViewModelProvider
 import com.ekalips.base.di.ViewModelKey
 import com.ekalips.base.vm.BaseViewModelFactory
 import com.ekalips.cahscrowd.auth.mvvm.vm.AuthScreenViewModel
-import com.ekalips.cahscrowd.main.mvvm.vm.child.EventFragmentViewModel
+import com.ekalips.cahscrowd.create_event.mvvm.vm.CreateEventScreenViewModel
 import com.ekalips.cahscrowd.main.mvvm.vm.MainScreenViewModel
+import com.ekalips.cahscrowd.main.mvvm.vm.child.EventFragmentViewModel
 import com.ekalips.cahscrowd.welcome.mvvm.vm.SplashScreenViewModel
 import dagger.Binds
 import dagger.Module
@@ -38,6 +39,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(value = EventFragmentViewModel::class)
     internal abstract fun bindEventsVM(maFragmentViewModel: EventFragmentViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(value = CreateEventScreenViewModel::class)
+    internal abstract fun bindCreateEventVM(createEventScreenViewModel: CreateEventScreenViewModel): ViewModel
 
     @Binds
     internal abstract fun bindViewModelFactory(factory: BaseViewModelFactory): ViewModelProvider.Factory
