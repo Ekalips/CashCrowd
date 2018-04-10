@@ -3,6 +3,7 @@ package com.ekalips.cahscrowd.data.event
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
+import android.arch.paging.DataSource
 import android.arch.paging.LivePagedListBuilder
 import com.ekalips.cahscrowd.data.event.local.LocalEventsDataStore
 import com.ekalips.cahscrowd.data.event.paginate.EventsBoundaryCallback
@@ -12,7 +13,6 @@ import com.ekalips.cahscrowd.stuff.ErrorHandler
 import com.ekalips.cahscrowd.stuff.paging.Listing
 import com.ekalips.cahscrowd.stuff.paging.NetworkState
 import com.ekalips.cahscrowd.stuff.utils.wrap
-import com.firebase.ui.auth.viewmodel.SingleLiveEvent
 import io.reactivex.Completable
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -31,10 +31,10 @@ class EventsDataProvider @Inject constructor(private val userDataProvider: UserD
     fun getEvents(): Listing<Event> {
         val boundaryCallback = EventsBoundaryCallback({ lastId -> fetchEventsRemotely(lastId) },
                 { saveEvents(it, false) })
-
-        val factory = localEventsDataStore.getEventsDataSourceFactory()
-        val builder = LivePagedListBuilder(factory, DEFAULT_NETWORK_PAGE_SIZE).setBoundaryCallback(boundaryCallback)
-        val refreshTrigger = SingleLiveEvent<Void>()
+        val factory = localEventsDataStore.getEventsDataSourceFactory() as DataSource.Factory<Int, Event>
+        val builder = LivePagedListBuilder(factory, DEFAULT_NETWORK_PAGE_SIZE)
+                .setBoundaryCallback(boundaryCallback)
+        val refreshTrigger = MutableLiveData<Void>()
         val refreshState = Transformations.switchMap(refreshTrigger, { refresh() })
         return Listing(pagedList = builder.build(),
                 networkState = boundaryCallback.networkState,
@@ -42,7 +42,7 @@ class EventsDataProvider @Inject constructor(private val userDataProvider: UserD
                     boundaryCallback.helper.retryAllFailed()
                 },
                 refresh = {
-                    refreshTrigger.call()
+                    refreshTrigger.value = null
                 },
                 refreshState = refreshState)
     }
@@ -60,31 +60,14 @@ class EventsDataProvider @Inject constructor(private val userDataProvider: UserD
 
     private fun fetchEventsRemotely(afterEventId: String?): Observable<List<Event>> {
         return userDataProvider.getAccessToken().flatMap { remoteEventDataStore.getEvents(it, afterEventId, DEFAULT_NETWORK_PAGE_SIZE) }
-                .doAfterSuccess { fetchUnknownUsers(it) }
                 .wrap(errorHandler.getHandler())
                 .toObservable()
     }
 
-    private fun fetchUnknownUsers(events: List<Event>?) {
-        Observable.fromCallable {
-            val unknownUserIds = ArrayList<String>()
-            events?.forEach {
-                it.actions?.forEach {
-                    if (it.user == null) {
-                        unknownUserIds.add(it.userId)
-                    }
-                }
-            }
-            unknownUserIds
-        }.switchMap { userDataProvider.getUsers(*it.toTypedArray()) }
-                .wrap(errorHandler.getHandler())
-                .subscribe()
-
-    }
-
     private fun saveEvents(events: List<Event>?, clear: Boolean = false) {
-        Completable.fromAction { localEventsDataStore.saveEvents(events, clear) }
-                .wrap().subscribe()
+        Completable.fromCallable {
+            localEventsDataStore.saveEvents(events, clear)
+        }.wrap(errorHandler.getHandler()).subscribe()
     }
 
 }

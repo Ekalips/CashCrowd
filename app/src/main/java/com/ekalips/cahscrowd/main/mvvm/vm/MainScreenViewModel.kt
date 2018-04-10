@@ -1,33 +1,25 @@
 package com.ekalips.cahscrowd.main.mvvm.vm
 
 import android.arch.lifecycle.MediatorLiveData
-import android.arch.paging.PagedList
 import com.ekalips.base.state.BaseViewState
-import com.ekalips.cahscrowd.data.event.Event
-import com.ekalips.cahscrowd.data.event.EventsDataProvider
+import com.ekalips.cahscrowd.main.navigation.MainActivityPlace
 import com.ekalips.cahscrowd.stuff.base.CCViewModel
-import com.ekalips.cahscrowd.stuff.paging.NetworkState
 import javax.inject.Inject
 
 class MainScreenViewState : BaseViewState() {
 
-    val events = MediatorLiveData<PagedList<Event>>()
-    val error = MediatorLiveData<String>()
-    val refreshing = MediatorLiveData<Boolean>()
+    val navigation = MediatorLiveData<MainActivityPlace>()
 
 }
 
-class MainScreenViewModel @Inject constructor(eventsDataProvider: EventsDataProvider) : CCViewModel<MainScreenViewState>() {
-    override val state: MainScreenViewState = MainScreenViewState()
-    private val listing = eventsDataProvider.getEvents()
+class MainScreenViewModel @Inject constructor() : CCViewModel<MainScreenViewState>() {
+    override val state = MainScreenViewState()
 
     init {
-        state.events.addSource(listing.pagedList, { state.events.postValue(it) })
-        state.loading.addSource(listing.networkState, { state.loading.postValue(it == NetworkState.LOADING) })
-        state.refreshing.addSource(listing.refreshState, { state.refreshing.postValue(it == NetworkState.LOADING) })
+        changeScreen(MainActivityPlace.EVENTS)
     }
 
-    fun refresh() {
-        listing.refresh()
+    fun changeScreen(mainActivityPlace: MainActivityPlace) {
+        state.navigation.value = mainActivityPlace
     }
 }

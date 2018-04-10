@@ -18,7 +18,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".auth.mvvm.view.AuthActivity" />
-        <activity android:name=".main.mvvm.view.MainActivity"></activity>
+        <activity android:name=".main.mvvm.view.MainActivity" />
     </application>
 
 </manifest>

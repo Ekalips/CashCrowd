@@ -4,6 +4,13 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="transparentAccentTint">#4cff4081</color>
+
+    <color name="transparentGray">#30b4b4b4</color>
+
+    <color name="unlimitedDialogBackgroundColor">#c8ffffff</color>
+
     <color name="black">#000</color>
     <color name="white">#fff</color>
+    <color name="gray">#b4b4b4</color>
 </resources>

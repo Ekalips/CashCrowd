@@ -32,6 +32,7 @@ class AuthScreenViewModel @Inject constructor(private val userDataProvider: User
     }
 
     fun signIn() {
+        FirebaseAuth.getInstance().signOut()
         state.signInTrigger.call()
     }
 
@@ -44,7 +45,10 @@ class AuthScreenViewModel @Inject constructor(private val userDataProvider: User
                 userDataProvider.authenticate(idToken, FirebaseInstanceId.getInstance().token)
                         .doOnSubscribe { state.loading.postValue(true) }
                         .doFinally { state.loading.postValue(false) }
-                        .subscribe({ navigate(Place.MAIN) }, { handleError(it) })
+                        .subscribe({
+                            goBack()
+                            navigate(Place.MAIN)
+                        }, { handleError(it) })
                         .disposeBy(disposer)
             }.addOnFailureListener {
                 handleError(it)

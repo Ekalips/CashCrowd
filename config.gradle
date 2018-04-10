@@ -8,4 +8,5 @@ ext {
     daggerVersion = "2.14.1"
     archComponentsVersion = "1.1.1"
     archPagingVersion = "1.0.0-alpha7"
+    archRoomVersion = "1.1.0-beta2"
 }

@@ -1,45 +1,48 @@
 package com.ekalips.cahscrowd.data.event.local
 
-import android.arch.paging.DataSource
-import com.ekalips.cahscrowd.data.action.Action
-import com.ekalips.cahscrowd.data.action.local.LocalActionsDataSource
+import com.ekalips.base.stuff.ifThen
+import com.ekalips.cahscrowd.data.action.local.LocalAction
+import com.ekalips.cahscrowd.data.action.local.toLocal
+import com.ekalips.cahscrowd.data.db.CashDB
 import com.ekalips.cahscrowd.data.event.Event
-import com.ekalips.cahscrowd.data.event.paginate.EventsPaginateDataSource
-import io.objectbox.Box
-import io.objectbox.BoxStore
+import com.ekalips.cahscrowd.data.user.local.LocalUserDao
+import com.ekalips.cahscrowd.data.user.local.model.LocalBaseUser
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class LocalEventsDataStore @Inject constructor(private val boxStore: BoxStore,
-                                               private val localActionsDataSource: LocalActionsDataSource,
-                                               private val box: Box<LocalEvent>) {
+class LocalEventsDataStore @Inject constructor(private val cashDB: CashDB,
+                                               private val eventsDao: LocalEventsDao,
+                                               private val usersDao: LocalUserDao) {
 
 
-    fun getEventsDataSourceFactory() = DataSource.Factory<Int, Event> {
-        EventsPaginateDataSource(box as Box<Event>, boxStore, localActionsDataSource)
-    }
+    fun getEventsDataSourceFactory() = eventsDao.getAllEventsDataSource()
 
     fun saveEvents(events: List<Event>?, clear: Boolean = false) {
         events?.let {
-            val mapped = events.map { it.toLocal() }
-            val actions = ArrayList<Action>()
-            if (clear) {
-                box.store.runInTx {
-                    box.removeAll()
-                    localActionsDataSource.clear()
-                }
-            } else {
-                val currentEvents = box.all
-                mapped.forEach {
-                    it.boxId = currentEvents.find { local -> it.id == local.id }?.boxId ?: 0
-                    it.actions?.let { actions.addAll(it) }
+            val actions = ArrayList<LocalAction>()
+            val mappedEvents = ArrayList<LocalEvent>()
+            events.forEach {
+                actions.addAll((it.actions ?: ArrayList()).map { it.toLocal() })
+                mappedEvents.add(it.toLocal())
+            }
 
+            val users = usersDao.getAllUsers()
+
+            val absentUserIds = ArrayList<String>(users.size)
+            actions.forEach {
+                val user = users.find { local -> it.userId == local.id }
+                if (user == null) {
+                    absentUserIds.add(it.userId)
                 }
             }
-            box.store.callInTx {
-                box.put(mapped)
-                localActionsDataSource.saveActions(*actions.toTypedArray())
+
+
+            cashDB.runInTransaction {
+                clear.ifThen { eventsDao.deleteAll() }
+                eventsDao.insert(*mappedEvents.toTypedArray())
+                eventsDao.insertEventActions(*actions.toTypedArray())
+                usersDao.insertUsers(*absentUserIds.map { LocalBaseUser(it, "", null, false) }.toTypedArray())
             }
         }
     }

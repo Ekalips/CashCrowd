@@ -15,11 +15,11 @@ class RemoteEventDataStore @Inject constructor(private val api: Api) {
     private val mockData = listOf(
             RemoteEvent("event1", "name1", "desc1",
                     listOf(
-                            RemoteAction("act1_1", "action1_1", 44.0, "user1", null, "event1", false),
-                            RemoteAction("act1_2", "action1_2", 44.0, "user1", null, "event1", false),
+                            RemoteAction("act1_1", "action1_1", 44.0, "user1", null, "event1", true),
+                            RemoteAction("act1_2", "action1_2", 44.0, "user1", null, "event1", true),
                             RemoteAction("act1_3", "action1_3", 44.0, "user2", null, "event1", false),
-                            RemoteAction("act1_4", "action1_4", 44.0, "user3", null, "event1", false),
-                            RemoteAction("act1_5", "action1_5", 44.0, "user4", null, "event1", false)
+                            RemoteAction("act1_4", "action1_4", 44.0, "user3", null, "event2", false),
+                            RemoteAction("act1_5", "action1_5", 44.0, "user4", null, "event2", false)
                     )),
             RemoteEvent("event2", "name2", "desc2",
                     listOf()),

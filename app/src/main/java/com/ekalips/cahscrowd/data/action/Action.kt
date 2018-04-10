@@ -10,6 +10,6 @@ interface Action {
     var userId: String
     var user: BaseUser?
     var eventId: String
-    var seen: Boolean
+    var newAction: Boolean
 
 }

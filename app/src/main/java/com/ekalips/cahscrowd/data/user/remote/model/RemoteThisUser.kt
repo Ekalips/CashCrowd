@@ -1,10 +1,16 @@
 package com.ekalips.cahscrowd.data.user.remote.model
 
 import com.ekalips.cahscrowd.data.user.model.ThisUser
+import com.squareup.moshi.Json
 
-data class RemoteThisUser(override var accessToken: String,
+data class RemoteThisUser(@Json(name = "token") override var accessToken: String,
                           override var deviceToken: String?,
                           var user: RemoteBaseUser) : ThisUser {
+    override var loaded: Boolean
+        get() = user.loaded
+        set(value) {
+            user.loaded = value
+        }
     override var id: String
         get() = user.id
         set(value) {

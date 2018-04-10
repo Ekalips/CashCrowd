@@ -7,4 +7,12 @@
     <string name="no_internet_connection">No internet connection</string>
     <string name="sign_in">Sign In</string>
     <string name="error_auth">Error during authorization</string>
+
+
+    <string name="arrow_down">M7.41,7.84L12,12.42l4.59,-4.58L18,9.25l-6,6 -6,-6z</string>
+    <string name="arrow_up">M7.41,15.41L12,10.83l4.59,4.58L18,14l-6,-6 -6,6z</string>
+    <string name="events_screen_title">Events</string>
+    <string name="create_event_btn_text">Yes, let\'s go!</string>
+    <string name="join_event_btn_text">No, I just got invited</string>
+    <string name="create_event_title">Lest create new event?</string>
 </resources>
