@@ -33,7 +33,7 @@ class LocalUserDataSource @Inject constructor(private val userDao: LocalUserDao,
     }
 
     fun saveUser(user: BaseUser) {
-        userDao.insertUsers(user.toLocal())
+        userDao.insert(user.toLocal())
     }
 
     fun saveMyUser(user: ThisUser) {
@@ -45,7 +45,7 @@ class LocalUserDataSource @Inject constructor(private val userDao: LocalUserDao,
         }.apply()
     }
 
-    fun getAll(): Single<List<BaseUser>> = Single.fromCallable { box.all }
+    fun getAll(): Single<List<BaseUser>> = Single.fromCallable { userDao.getAllUsers() }
 
     fun saveUsers(vararg users: BaseUser) {
         users.forEach { saveUser(it) }

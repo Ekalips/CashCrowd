@@ -16,7 +16,7 @@ interface LocalUserDao {
     fun getUser(uId: String): LocalBaseUser?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertUsers(vararg users: LocalBaseUser)
+    fun insert(vararg users: LocalBaseUser)
 
     @Query("SELECT * FROM users")
     fun getAllUsers(): List<LocalBaseUser>

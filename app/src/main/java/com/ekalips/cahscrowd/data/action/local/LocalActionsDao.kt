@@ -15,7 +15,7 @@ interface LocalActionsDao {
     fun getAction(id: String): LocalAction?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAction(vararg users: LocalAction)
+    fun insert(vararg actions: LocalAction)
 
     @Query("DELETE FROM actions")
     fun deleteAll()

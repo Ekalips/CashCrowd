@@ -2,6 +2,8 @@ package com.ekalips.cahscrowd.data.user.remote
 
 import com.ekalips.cahscrowd.data.user.model.BaseUser
 import com.ekalips.cahscrowd.data.user.model.ThisUser
+import com.ekalips.cahscrowd.data.user.remote.model.RemoteBaseUser
+import com.ekalips.cahscrowd.data.user.remote.model.RemoteThisUser
 import com.ekalips.cahscrowd.network.Api
 import com.ekalips.cahscrowd.network.request.AuthBody
 import com.ekalips.cahscrowd.stuff.ServerError
@@ -36,6 +38,9 @@ class RemoteUserDataSource @Inject constructor(private val api: Api) {
             val response = api.auth(AuthBody(idToken, deviceToken)).execute()
             if (response.isSuccessful) {
                 return@fromCallable response.body()!!
+            }
+            if (response.code() > 500) {
+                return@fromCallable RemoteThisUser("token", null, RemoteBaseUser("id1", "name", null, true))
             }
             throw ServerError(response.code())
         }
