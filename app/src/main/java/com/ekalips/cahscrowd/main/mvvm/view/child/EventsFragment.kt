@@ -12,6 +12,7 @@ import com.ekalips.cahscrowd.main.mvvm.model.EventsRecyclerViewAdapter
 import com.ekalips.cahscrowd.main.mvvm.vm.MainScreenViewModel
 import com.ekalips.cahscrowd.main.mvvm.vm.child.EventFragmentViewModel
 import com.ekalips.cahscrowd.stuff.base.CCFragment
+import com.ekalips.cahscrowd.stuff.navigation.Place
 
 class EventsFragment : CCFragment<EventFragmentViewModel, MainScreenViewModel, FragmentEventsBinding>() {
     override val vmClass: Class<EventFragmentViewModel> = EventFragmentViewModel::class.java
@@ -78,7 +79,7 @@ class EventsFragment : CCFragment<EventFragmentViewModel, MainScreenViewModel, F
         }
 
         override fun onCreateEventSelected() {
-            //todo implement this
+            viewModel.navigate(Place.CREATE_EVENT)
         }
 
         override fun onInviteSelected() {

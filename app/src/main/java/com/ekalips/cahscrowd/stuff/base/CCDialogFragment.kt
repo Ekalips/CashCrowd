@@ -30,10 +30,7 @@ abstract class CCDialogFragment<VM : CCViewModel<BaseViewState>, ParentVM : CCVi
 
     private fun handleBaseNavigation(place: Place, payload: Any?) {
         if (payload == null && context != null) {
-            when (place) {
-                Place.SPLASH -> navigator navigateToSplashScreen context!!
-                else -> handleNavigation(place, payload)
-            }
+            parentViewModel.navigate(place, payload)
         } else {
             handleNavigation(place, payload)
         }
