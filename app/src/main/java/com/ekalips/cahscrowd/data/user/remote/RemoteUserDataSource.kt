@@ -39,7 +39,7 @@ class RemoteUserDataSource @Inject constructor(private val api: Api) {
             if (response.isSuccessful) {
                 return@fromCallable response.body()!!
             }
-            if (response.code() > 500) {
+            if (2==2) {
                 return@fromCallable RemoteThisUser("token", null, RemoteBaseUser("id1", "name", null, true))
             }
             throw ServerError(response.code())

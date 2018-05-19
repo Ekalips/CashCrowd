@@ -6,6 +6,7 @@
     <dimen name="d_4">4dp</dimen>
     <dimen name="d_8">8dp</dimen>
     <dimen name="d_16">16dp</dimen>
+    <dimen name="d_64_n">-64dp</dimen>
     <dimen name="fab_size">56dp</dimen>
 
 </resources>

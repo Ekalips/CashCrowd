@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="user"
+            type="com.ekalips.cahscrowd.create_event.mvvm.model.GuestUserWrap" />
+
+        <variable
+            name="expanded"
+            type="boolean" />
+
+        <variable
+            name="onContactClick"
+            type="Runnable" />
+
+        <variable
+            name="onRemoveClick"
+            type="Runnable" />
+    </data>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:onClick="@{onContactClick}">
+
+
+        <ImageView
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_gravity="center|end"
+            android:background="?selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="@{onRemoveClick}"
+            android:padding="12dp"
+            android:src="@drawable/ic_delete"
+            android:tint="@color/colorAccent"
+            android:visibility="@{expanded}" />
+
+        <LinearLayout
+            android:id="@+id/contentHolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp">
+
+            <ImageView
+                android:id="@+id/userIv"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:background="@drawable/circle_background"
+                android:backgroundTint="@color/gray"
+                android:outlineProvider="background"
+                app:placeholder="@{@drawable/ic_person}"
+                app:src='@{user.avatar}'
+                tools:src="@drawable/ic_person" />
+
+            <Space
+                android:layout_width="16dp"
+                android:layout_height="0dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="2"
+                    android:text="@{user.name}"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="?android:textColorPrimary"
+                    tools:text="User Name" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="2"
+                    android:text="@{user.email}"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textColor="?android:textColorSecondary"
+                    tools:text="user_email@gmail.com" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </FrameLayout>
+</layout>

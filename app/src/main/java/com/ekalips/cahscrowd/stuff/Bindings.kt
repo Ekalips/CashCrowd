@@ -63,3 +63,8 @@ fun setVerticalMargin(view: View, marginBot: Float?, marginTop: Float?) {
         (view.layoutParams as ViewGroup.MarginLayoutParams).topMargin = marginTop?.toInt() ?: 0
     }
 }
+
+@BindingAdapter("android:onClick")
+fun setClickRunnable(view: View, click: Runnable?) {
+    view.setOnClickListener(if (click != null) View.OnClickListener { click.run() } else null)
+}
