@@ -23,6 +23,6 @@ class EventScreenViewModel @Inject constructor(private val eventsDataProvider: E
     }
 
     fun init(eventId: String) {
-        state.eventId.value ?: state.eventId.postValue(eventId)
+        state.eventId.postValue(eventId)
     }
 }

@@ -4,7 +4,6 @@ package com.ekalips.cahscrowd.event.mvvm.view
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.ekalips.base.stuff.getStatusBarHeight
 import com.ekalips.cahscrowd.BR
 import com.ekalips.cahscrowd.R
 import com.ekalips.cahscrowd.databinding.ActivityEventBinding
@@ -22,7 +21,7 @@ class EventActivity : CCActivity<EventScreenViewModel, ActivityEventBinding>() {
 
         setSupportActionBar(binding?.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        binding?.appBar?.setPadding(0, getStatusBarHeight(), 0, 0)
+
 
         extractEventId(intent)?.let {
             viewModel.init(it)
