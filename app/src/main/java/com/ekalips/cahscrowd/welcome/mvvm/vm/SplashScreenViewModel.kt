@@ -23,5 +23,6 @@ class SplashScreenViewModel @Inject constructor(userDataProvider: UserDataProvid
         } else {
             navigate(Place.MAIN)
         }
+        goBack()
     }
 }
