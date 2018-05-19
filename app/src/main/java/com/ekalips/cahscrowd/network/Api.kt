@@ -3,6 +3,7 @@ package com.ekalips.cahscrowd.network
 import com.ekalips.cahscrowd.data.event.remote.RemoteEvent
 import com.ekalips.cahscrowd.data.user.remote.model.RemoteBaseUser
 import com.ekalips.cahscrowd.data.user.remote.model.RemoteThisUser
+import com.ekalips.cahscrowd.network.body.CreateEventBody
 import com.ekalips.cahscrowd.network.request.AuthBody
 import retrofit2.Call
 import retrofit2.http.*
@@ -24,5 +25,8 @@ interface Api {
 
     @GET("events")
     fun getEvents(@Header(TOKEN_FIELD) token: String, @Query("limit") limit: Int, @Query("after") afterEventId: String?): Call<List<RemoteEvent>>
+
+    @POST("events")
+    fun createEvent(@Header(TOKEN_FIELD) token: String, @Body body: CreateEventBody): Call<RemoteEvent>
 
 }

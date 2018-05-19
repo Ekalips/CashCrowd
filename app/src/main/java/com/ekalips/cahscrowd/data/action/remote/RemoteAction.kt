@@ -8,6 +8,6 @@ data class RemoteAction(@Json(name = "id") override var id: String,
                         @Json(name = "name") override var name: String,
                         @Json(name = "amount") override var amount: Double,
                         @Json(name = "user") override var userId: String,
-                        @Transient override var user: BaseUser?,
+                        @Transient override var user: BaseUser? = null,
                         @Json(name = "event") override var eventId: String = "",
                         @Json(name = "is_new") override var newAction: Boolean) : Action

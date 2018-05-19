@@ -1,9 +1,12 @@
 package com.ekalips.cahscrowd.di.modules
 
 import com.ekalips.cahscrowd.BuildConfig
+import com.ekalips.cahscrowd.data.action.Action
+import com.ekalips.cahscrowd.data.event.remote.ActionsJsonAdapter
 import com.ekalips.cahscrowd.network.Api
-import com.squareup.moshi.KotlinJsonAdapterFactory
+import com.ekalips.cahscrowd.network.interceptor.BearerInterceptor
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -21,6 +24,7 @@ class NetworkModule {
     internal fun provideMoshi(): Moshi {
         return Moshi.Builder()
                 .add(KotlinJsonAdapterFactory())
+                .add(Action::class.java, ActionsJsonAdapter())
                 .build()
     }
 
@@ -42,12 +46,19 @@ class NetworkModule {
         }
     }
 
+    @Provides
+    @Singleton
+    internal fun provideBearerInterceptor(): BearerInterceptor {
+        return BearerInterceptor()
+    }
+
 
     @Provides
     @Singleton
-    internal fun provideClient(loggingInterceptor: HttpLoggingInterceptor?): OkHttpClient {
+    internal fun provideClient(loggingInterceptor: HttpLoggingInterceptor?, bearerInterceptor: BearerInterceptor): OkHttpClient {
         val okhttpBuilder = OkHttpClient.Builder()
         loggingInterceptor?.let { okhttpBuilder.addInterceptor(it) }
+        okhttpBuilder.addInterceptor(bearerInterceptor)
         return okhttpBuilder.build()
     }
 

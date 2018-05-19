@@ -47,6 +47,11 @@ class EventsDataProvider @Inject constructor(private val userDataProvider: UserD
                 refreshState = refreshState)
     }
 
+    fun createEvent(title: String, description: String): Completable {
+        return userDataProvider.getAccessToken().flatMapCompletable { remoteEventDataStore.crateEvent(it, title, description) }
+                .wrap(errorHandler.getHandler())
+    }
+
     private fun refresh(): LiveData<NetworkState> {
         val state = MutableLiveData<NetworkState>()
         state.value = NetworkState.LOADING

@@ -3,6 +3,8 @@ package com.ekalips.cahscrowd.create_event.mvvm.vm
 import android.arch.lifecycle.MutableLiveData
 import com.ekalips.base.state.BaseViewState
 import com.ekalips.cahscrowd.create_event.mvvm.model.GuestUserWrap
+import com.ekalips.cahscrowd.data.event.EventsDataProvider
+import com.ekalips.cahscrowd.providers.ResourceProvider
 import com.ekalips.cahscrowd.stuff.base.CCViewModel
 import com.ekalips.cahscrowd.stuff.utils.ContactUtils
 import com.firebase.ui.auth.viewmodel.SingleLiveEvent
@@ -18,7 +20,8 @@ class CreateEventScreenViewState : BaseViewState() {
 
 }
 
-class CreateEventScreenViewModel @Inject constructor() : CCViewModel<CreateEventScreenViewState>() {
+class CreateEventScreenViewModel @Inject constructor(private val resourceProvider: ResourceProvider,
+                                                     private val eventsDataProvider: EventsDataProvider) : CCViewModel<CreateEventScreenViewState>() {
     override val state = CreateEventScreenViewState()
 
     fun onAddGuestClicked() {
@@ -51,7 +54,14 @@ class CreateEventScreenViewModel @Inject constructor() : CCViewModel<CreateEvent
         }
     }
 
-    fun createEvent(){
-        //todo implement this
+    fun createEvent() {
+        synchronized(lock) {
+            if (state.eventTitle.value.isNullOrBlank() || state.eventDescription.value.isNullOrBlank()) {
+                return
+            }
+        }
+        eventsDataProvider.createEvent(state.eventTitle.value!!, state.eventDescription.value!!).subscribe({
+            println("SUC")
+        }, Throwable::printStackTrace)
     }
 }
