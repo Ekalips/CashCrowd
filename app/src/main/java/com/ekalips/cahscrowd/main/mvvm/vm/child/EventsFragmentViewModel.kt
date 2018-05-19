@@ -10,7 +10,7 @@ import com.ekalips.cahscrowd.stuff.paging.NetworkState
 import com.firebase.ui.auth.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
-class EventFragmentViewState : BaseViewState() {
+class EventsFragmentViewState : BaseViewState() {
 
     val events = MediatorLiveData<PagedList<Event>>()
     val error = MediatorLiveData<String>()
@@ -20,8 +20,8 @@ class EventFragmentViewState : BaseViewState() {
 
 }
 
-class EventFragmentViewModel @Inject constructor(eventsDataProvider: EventsDataProvider) : CCViewModel<EventFragmentViewState>() {
-    override val state: EventFragmentViewState = EventFragmentViewState()
+class EventsFragmentViewModel @Inject constructor(eventsDataProvider: EventsDataProvider) : CCViewModel<EventsFragmentViewState>() {
+    override val state: EventsFragmentViewState = EventsFragmentViewState()
     private val listing = eventsDataProvider.getEvents()
 
     init {

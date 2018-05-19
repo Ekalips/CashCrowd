@@ -18,14 +18,16 @@ import com.ekalips.cahscrowd.stuff.TransitionListenerAdapter
 import com.ekalips.cahscrowd.stuff.utils.disposeBy
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
+import java.lang.ref.SoftReference
 import java.util.concurrent.atomic.AtomicBoolean
 
-class EventsRecyclerViewAdapter : PagedRecyclerViewAdapter<RvItemEventBinding, Event>(comparator) {
+class EventsRecyclerViewAdapter(callback: AdapterCallbacks? = null) : PagedRecyclerViewAdapter<RvItemEventBinding, Event>(comparator) {
     override val resId: Int = R.layout.rv_item_event
 
     private val disposables = HashMap<Any, CompositeDisposable?>()
     private val expandedStates = HashMap<String, Boolean>()
     private var expandLock = AtomicBoolean()
+    private val callback = SoftReference(callback)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingViewHolder<RvItemEventBinding> {
         return super.onCreateViewHolder(parent, viewType).also {
@@ -39,6 +41,7 @@ class EventsRecyclerViewAdapter : PagedRecyclerViewAdapter<RvItemEventBinding, E
         collapseOrExpand(holder, !(expandedStates[item?.id] ?: false), false)
         holder.binding.event = item
         (holder.binding.actionsRv.adapter as ActionsRecyclerViewAdapter).submitList(item?.actions)
+        holder.binding.onEventClick = Runnable { item?.let { callback.get()?.onEventClicked(item) } }
         holder.binding.expandIv.setOnClickListener {
             if (!expandLock.get()) {
                 collapseOrExpand(holder)
@@ -109,11 +112,14 @@ class EventsRecyclerViewAdapter : PagedRecyclerViewAdapter<RvItemEventBinding, E
         super.submitList(pagedList)
     }
 
+
+    interface AdapterCallbacks {
+        fun onEventClicked(event: Event)
+    }
+
     companion object {
         private val comparator = object : DiffUtil.ItemCallback<Event>() {
-            override fun areItemsTheSame(oldItem: Event?, newItem: Event?): Boolean =
-                    oldItem?.id == newItem?.id
-
+            override fun areItemsTheSame(oldItem: Event?, newItem: Event?): Boolean = oldItem?.id == newItem?.id
             override fun areContentsTheSame(oldItem: Event?, newItem: Event?): Boolean {
                 return false
             }

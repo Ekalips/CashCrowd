@@ -22,6 +22,10 @@
         <variable
             name="expanded"
             type="boolean" />
+
+        <variable
+            name="onEventClick"
+            type="Runnable"/>
     </data>
 
     <FrameLayout
@@ -41,6 +45,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="@{onEventClick}"
                 android:paddingBottom="10dp"
                 android:paddingTop="16dp">
 

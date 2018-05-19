@@ -22,6 +22,7 @@
         <activity android:name=".auth.mvvm.view.AuthActivity" />
         <activity android:name=".main.mvvm.view.MainActivity" />
         <activity android:name=".create_event.mvvm.view.CreateEventActivity" />
+        <activity android:name=".event.mvvm.view.EventActivity" />
     </application>
 
 </manifest>

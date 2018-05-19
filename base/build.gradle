@@ -30,6 +30,7 @@ dependencies {
 
     implementation "com.android.support:appcompat-v7:$appCompatVersion"
     implementation "com.android.support:recyclerview-v7:$appCompatVersion"
+    implementation "com.android.support:design:$appCompatVersion"
     implementation "android.arch.paging:runtime:$archPagingVersion"
 
 

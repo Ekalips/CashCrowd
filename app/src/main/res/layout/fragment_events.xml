@@ -6,7 +6,7 @@
 
         <variable
             name="vm"
-            type="com.ekalips.cahscrowd.main.mvvm.vm.child.EventFragmentViewModel" />
+            type="com.ekalips.cahscrowd.main.mvvm.vm.child.EventsFragmentViewModel" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"

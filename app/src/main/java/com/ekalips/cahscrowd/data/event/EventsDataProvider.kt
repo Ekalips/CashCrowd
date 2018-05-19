@@ -52,6 +52,10 @@ class EventsDataProvider @Inject constructor(private val userDataProvider: UserD
                 .wrap(errorHandler.getHandler())
     }
 
+    fun getEvent(eventId: String): LiveData<Event> {
+        return localEventsDataStore.getEvent(eventId)
+    }
+
     private fun refresh(): LiveData<NetworkState> {
         val state = MutableLiveData<NetworkState>()
         state.value = NetworkState.LOADING

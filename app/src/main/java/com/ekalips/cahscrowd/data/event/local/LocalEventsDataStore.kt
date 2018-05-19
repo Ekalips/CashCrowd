@@ -1,5 +1,6 @@
 package com.ekalips.cahscrowd.data.event.local
 
+import android.arch.lifecycle.LiveData
 import android.util.Log
 import com.ekalips.base.stuff.ifThen
 import com.ekalips.cahscrowd.data.action.local.LocalAction
@@ -46,5 +47,7 @@ class LocalEventsDataStore @Inject constructor(private val cashDB: CashDB,
             }
         }
     }
+
+    fun getEvent(eventId: String): LiveData<Event> = eventsDao.getEvent(eventId) as LiveData<Event>
 
 }

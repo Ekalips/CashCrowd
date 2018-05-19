@@ -10,6 +10,7 @@ import com.ekalips.cahscrowd.main.mvvm.vm.MainScreenViewModel
 import com.ekalips.cahscrowd.main.navigation.MainActivityNavigator
 import com.ekalips.cahscrowd.main.navigation.MainActivityPlace
 import com.ekalips.cahscrowd.stuff.base.CCActivity
+import com.ekalips.cahscrowd.stuff.navigation.Place
 import javax.inject.Inject
 
 class MainActivity : CCActivity<MainScreenViewModel, ActivityMainBinding>() {
@@ -41,5 +42,11 @@ class MainActivity : CCActivity<MainScreenViewModel, ActivityMainBinding>() {
             }
         }
         return@OnNavigationItemSelectedListener true
+    }
+
+    override fun handleNavigation(place: Place, payload: Any?) {
+        when (place) {
+            Place.EVENT -> navigator.navigateToEventScreen(this, payload as String)
+        }
     }
 }
