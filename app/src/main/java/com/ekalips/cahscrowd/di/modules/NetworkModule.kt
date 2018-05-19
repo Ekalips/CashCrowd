@@ -1,8 +1,6 @@
 package com.ekalips.cahscrowd.di.modules
 
 import com.ekalips.cahscrowd.BuildConfig
-import com.ekalips.cahscrowd.data.action.Action
-import com.ekalips.cahscrowd.data.event.remote.ActionsJsonAdapter
 import com.ekalips.cahscrowd.network.Api
 import com.ekalips.cahscrowd.network.interceptor.BearerInterceptor
 import com.squareup.moshi.Moshi
@@ -24,7 +22,6 @@ class NetworkModule {
     internal fun provideMoshi(): Moshi {
         return Moshi.Builder()
                 .add(KotlinJsonAdapterFactory())
-                .add(Action::class.java, ActionsJsonAdapter())
                 .build()
     }
 
