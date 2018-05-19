@@ -1,6 +1,6 @@
 ext {
 
-    devServerUrl = "http://api.airei.co/"
+    devServerUrl = "http://api.cashcr.tech/"
 
     appCompatVersion = "27.1.1"
     rxJavaVersion = "2.1.9"
