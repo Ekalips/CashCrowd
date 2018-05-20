@@ -19,7 +19,9 @@
             android:id="@+id/userIv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/gray"
+            android:background="@drawable/circle_background"
+            android:outlineProvider="background"
+            android:backgroundTint="@color/gray"
             app:backgroundTint='@{action.newAction?@color/transparentAccentTint:0}'
             app:placeholder="@{@drawable/ic_person}"
             app:src='@{action.user.avatar}'

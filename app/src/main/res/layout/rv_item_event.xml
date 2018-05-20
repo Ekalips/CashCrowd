@@ -160,7 +160,7 @@
                         android:layout_weight="1"
                         android:orientation="horizontal"
                         app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-                        tools:listitem="@layout/rv_item_event_action" />
+                        tools:listitem="@layout/rv_item_event_action_collapsible" />
 
                     <TextView
                         android:id="@+id/lastActionTimeTv"

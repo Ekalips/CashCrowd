@@ -8,7 +8,7 @@ import com.ekalips.base.stuff.views.CircleOutlineProvider
 import com.ekalips.cahscrowd.BR
 import com.ekalips.cahscrowd.R
 import com.ekalips.cahscrowd.data.action.Action
-import com.ekalips.cahscrowd.databinding.RvItemEventActionBinding
+import com.ekalips.cahscrowd.databinding.RvItemEventActionCollapsibleBinding
 
 class ActionsRecyclerViewAdapter : BindingRecyclerViewAdapter<ViewDataBinding, Action>() {
     override val resId: Int = 0
@@ -21,7 +21,7 @@ class ActionsRecyclerViewAdapter : BindingRecyclerViewAdapter<ViewDataBinding, A
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindingViewHolder<ViewDataBinding> {
-        return BindingViewHolder<RvItemEventActionBinding>(R.layout.rv_item_event_action, parent).also {
+        return BindingViewHolder<RvItemEventActionCollapsibleBinding>(R.layout.rv_item_event_action_collapsible, parent).also {
             it.binding.userIv.outlineProvider = CircleOutlineProvider()
             it.binding.userIv.clipToOutline = true
         }

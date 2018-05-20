@@ -8,31 +8,36 @@
             name="action"
             type="com.ekalips.cahscrowd.data.action.Action" />
 
+        <variable
+            name="expanded"
+            type="boolean" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingBottom="8dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="8dp">
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/userIv"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
-            android:background="@drawable/circle_background"
-            android:backgroundTint="@color/gray"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginBottom="@{expanded ? @dimen/d_2 : @dimen/d_0}"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginTop="@{expanded ? @dimen/d_2 : @dimen/d_0}"
+            android:background="@color/gray"
+            app:backgroundTint='@{action.newAction?@color/transparentAccentTint:0}'
             app:placeholder="@{@drawable/ic_person}"
             app:src='@{action.user.avatar}'
+            app:tint='@{action.newAction?@color/transparentAccentTint:0}'
             tools:src="@drawable/ic_person" />
 
         <Space
             android:layout_width="16dp"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:visibility="@{expanded}" />
 
         <com.ekalips.cahscrowd.stuff.views.HighlightableTextView
             android:layout_width="wrap_content"
@@ -41,6 +46,7 @@
             android:text="User Name spent 44$"
             android:textColor="@color/black"
             android:textStyle="normal"
+            android:visibility="@{expanded}"
             app:highlightStyle="bold"
             app:highlightText="User Name" />
 

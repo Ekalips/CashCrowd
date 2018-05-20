@@ -25,7 +25,7 @@ abstract class BaseViewModel<out State : BaseViewState> : ViewModel() {
         disposer.dispose()
     }
 
-    protected fun goBack() {
+    fun goBack() {
         state.back.call()
     }
 }
