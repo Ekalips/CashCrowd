@@ -1,18 +1,13 @@
 package com.ekalips.cahscrowd.data.action.local
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
-import io.reactivex.Flowable
 
 @Dao
 interface LocalActionsDao {
-    @Query("SELECT * FROM actions, users")
-    fun getActions(): List<LocalAction>
 
-    @Query("SELECT * FROM actions, users")
-    fun getActionsAsync(): Flowable<List<LocalAction>>
-
-    @Query("SELECT * FROM actions,users WHERE actionId = :id")
-    fun getAction(id: String): LocalAction?
+    @Query("SELECT * FROM actions INNER JOIN users ON actions.relatedUserId = users.userId WHERE relatedEventId = :eventId")
+    fun getActionsForEvent(eventId: String): LiveData<List<LocalAction>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(vararg actions: LocalAction)

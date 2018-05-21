@@ -26,6 +26,7 @@
             android:layout_height="52dp"
             android:background="@drawable/circle_background"
             android:backgroundTint="@color/gray"
+            android:outlineProvider="background"
             app:placeholder="@{@drawable/ic_person}"
             app:src='@{action.user.avatar}'
             tools:src="@drawable/ic_person" />
@@ -38,11 +39,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="1"
-            android:text="User Name spent 44$"
+            android:text="@{action.user.name}"
             android:textColor="@color/black"
             android:textStyle="normal"
             app:highlightStyle="bold"
-            app:highlightText="User Name" />
+            app:highlightText="@{action.user.name}"
+            tools:highlightText="User Name"
+            tools:text="User Name spent 200$" />
 
     </LinearLayout>
 </layout>

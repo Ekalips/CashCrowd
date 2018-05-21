@@ -44,7 +44,7 @@ class CreateEventActivity : CCActivity<CreateEventScreenViewModel, ActivityCreat
             appBarElevationThreshold = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8f, resources.displayMetrics)
             setUpToolbarScrolling(it)
             setSupportActionBar(it.toolbar)
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            supportActionBar?.setDisplayShowTitleEnabled(false)
             it.appBar.setPadding(0, getStatusBarHeight(), 0, 0)
             it.guestsRv.adapter = adapter
         }
@@ -53,7 +53,7 @@ class CreateEventActivity : CCActivity<CreateEventScreenViewModel, ActivityCreat
         viewModel.state.guests.observe(this, Observer { adapter.submitList(it) })
     }
 
-    private val adapterCallbacks = object: GuestsRecyclerViewAdapter.Companion.AdapterCallbacks{
+    private val adapterCallbacks = object : GuestsRecyclerViewAdapter.Companion.AdapterCallbacks {
         override fun onRemoveClick(guest: GuestUserWrap) {
             viewModel.onContactRemoved(guest)
         }
