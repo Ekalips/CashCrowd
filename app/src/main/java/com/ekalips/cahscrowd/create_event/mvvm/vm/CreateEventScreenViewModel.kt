@@ -2,6 +2,7 @@ package com.ekalips.cahscrowd.create_event.mvvm.vm
 
 import android.arch.lifecycle.MutableLiveData
 import com.ekalips.base.state.BaseViewState
+import com.ekalips.cahscrowd.R
 import com.ekalips.cahscrowd.create_event.mvvm.model.GuestUserWrap
 import com.ekalips.cahscrowd.data.event.EventsDataProvider
 import com.ekalips.cahscrowd.providers.ResourceProvider
@@ -61,7 +62,11 @@ class CreateEventScreenViewModel @Inject constructor(private val resourceProvide
             }
         }
         eventsDataProvider.createEvent(state.eventTitle.value!!, state.eventDescription.value!!).subscribe({
-            println("SUC")
-        }, Throwable::printStackTrace)
+            state.toast.postValue(resourceProvider.getString(R.string.success_event_create))
+            goBack()
+        }, {
+            it.printStackTrace()
+            state.toast.postValue(resourceProvider.getString(R.string.error_event_create))
+        })
     }
 }

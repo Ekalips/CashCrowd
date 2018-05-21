@@ -14,6 +14,9 @@ interface LocalEventsDao {
     @Query("SELECT * FROM events")
     fun getAllEventsDataSource(): DataSource.Factory<Int, LocalEventWithActions>
 
+    @Query("SELECT * FROM events")
+    fun getEvents(): List<LocalEventWithActions>
+
     @Query("DELETE FROM events")
     fun deleteAll()
 

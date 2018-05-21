@@ -10,6 +10,7 @@ import com.ekalips.cahscrowd.data.db.CashDB
 import com.ekalips.cahscrowd.data.event.Event
 import com.ekalips.cahscrowd.data.user.local.LocalUserDao
 import com.ekalips.cahscrowd.data.user.local.model.LocalBaseUser
+import io.reactivex.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,6 +22,8 @@ class LocalEventsDataStore @Inject constructor(private val cashDB: CashDB,
 
 
     fun getEventsDataSourceFactory() = eventsDao.getAllEventsDataSource()
+
+    fun getEvents() = Observable.fromCallable { eventsDao.getEvents() } as Observable<List<Event>>
 
     fun saveEvents(events: List<Event>?, clear: Boolean = false) {
         events?.let { Log.d(javaClass.simpleName, "Save Events: $it") }

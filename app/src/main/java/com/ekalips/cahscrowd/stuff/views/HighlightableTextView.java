@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
@@ -95,6 +96,7 @@ public class HighlightableTextView extends AppCompatTextView {
         if (highlightText == null)
             return;
         String newText = getText() == null ? "" : getText().toString();
+        if (TextUtils.isEmpty(newText)) return;
         boolean containsHighlightedText = newText.contains(highlightText);
         boolean textChanged = !newText.equals(lastText);
         if ((!containsHighlightedText || !textChanged) && !force)
@@ -110,14 +112,18 @@ public class HighlightableTextView extends AppCompatTextView {
         boolean isColor = containsFlag(highlightStyle, HIGHLIGHT_COLOR);
         boolean isSize = containsFlag(highlightStyle, HIGHLIGHT_SIZE);
         while (matcher.find()) {
+            int start = matcher.start();
+            int end = matcher.end();
+            if (start == end) continue;
+
             if (isBold) {
-                builder.setSpan(new StyleSpan(Typeface.BOLD), matcher.start(), matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                builder.setSpan(new StyleSpan(Typeface.BOLD), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
             if (isColor) {
-                builder.setSpan(new ForegroundColorSpan(highlightColor), matcher.start(), matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                builder.setSpan(new ForegroundColorSpan(highlightColor), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
             if (isSize) {
-                builder.setSpan(new RelativeSizeSpan(highlightSize), matcher.start(), matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                builder.setSpan(new RelativeSizeSpan(highlightSize), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
         setText(builder);

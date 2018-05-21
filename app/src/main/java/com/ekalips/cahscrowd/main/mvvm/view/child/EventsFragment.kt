@@ -36,13 +36,14 @@ class EventsFragment : CCFragment<EventsFragmentViewModel, MainScreenViewModel, 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        appBarElevationThreshold = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8F, resources.displayMetrics)
+        appBarElevationThreshold = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2F, resources.displayMetrics)
         viewModel.state.events.observe(this, Observer { adapter.submitList(it) })
         viewModel.state.addEventTrigger.observe(this, Observer { openAddEventDialog() })
     }
 
     override fun onBindingReady(binding: FragmentEventsBinding) {
-        viewModel.state.refreshing.observe(this, Observer { binding.swipeLay.isRefreshing = it ?: false })
+        viewModel.state.loading.observe(this, Observer { binding.swipeLay.isRefreshing = it ?: false })
+        viewModel.state.updateTrigger.observe(this, Observer { adapter.notifyItemRangeChanged(0, adapter.itemCount) })
         binding.eventsRecyclerView.adapter = adapter
         binding.swipeLay.setOnRefreshListener { viewModel.refresh() }
         setUpToolbarScrolling(binding)

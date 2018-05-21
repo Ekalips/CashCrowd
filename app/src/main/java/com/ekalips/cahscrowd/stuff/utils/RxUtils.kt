@@ -7,63 +7,59 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
-class RxUtils {
+object RxUtils {
 
-    companion object {
+    fun <T> wrapAsIO(observable: Observable<T>): Observable<T> {
+        return wrapAs(observable, Schedulers.io())
+    }
 
-        fun <T> wrapAsIO(observable: Observable<T>): Observable<T> {
-            return wrapAs(observable, Schedulers.io())
-        }
+    fun <T> wrapAsNewThread(observable: Observable<T>): Observable<T> {
+        return wrapAs(observable, Schedulers.newThread())
+    }
 
-        fun <T> wrapAsNewThread(observable: Observable<T>): Observable<T> {
-            return wrapAs(observable, Schedulers.newThread())
-        }
+    fun <T> wrapAs(observable: Observable<T>, scheduler: Scheduler): Observable<T> {
+        return observable
+                .subscribeOn(scheduler)
+                .observeOn(AndroidSchedulers.mainThread())
+    }
 
-        fun <T> wrapAs(observable: Observable<T>, scheduler: Scheduler): Observable<T> {
-            return observable
-                    .subscribeOn(scheduler)
+    fun <T> applyObservalbeIOSchedulers(): ObservableTransformer<T, T> {
+        return ObservableTransformer { upstream ->
+            upstream.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
         }
+    }
 
-        fun <T> applyObservalbeIOSchedulers(): ObservableTransformer<T, T> {
-            return ObservableTransformer { upstream ->
-                upstream.subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-            }
+    fun <T> applySignleIOSchedulers(): SingleTransformer<T, T> {
+        return SingleTransformer { observable ->
+            observable.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
         }
+    }
 
-        fun <T> applySignleIOSchedulers(): SingleTransformer<T, T> {
-            return SingleTransformer { observable ->
-                observable.subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-            }
+    fun applyCompletableIOSchedulers(): CompletableTransformer {
+        return CompletableTransformer { upstream ->
+            upstream.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
         }
+    }
 
-        fun applyCompletableIOSchedulers(): CompletableTransformer {
-            return CompletableTransformer { upstream ->
-                upstream.subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-            }
+    fun <T> throwOrWrapObservable(handler: (Throwable) -> Boolean): ObservableTransformer<T, T> {
+        return ObservableTransformer {
+            it.onErrorResumeNext { t: Throwable -> if (handler(t)) Observable.error(InsignificantError(t)) else Observable.error(t) }
         }
+    }
 
-        fun <T> throwOrWrapObservable(handler: (Throwable) -> Boolean): ObservableTransformer<T, T> {
-            return ObservableTransformer {
-                it.onErrorResumeNext { t: Throwable -> if (handler(t)) Observable.error(InsignificantError(t)) else Observable.error(t) }
-            }
+    fun throwOrWrapCompletable(handler: (Throwable) -> Boolean): CompletableTransformer {
+        return CompletableTransformer {
+            it.onErrorResumeNext { t: Throwable -> if (handler(t)) Completable.error(InsignificantError(t)) else Completable.error(t) }
         }
+    }
 
-        fun throwOrWrapCompletable(handler: (Throwable) -> Boolean): CompletableTransformer {
-            return CompletableTransformer {
-                it.onErrorResumeNext { t: Throwable -> if (handler(t)) Completable.error(InsignificantError(t)) else Completable.error(t) }
-            }
+    fun <T> throwOrWrapSingle(handler: (Throwable) -> Boolean): SingleTransformer<T, T> {
+        return SingleTransformer {
+            it.onErrorResumeNext { t: Throwable -> if (handler(t)) Single.error(InsignificantError(t)) else Single.error(t) }
         }
-
-        fun <T> throwOrWrapSingle(handler: (Throwable) -> Boolean): SingleTransformer<T, T> {
-            return SingleTransformer {
-                it.onErrorResumeNext { t: Throwable -> if (handler(t)) Single.error(InsignificantError(t)) else Single.error(t) }
-            }
-        }
-
     }
 
 }

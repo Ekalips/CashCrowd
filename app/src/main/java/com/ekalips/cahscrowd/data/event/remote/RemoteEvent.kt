@@ -8,7 +8,7 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class RemoteEvent(@Json(name = "_id") override var id: String,
-                       @Json(name = "title") override var name: String,
+                       @Json(name = "title") override var name: String = "title",
                        @Json(name = "description") override var description: String = "") : Event {
 
     @Json(name = "actions")

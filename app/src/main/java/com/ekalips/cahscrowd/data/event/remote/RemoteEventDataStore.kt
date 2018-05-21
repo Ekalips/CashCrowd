@@ -1,6 +1,5 @@
 package com.ekalips.cahscrowd.data.event.remote
 
-import android.util.Log
 import com.ekalips.cahscrowd.data.event.Event
 import com.ekalips.cahscrowd.network.Api
 import com.ekalips.cahscrowd.network.body.CreateEventBody
@@ -28,9 +27,14 @@ class RemoteEventDataStore @Inject constructor(private val api: Api) {
 //            RemoteEvent("event5", "name5", "desc5", listOf())
 //    )
 
-    fun getEvents(token: String, afterEventId: String?, pageSize: Int): Single<List<Event>> {
-        Log.e(javaClass.simpleName, "GET EVENTS")
-        return Single.never()
+    fun getEvents(token: String): Single<List<Event>> {
+        return Single.fromCallable {
+            val result = api.getEvents(token).execute()
+            if (result.isSuccessful){
+                return@fromCallable result.body()!!
+            }
+            throw ServerError(result.code())
+        }
     }
 
     fun crateEvent(token: String, title: String, description: String): Completable {

@@ -23,4 +23,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="error_event_not_found">Event not found</string>
+    <string name="participant">Participant</string>
+    <string name="action_info_income">%s invested %s</string>
+    <string name="action_info_spent">%s spent %s</string>
+    <string name="success_event_create">Event successfully created</string>
+    <string name="error_event_create">Error creating event</string>
 </resources>

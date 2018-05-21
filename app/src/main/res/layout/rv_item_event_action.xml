@@ -4,6 +4,8 @@
 
     <data>
 
+        <import type="com.ekalips.cahscrowd.stuff.utils.EventUtils" />
+
         <variable
             name="action"
             type="com.ekalips.cahscrowd.data.action.Action" />
@@ -39,11 +41,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="1"
-            android:text="@{action.user.name}"
+            android:text="@{EventUtils.getEventActionInfo(context, action)}"
             android:textColor="@color/black"
             android:textStyle="normal"
             app:highlightStyle="bold"
-            app:highlightText="@{action.user.name}"
+            app:highlightText="@{EventUtils.getUserName(context, action)}"
             tools:highlightText="User Name"
             tools:text="User Name spent 200$" />
 

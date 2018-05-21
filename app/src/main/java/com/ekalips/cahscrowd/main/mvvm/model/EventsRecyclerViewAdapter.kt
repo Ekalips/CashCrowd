@@ -1,6 +1,5 @@
 package com.ekalips.cahscrowd.main.mvvm.model
 
-import android.arch.paging.PagedList
 import android.graphics.drawable.Animatable
 import android.support.transition.AutoTransition
 import android.support.transition.Transition
@@ -9,8 +8,8 @@ import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.view.ViewGroup
+import com.ekalips.base.rv.BindingRecyclerViewAdapter
 import com.ekalips.base.rv.BindingViewHolder
-import com.ekalips.base.rv.PagedRecyclerViewAdapter
 import com.ekalips.cahscrowd.R
 import com.ekalips.cahscrowd.data.event.Event
 import com.ekalips.cahscrowd.databinding.RvItemEventBinding
@@ -21,7 +20,7 @@ import io.reactivex.disposables.CompositeDisposable
 import java.lang.ref.SoftReference
 import java.util.concurrent.atomic.AtomicBoolean
 
-class EventsRecyclerViewAdapter(callback: AdapterCallbacks? = null) : PagedRecyclerViewAdapter<RvItemEventBinding, Event>(comparator) {
+class EventsRecyclerViewAdapter(callback: AdapterCallbacks? = null) : BindingRecyclerViewAdapter<RvItemEventBinding, Event>(DIFF_CALLBACK) {
     override val resId: Int = R.layout.rv_item_event
 
     private val disposables = HashMap<Any, CompositeDisposable?>()
@@ -49,6 +48,7 @@ class EventsRecyclerViewAdapter(callback: AdapterCallbacks? = null) : PagedRecyc
             }
         }
         calcStuffFor(holder.binding.root, item, { holder.binding.newCount = it })
+        holder.binding.executePendingBindings()
     }
 
     private fun collapseOrExpand(holder: BindingViewHolder<RvItemEventBinding>) {
@@ -102,14 +102,12 @@ class EventsRecyclerViewAdapter(callback: AdapterCallbacks? = null) : PagedRecyc
         disposables[key] = disposer
     }
 
-    override fun submitList(pagedList: PagedList<Event>?) {
+    override fun submitList(data: List<Event>?) {
         expandedStates.clear()
-        pagedList?.forEach {
+        data?.forEach {
             expandedStates[it.id] = false
         }
-
-
-        super.submitList(pagedList)
+        super.submitList(data)
     }
 
 
@@ -118,10 +116,13 @@ class EventsRecyclerViewAdapter(callback: AdapterCallbacks? = null) : PagedRecyc
     }
 
     companion object {
-        private val comparator = object : DiffUtil.ItemCallback<Event>() {
-            override fun areItemsTheSame(oldItem: Event?, newItem: Event?): Boolean = oldItem?.id == newItem?.id
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Event>() {
+            override fun areItemsTheSame(oldItem: Event?, newItem: Event?): Boolean {
+                return oldItem?.id == newItem?.id
+            }
+
             override fun areContentsTheSame(oldItem: Event?, newItem: Event?): Boolean {
-                return false
+                return oldItem?.name == newItem?.name && oldItem?.description == newItem?.description // todo check list
             }
 
         }

@@ -1,17 +1,10 @@
 package com.ekalips.cahscrowd.data.event
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Transformations
-import android.arch.paging.DataSource
-import android.arch.paging.LivePagedListBuilder
 import com.ekalips.cahscrowd.data.event.local.LocalEventsDataStore
-import com.ekalips.cahscrowd.data.event.paginate.EventsBoundaryCallback
 import com.ekalips.cahscrowd.data.event.remote.RemoteEventDataStore
 import com.ekalips.cahscrowd.data.user.UserDataProvider
 import com.ekalips.cahscrowd.stuff.ErrorHandler
-import com.ekalips.cahscrowd.stuff.paging.Listing
-import com.ekalips.cahscrowd.stuff.paging.NetworkState
 import com.ekalips.cahscrowd.stuff.utils.wrap
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -28,23 +21,30 @@ class EventsDataProvider @Inject constructor(private val userDataProvider: UserD
         private const val DEFAULT_NETWORK_PAGE_SIZE = 30
     }
 
-    fun getEvents(): Listing<Event> {
-        val boundaryCallback = EventsBoundaryCallback({ lastId -> fetchEventsRemotely(lastId) },
-                { saveEvents(it, false) })
-        val factory = localEventsDataStore.getEventsDataSourceFactory() as DataSource.Factory<Int, Event>
-        val builder = LivePagedListBuilder(factory, DEFAULT_NETWORK_PAGE_SIZE)
-                .setBoundaryCallback(boundaryCallback)
-        val refreshTrigger = MutableLiveData<Void>()
-        val refreshState = Transformations.switchMap(refreshTrigger, { refresh() })
-        return Listing(pagedList = builder.build(),
-                networkState = boundaryCallback.networkState,
-                retry = {
-                    boundaryCallback.helper.retryAllFailed()
-                },
-                refresh = {
-                    refreshTrigger.value = null
-                },
-                refreshState = refreshState)
+//    fun getEventsListing(): Listing<Event> {
+//        val boundaryCallback = EventsBoundaryCallback({ lastId -> fetchEventsRemotely(lastId) },
+//                { saveEvents(it, false) })
+//        val factory = localEventsDataStore.getEventsDataSourceFactory() as DataSource.Factory<Int, Event>
+//        val builder = LivePagedListBuilder(factory, DEFAULT_NETWORK_PAGE_SIZE)
+//                .setBoundaryCallback(boundaryCallback)
+//        val refreshTrigger = MutableLiveData<Void>()
+//        val refreshState = Transformations.switchMap(refreshTrigger, { refresh() })
+//        return Listing(pagedList = builder.build(),
+//                networkState = boundaryCallback.networkState,
+//                retry = {
+//                    boundaryCallback.helper.retryAllFailed()
+//                },
+//                refresh = {
+//                    refreshTrigger.value = null
+//                },
+//                refreshState = refreshState)
+//    }
+
+    fun getEvents(): Observable<List<Event>> {
+        return Observable.concatDelayError(Observable.just(localEventsDataStore.getEvents(),
+                userDataProvider.getAccessToken().flatMap { remoteEventDataStore.getEvents(it) }.toObservable()
+                        .doOnNext({ saveEvents(it) })))
+                .wrap(errorHandler.getHandler())
     }
 
     fun createEvent(title: String, description: String): Completable {
@@ -56,22 +56,22 @@ class EventsDataProvider @Inject constructor(private val userDataProvider: UserD
         return localEventsDataStore.getEvent(eventId)
     }
 
-    private fun refresh(): LiveData<NetworkState> {
-        val state = MutableLiveData<NetworkState>()
-        state.value = NetworkState.LOADING
-        fetchEventsRemotely(null)
-                .subscribe({
-                    saveEvents(it, true)
-                    state.postValue(NetworkState.LOADED)
-                }, { state.postValue(NetworkState.error(it.message)) })
-        return state
-    }
-
-    private fun fetchEventsRemotely(afterEventId: String?): Observable<List<Event>> {
-        return userDataProvider.getAccessToken().flatMap { remoteEventDataStore.getEvents(it, afterEventId, DEFAULT_NETWORK_PAGE_SIZE) }
-                .wrap(errorHandler.getHandler())
-                .toObservable()
-    }
+//    private fun refresh(): LiveData<NetworkState> {
+//        val state = MutableLiveData<NetworkState>()
+//        state.value = NetworkState.LOADING
+//        fetchEventsRemotely(null)
+//                .subscribe({
+//                    saveEvents(it, true)
+//                    state.postValue(NetworkState.LOADED)
+//                }, { state.postValue(NetworkState.error(it.message)) })
+//        return state
+//    }
+//
+//    private fun fetchEventsRemotely(afterEventId: String?): Observable<List<Event>> {
+//        return userDataProvider.getAccessToken().flatMap { remoteEventDataStore.getEvents(it, afterEventId, DEFAULT_NETWORK_PAGE_SIZE) }
+//                .wrap(errorHandler.getHandler())
+//                .toObservable()
+//    }
 
     private fun saveEvents(events: List<Event>?, clear: Boolean = false) {
         Completable.fromCallable {
