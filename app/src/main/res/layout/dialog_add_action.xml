@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="negative"
+            type="boolean" />
+
+        <variable
+            name="amount"
+            type="android.arch.lifecycle.MutableLiveData&lt;String>" />
+
+        <variable
+            name="onCancel"
+            type="Runnable" />
+
+        <variable
+            name="onAccept"
+            type="Runnable" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingEnd="4dp"
+            android:paddingStart="4dp"
+            android:text="@{negative?@string/add_action_withdraw_title:@string/add_action_income_title}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            tools:text="@string/add_action_income_title" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="8dp" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hit_how_much_money"
+                android:inputType="numberDecimal"
+                android:text="@={amount}" />
+        </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:orientation="horizontal">
+
+            <Button
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@android:string/cancel"
+                android:onClick="@{onCancel}"/>
+
+            <Button
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{onAccept}"
+                android:text="@{negative?@string/add_action_withdraw_accept:@string/add_action_income_accept}"
+                tools:text="@string/add_action_income_accept" />
+
+        </LinearLayout>
+    </LinearLayout>
+</layout>

@@ -29,6 +29,14 @@
     <string name="success_event_create">Event successfully created</string>
     <string name="error_event_create">Error creating event</string>
     <string name="add_action_title">What\'s you up to?</string>
-    <string name="add_action_income_btn">I\'ve got some money</string>
+    <string name="add_action_income_btn">I brought cash</string>
     <string name="add_action_withdraw_btn">I want to take some</string>
+    <string name="add_action_income_title">Put in money</string>
+    <string name="hit_how_much_money">How much?</string>
+    <string name="add_action_withdraw_title">Take money</string>
+
+    <string name="add_action_withdraw_accept">Take</string>
+    <string name="add_action_income_accept">Put</string>
+    <string name="error_create_action">Error creating action</string>
+    <string name="success_create_action">You successfully created action</string>
 </resources>

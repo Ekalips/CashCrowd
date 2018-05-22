@@ -1,11 +1,14 @@
 package com.ekalips.cahscrowd.event.mvvm.view
 
 
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.view.ViewPager
+import android.support.v7.app.AlertDialog
 import android.util.TypedValue
 import android.view.View
 import com.ekalips.base.stuff.TitledFragmentPagerAdapter
@@ -13,6 +16,7 @@ import com.ekalips.base.stuff.getStatusBarHeight
 import com.ekalips.cahscrowd.BR
 import com.ekalips.cahscrowd.R
 import com.ekalips.cahscrowd.databinding.ActivityEventBinding
+import com.ekalips.cahscrowd.databinding.DialogAddActionBinding
 import com.ekalips.cahscrowd.event.mvvm.model.EventActionsRecyclerViewAdapter
 import com.ekalips.cahscrowd.event.mvvm.view.child.EventActionsFragment
 import com.ekalips.cahscrowd.event.mvvm.vm.EventScreenPages
@@ -39,7 +43,7 @@ class EventActivity : CCActivity<EventScreenViewModel, ActivityEventBinding>() {
         val adapter = EventActionsRecyclerViewAdapter()
         viewModel.state.event.observe(this, Observer { adapter.submitList(it?.actions) })
         viewModel.state.currentPage.observe(this, Observer { it?.let { onStatePageChangeListener(it) } })
-        viewModel.state.addActionTrigger.observe(this, Observer { showAddActionDialog() })
+        viewModel.state.addActionTrigger.observe(this, Observer { showAddActionSelectorDialog() })
         initViewPager()
         extractEventId(intent)?.let {
             viewModel.init(it)
@@ -88,7 +92,7 @@ class EventActivity : CCActivity<EventScreenViewModel, ActivityEventBinding>() {
         }
     }
 
-    private fun showAddActionDialog() {
+    private fun showAddActionSelectorDialog() {
         val dp16 = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, resources.displayMetrics)
 
         val dialogBuilder = FabExpandingDialog.Companion.FabExpandingDialogBuilder.create(this)
@@ -117,12 +121,29 @@ class EventActivity : CCActivity<EventScreenViewModel, ActivityEventBinding>() {
         }
 
         override fun onFirstOptionSelected() {
-
+            showAddActionDialog(false)
         }
 
         override fun onSecondOptionSelected() {
-
+            showAddActionDialog(true)
         }
+    }
+
+    private fun showAddActionDialog(isNegative: Boolean) {
+        val dialogBinding = DataBindingUtil.inflate<DialogAddActionBinding>(layoutInflater, R.layout.dialog_add_action, null, false)
+        val amount = MutableLiveData<String>()
+        dialogBinding.negative = isNegative
+        dialogBinding.amount = amount
+
+        val dialog = AlertDialog.Builder(this)
+                .setView(dialogBinding.root)
+                .show()
+
+        dialogBinding.onAccept = Runnable {
+            val created = viewModel.createAction(amount.value, isNegative)
+            if (created) dialog.dismiss()
+        }
+        dialogBinding.onCancel = Runnable { dialog.dismiss() }
     }
 
     companion object {

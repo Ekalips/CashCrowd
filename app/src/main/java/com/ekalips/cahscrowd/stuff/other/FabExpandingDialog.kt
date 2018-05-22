@@ -74,7 +74,7 @@ class FabExpandingDialog : DialogFragment() {
             fabBottomMargin = args.getFloat(ARG_INITIAL_BOTTOM_MARGIN)
             fabEndMargin = args.getFloat(ARG_INITIAL_END_MARGIN)
 
-            firstActionName = binding.secondBtn.text.toString()
+            firstActionName = binding.firstBtn.text.toString()
         }
     }
 

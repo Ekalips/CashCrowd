@@ -11,6 +11,7 @@ import com.ekalips.cahscrowd.stuff.data.Listing
 import com.ekalips.cahscrowd.stuff.paging.NetworkState
 import com.ekalips.cahscrowd.stuff.utils.wrap
 import com.firebase.ui.auth.viewmodel.SingleLiveEvent
+import io.reactivex.Completable
 import io.reactivex.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -48,6 +49,12 @@ class ActionsDataProvider @Inject constructor(private val userDataProvider: User
 
     fun saveActionsForEvent(eventId: String, vararg actions: Action, clear: Boolean = false) {
         localActionsDataSource.saveActionsForEvent(eventId, *actions, clear = clear)
+    }
+
+    fun createAction(eventId: String, amount: Double): Completable {
+        return Completable.fromSingle(userDataProvider.getAccessToken().flatMap { remoteActionsDataSource.createAction(it, eventId, amount) }
+                .doOnSuccess { saveActionsForEvent(eventId, it, clear = false) })
+                .wrap(errorHandler.getHandler())
     }
 
 }
