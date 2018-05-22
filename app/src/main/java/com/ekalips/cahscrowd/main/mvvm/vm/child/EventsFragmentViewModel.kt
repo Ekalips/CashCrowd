@@ -60,7 +60,8 @@ class EventsFragmentViewModel @Inject constructor(private val eventsDataProvider
 
     private fun getUsersAndFillList(userIds: List<String>?) {
         userIds?.let {
-            userDataProvider.getUsersSmart(*it.toTypedArray()).subscribe({ onUsersFetched(it) }, { it.printStackTrace() })
+            if (it.isNotEmpty())
+                userDataProvider.getUsersSmart(*it.toTypedArray()).subscribe({ onUsersFetched(it) }, { it.printStackTrace() })
         }
     }
 
