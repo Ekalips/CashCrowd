@@ -66,7 +66,7 @@ class EventsDataProvider @Inject constructor(private val userDataProvider: UserD
 
     fun getEventParticipants(eventId: String): Single<List<BaseUser>> {
         return userDataProvider.getAccessToken().flatMap { remoteEventDataStore.getEventParticipants(it, eventId) }
-                .doAfterSuccess { userDataProvider.saveUsers(*it.toTypedArray()) }
+//                .doAfterSuccess { userDataProvider.saveUsers(*it.toTypedArray()) }
                 .wrap(errorHandler.getHandler())
     }
 

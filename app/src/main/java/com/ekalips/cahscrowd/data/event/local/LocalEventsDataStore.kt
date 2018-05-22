@@ -24,7 +24,6 @@ class LocalEventsDataStore @Inject constructor(private val cashDB: CashDB,
     fun getEventsDataSourceFactory() = eventsDao.getAllEventsDataSource()
 
     fun getEvents() = Observable.fromCallable { eventsDao.getEvents() } as Observable<List<Event>>
-
     fun getEventsLiveData() = eventsDao.getEventsLiveData() as LiveData<List<Event>>
 
     fun saveEvents(events: List<Event>?, clear: Boolean = false) {
@@ -32,9 +31,10 @@ class LocalEventsDataStore @Inject constructor(private val cashDB: CashDB,
         events?.let {
             val actions = ArrayList<LocalAction>()
             val mappedEvents = ArrayList<LocalEvent>()
-            events.forEach {
-                actions.addAll((it.actions ?: ArrayList()).map { it.toLocal() })
-                mappedEvents.add(it.toLocal().also { it.actions = null })
+            events.forEach { event ->
+                actions.addAll((event.actions ?: ArrayList())
+                        .map { it.toLocal().also { it.eventId = event.id } })
+                mappedEvents.add(event.toLocal().also { it.actions = null })
             }
 
             val users = usersDao.getAllUsers()

@@ -6,10 +6,12 @@ import android.arch.persistence.room.*
 @Dao
 interface LocalActionsDao {
 
-    @Query("SELECT * FROM actions INNER JOIN users ON actions.relatedUserId = users.userId WHERE relatedEventId = :eventId")
+    @Query("SELECT * FROM actions LEFT JOIN users ON actions.relatedUserId = users.userId WHERE relatedEventId = :eventId")
+    @Transaction
     fun getActionsForEvent(eventId: String): List<LocalAction>
 
-    @Query("SELECT * FROM actions INNER JOIN users ON actions.relatedUserId = users.userId WHERE relatedEventId = :eventId")
+    @Query("SELECT * FROM actions LEFT JOIN users ON actions.relatedUserId = users.userId WHERE relatedEventId = :eventId")
+    @Transaction
     fun getActionsForEventLiveData(eventId: String): LiveData<List<LocalAction>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

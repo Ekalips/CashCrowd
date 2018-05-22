@@ -30,7 +30,7 @@ object EventUtils {
         return action?.let {
             val userName = getUserName(context, action)
 
-            val amount = formatCurrency(it.amount)
+            val amount = formatCurrency(Math.abs(it.amount))
 
             return when {
                 it.amount > 0 -> context.getString(R.string.action_info_income, userName, amount)

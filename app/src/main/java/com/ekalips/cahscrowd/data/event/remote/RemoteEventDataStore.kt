@@ -41,7 +41,7 @@ class RemoteEventDataStore @Inject constructor(private val api: Api) {
         return Single.fromCallable {
             val result = api.getEvent(token, eventId).execute()
             if (result.isSuccessful) {
-                return@fromCallable result.body()!!
+                return@fromCallable result.body()!!.also { event -> event.actions?.forEach { it.eventId = event.id } }
             }
             throw ServerError(result.code())
         }
@@ -62,7 +62,7 @@ class RemoteEventDataStore @Inject constructor(private val api: Api) {
         return Single.fromCallable {
             val result = api.createEvent(token, CreateEventBody(title, description)).execute()
             if (result.isSuccessful) {
-                return@fromCallable result.body()!!
+                return@fromCallable result.body()!!.also { event -> event.actions?.forEach { it.eventId = event.id } }
             }
             throw ServerError(result.code())
         }
@@ -82,7 +82,7 @@ class RemoteEventDataStore @Inject constructor(private val api: Api) {
         return Single.fromCallable {
             val result = api.acceptInviteCode(token, inviteCode).execute()
             if (result.isSuccessful) {
-                return@fromCallable result.body()!!
+                return@fromCallable result.body()!!.also { event -> event.actions?.forEach { it.eventId = event.id } }
             }
             throw ServerError(result.code())
         }

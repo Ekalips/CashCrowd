@@ -2,10 +2,7 @@ package com.ekalips.cahscrowd.data.event.local
 
 import android.arch.lifecycle.LiveData
 import android.arch.paging.DataSource
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy
-import android.arch.persistence.room.Query
+import android.arch.persistence.room.*
 
 @Dao
 interface LocalEventsDao {
@@ -23,9 +20,11 @@ interface LocalEventsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(vararg events: LocalEvent)
 
+    @Transaction
     @Query("SELECT * FROM events where eventId = :eventId")
     fun getEvent(eventId: String): LiveData<LocalEventWithActions>
 
+    @Transaction
     @Query("SELECT * FROM events")
     fun getEventsLiveData(): LiveData<List<LocalEventWithActions>>
 }

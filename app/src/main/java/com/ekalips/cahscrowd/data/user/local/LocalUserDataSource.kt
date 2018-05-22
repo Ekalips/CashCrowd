@@ -1,5 +1,6 @@
 package com.ekalips.cahscrowd.data.user.local
 
+import com.ekalips.cahscrowd.data.db.CashDB
 import com.ekalips.cahscrowd.data.user.local.model.LocalBaseUser
 import com.ekalips.cahscrowd.data.user.local.model.LocalThisUser
 import com.ekalips.cahscrowd.data.user.local.model.toLocal
@@ -9,7 +10,8 @@ import com.ekalips.cahscrowd.providers.SharedPreferencesProvider
 import io.reactivex.Single
 import javax.inject.Inject
 
-class LocalUserDataSource @Inject constructor(private val userDao: LocalUserDao,
+class LocalUserDataSource @Inject constructor(private val cashDB: CashDB,
+                                              private val userDao: LocalUserDao,
                                               sharedPreferencesProvider: SharedPreferencesProvider) {
 
     private val userSharedPrefs = sharedPreferencesProvider.getNamedPreferences(USER_PREFS_NAME)
@@ -33,7 +35,9 @@ class LocalUserDataSource @Inject constructor(private val userDao: LocalUserDao,
     }
 
     fun saveUser(user: BaseUser) {
-        userDao.insert(user.toLocal())
+        cashDB.runInTransaction {
+            userDao.insert(user.toLocal())
+        }
     }
 
     fun saveMyUser(user: ThisUser) {
@@ -48,7 +52,9 @@ class LocalUserDataSource @Inject constructor(private val userDao: LocalUserDao,
     fun getAll(): Single<List<BaseUser>> = Single.fromCallable { userDao.getAllUsers() }
 
     fun saveUsers(vararg users: BaseUser) {
-        users.forEach { saveUser(it) }
+        cashDB.runInTransaction {
+            userDao.insert(*users.map { it.toLocal() }.toTypedArray())
+        }
     }
 
     companion object {

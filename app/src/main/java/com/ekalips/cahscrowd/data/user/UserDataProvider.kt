@@ -70,8 +70,9 @@ class UserDataProvider @Inject constructor(private val localUserDataSource: Loca
     }
 
     fun saveUsers(vararg users: BaseUser) {
-        Observable.fromIterable(users.toList())
-                .subscribe({ localUserDataSource.saveUser(it) }, { println("Error saving user"); it.printStackTrace() })
+        Completable.fromAction { localUserDataSource.saveUsers(*users) }
+                .wrap(errorHandler.getHandler())
+                .subscribe({ "${users.size} users saved" }, { println("Error saving user"); it.printStackTrace() })
 
     }
 

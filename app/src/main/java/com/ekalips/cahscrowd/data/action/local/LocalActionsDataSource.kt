@@ -36,6 +36,10 @@ class LocalActionsDataSource @Inject constructor(private val cashDB: CashDB,
 
     }
 
-    fun getActionsForEventLiveData(eventId: String): LiveData<List<Action>> = actionsDao.getActionsForEventLiveData(eventId) as LiveData<List<Action>>
+    fun getActionsForEventLiveData(eventId: String): LiveData<List<Action>>{
+        return actionsDao.getActionsForEventLiveData(eventId) as LiveData<List<Action>>
+
+    }
+
 
 }
