@@ -14,7 +14,7 @@ class RemoteActionsDataSource @Inject constructor(private val api: Api) {
         return Single.fromCallable {
             val response = api.getEventActions(token, eventId).execute()
             if (response.isSuccessful) {
-                return@fromCallable response.body()!!
+                return@fromCallable response.body()!!.also { it.forEach { it.eventId = eventId } }
             }
             throw ServerError(response.code())
         }
@@ -24,7 +24,7 @@ class RemoteActionsDataSource @Inject constructor(private val api: Api) {
         return Single.fromCallable {
             val response = api.createAction(token, eventId, CreateActionBody(amount)).execute()
             if (response.isSuccessful) {
-                return@fromCallable response.body()!!
+                return@fromCallable response.body()!!.also { it.eventId = eventId }
             }
             throw ServerError(response.code())
         }

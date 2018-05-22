@@ -4,7 +4,6 @@ import com.ekalips.cahscrowd.data.event.Event
 import com.ekalips.cahscrowd.network.Api
 import com.ekalips.cahscrowd.network.body.CreateEventBody
 import com.ekalips.cahscrowd.stuff.ServerError
-import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,8 +29,8 @@ class RemoteEventDataStore @Inject constructor(private val api: Api) {
     fun getEvents(token: String): Single<List<Event>> {
         return Single.fromCallable {
             val result = api.getEvents(token).execute()
-            if (result.isSuccessful){
-                return@fromCallable result.body()!!
+            if (result.isSuccessful) {
+                return@fromCallable result.body()!!.also { it.forEach { event -> event.actions?.forEach { it.eventId = event.id } } }
             }
             throw ServerError(result.code())
         }

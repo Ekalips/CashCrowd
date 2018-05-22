@@ -27,5 +27,5 @@ interface LocalEventsDao {
     fun getEvent(eventId: String): LiveData<LocalEventWithActions>
 
     @Query("SELECT * FROM events")
-    fun getEventsLiveData(): LiveData<List<LocalEvent>>
+    fun getEventsLiveData(): LiveData<List<LocalEventWithActions>>
 }
