@@ -1,5 +1,6 @@
 package com.ekalips.cahscrowd.data.action.local
 
+import android.arch.lifecycle.LiveData
 import com.ekalips.base.stuff.ifThen
 import com.ekalips.cahscrowd.data.action.Action
 import com.ekalips.cahscrowd.data.db.CashDB
@@ -34,5 +35,7 @@ class LocalActionsDataSource @Inject constructor(private val cashDB: CashDB,
         }
 
     }
+
+    fun getActionsForEventLiveData(eventId: String): LiveData<List<Action>> = actionsDao.getActionsForEventLiveData(eventId) as LiveData<List<Action>>
 
 }

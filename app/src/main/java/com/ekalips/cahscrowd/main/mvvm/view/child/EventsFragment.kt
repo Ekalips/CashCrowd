@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.util.TypedValue
 import android.view.View
+import com.ekalips.base.stuff.getBottomNavBarHeight
 import com.ekalips.cahscrowd.BR
 import com.ekalips.cahscrowd.R
 import com.ekalips.cahscrowd.data.event.Event
@@ -14,6 +15,7 @@ import com.ekalips.cahscrowd.main.mvvm.vm.MainScreenViewModel
 import com.ekalips.cahscrowd.main.mvvm.vm.child.EventsFragmentViewModel
 import com.ekalips.cahscrowd.stuff.base.CCFragment
 import com.ekalips.cahscrowd.stuff.navigation.Place
+import com.ekalips.cahscrowd.stuff.other.FabExpandingDialog
 
 class EventsFragment : CCFragment<EventsFragmentViewModel, MainScreenViewModel, FragmentEventsBinding>() {
     override val vmClass: Class<EventsFragmentViewModel> = EventsFragmentViewModel::class.java
@@ -62,16 +64,26 @@ class EventsFragment : CCFragment<EventsFragmentViewModel, MainScreenViewModel, 
     }
 
     private fun openAddEventDialog() {
-        val dialog = CreateEventDialogFragment.newInstance()
+        val endMargin = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16f, resources.displayMetrics)
+        val bottomMargin = endMargin + context.getBottomNavBarHeight() + endMargin / 2
+        val dialogBuilder = FabExpandingDialog.Companion.FabExpandingDialogBuilder.create(context!!)
+                .setTitle(R.string.create_event_title)
+                .setFirstActionName(R.string.create_event_btn_text)
+                .setSecondActionName(R.string.join_event_btn_text)
+                .setInitialFabEndMargin(endMargin)
+                .setInitialFabBottomMargin(bottomMargin)
+                .setFirstActionImg(R.drawable.ic_add)
+                .setSecondActionImg(R.drawable.ic_person_add)
+        val dialog = dialogBuilder.build()
         setUpCreateDialogCallback(dialog)
-        dialog.show(childFragmentManager, CreateEventDialogFragment.TAG)
+        dialog.show(childFragmentManager, FabExpandingDialog.TAG)
     }
 
-    private fun setUpCreateDialogCallback(dialog: CreateEventDialogFragment?) {
+    private fun setUpCreateDialogCallback(dialog: FabExpandingDialog?) {
         if (dialog != null) {
             dialog.setCallback(fragmentCallback)
         } else {
-            val fragment = childFragmentManager.findFragmentByTag(CreateEventDialogFragment.TAG) as CreateEventDialogFragment?
+            val fragment = childFragmentManager.findFragmentByTag(FabExpandingDialog.TAG) as FabExpandingDialog?
             fragment?.setCallback(fragmentCallback)
         }
     }
@@ -80,7 +92,8 @@ class EventsFragment : CCFragment<EventsFragmentViewModel, MainScreenViewModel, 
         binding?.addFab?.visibility = if (show) View.VISIBLE else View.INVISIBLE
     }
 
-    private val fragmentCallback = object : CreateEventDialogFragment.Companion.Callback {
+    private val fragmentCallback = object : FabExpandingDialog.Callback {
+
         override fun onDialogOpen() {
             showFab(false)
         }
@@ -89,11 +102,11 @@ class EventsFragment : CCFragment<EventsFragmentViewModel, MainScreenViewModel, 
             showFab(true)
         }
 
-        override fun onCreateEventSelected() {
+        override fun onFirstOptionSelected() {
             viewModel.navigate(Place.CREATE_EVENT)
         }
 
-        override fun onInviteSelected() {
+        override fun onSecondOptionSelected() {
             //todo implement this
         }
     }

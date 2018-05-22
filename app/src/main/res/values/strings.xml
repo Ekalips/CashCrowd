@@ -28,4 +28,7 @@
     <string name="action_info_spent">%s spent %s</string>
     <string name="success_event_create">Event successfully created</string>
     <string name="error_event_create">Error creating event</string>
+    <string name="add_action_title">What\'s you up to?</string>
+    <string name="add_action_income_btn">I\'ve got some money</string>
+    <string name="add_action_withdraw_btn">I want to take some</string>
 </resources>

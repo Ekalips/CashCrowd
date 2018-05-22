@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/parentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:id="@+id/backgroundView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/unlimitedDialogBackgroundColor" />
+
+        <TextView
+            android:id="@+id/titleTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/titleGuideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/titleGuideline"
+            tools:text="Dialog title" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/firstBtnContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/fab_size"
+            android:layout_marginBottom="8dp"
+            app:cardBackgroundColor="@color/colorAccent"
+            app:layout_constraintBottom_toBottomOf="@+id/buttonsGuideline"
+            app:layout_constraintLeft_toLeftOf="@id/centerGuideline"
+            app:layout_constraintRight_toRightOf="@id/centerGuideline">
+
+            <TextView
+                android:id="@+id/firstBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="?selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:maxLines="1"
+                android:minWidth="200dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:textAllCaps="false"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
+                android:textColor="@color/white"
+                tools:text="First Action" />
+
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/secondBtnContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/fab_size"
+            android:layout_marginTop="8dp"
+            app:layout_constraintLeft_toLeftOf="@id/centerGuideline"
+            app:layout_constraintRight_toRightOf="@id/centerGuideline"
+            app:layout_constraintTop_toTopOf="@+id/buttonsGuideline">
+
+            <TextView
+                android:id="@+id/secondBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="?selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:minWidth="200dp"
+                android:outlineProvider="background"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:textAllCaps="false"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
+                tools:text="Second Action" />
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.constraint.Guideline
+            android:id="@+id/titleGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.33" />
+
+
+        <android.support.constraint.Guideline
+            android:id="@+id/buttonsGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.66" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/centerGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+
+    </android.support.constraint.ConstraintLayout>
+</layout>
