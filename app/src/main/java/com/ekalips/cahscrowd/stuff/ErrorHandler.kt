@@ -3,6 +3,7 @@ package com.ekalips.cahscrowd.stuff
 import com.ekalips.base.providers.ToastProvider
 import com.ekalips.cahscrowd.R
 import com.squareup.moshi.JsonDataException
+import com.squareup.moshi.JsonEncodingException
 import io.reactivex.exceptions.OnErrorNotImplementedException
 import io.reactivex.exceptions.UndeliverableException
 import java.io.IOException
@@ -31,6 +32,7 @@ class ErrorHandler @Inject constructor(private val toastProvider: ToastProvider)
                     is ConnectException -> toastProvider.showToast(R.string.unable_to_communicate_to_server)
                     is SocketTimeoutException -> toastProvider.showToast(R.string.unable_to_communicate_to_server)
                     is SocketException -> toastProvider.showToast(R.string.unable_to_communicate_to_server)
+                    is JsonEncodingException -> toastProvider.showToast(R.string.malformed_json)
                     !is InterruptedIOException -> toastProvider.showToast(R.string.no_internet_connection)
                 }
                 true

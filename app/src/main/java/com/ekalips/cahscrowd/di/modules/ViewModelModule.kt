@@ -6,6 +6,7 @@ import com.ekalips.base.di.ViewModelKey
 import com.ekalips.base.vm.BaseViewModelFactory
 import com.ekalips.cahscrowd.auth.mvvm.vm.AuthScreenViewModel
 import com.ekalips.cahscrowd.create_event.mvvm.vm.CreateEventScreenViewModel
+import com.ekalips.cahscrowd.deep.DeepLinkViewModel
 import com.ekalips.cahscrowd.event.mvvm.vm.EventScreenViewModel
 import com.ekalips.cahscrowd.event.mvvm.vm.child.EventActionsViewModel
 import com.ekalips.cahscrowd.event.mvvm.vm.child.EventParticipantsViewModel
@@ -62,6 +63,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(value = EventParticipantsViewModel::class)
     internal abstract fun bindEventParticipantsVM(eventParticipantsViewModel: EventParticipantsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(value = DeepLinkViewModel::class)
+    internal abstract fun bindDeepLinkViewModel(deepLinkViewModel: DeepLinkViewModel): ViewModel
 
     @Binds
     internal abstract fun bindViewModelFactory(factory: BaseViewModelFactory): ViewModelProvider.Factory

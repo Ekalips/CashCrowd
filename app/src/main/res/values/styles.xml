@@ -8,13 +8,23 @@
         <item name="android:colorEdgeEffect">@color/transparentGray</item>
     </style>
 
-    <style name="AppTheme.WithBackground" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppTheme.WithBackground" parent="AppTheme">
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryDark">@color/white</item>
         <item name="colorAccent">@color/white</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:colorEdgeEffect">@color/transparentGray</item>
         <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <style name="AppTheme.Transparent" parent="AppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/unlimitedDialogBackgroundColor</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+
     </style>
 
     <style name="UnlimitedDialog">

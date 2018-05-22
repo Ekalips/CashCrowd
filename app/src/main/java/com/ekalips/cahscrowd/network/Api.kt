@@ -50,4 +50,10 @@ interface Api {
     @POST("events/{event_id}/invite")
     fun getEventInviteLink(@Header(TOKEN_FIELD) token: String, @Path("event_id") eventId: String): Call<GetEventShareLinkResponse>
 
+    @POST("invites")
+    fun acceptInviteCode(@Header(TOKEN_FIELD) token: String, @Query("code") inviteCode: String): Call<RemoteEvent>
+
+    @POST("invites")
+    fun acceptInviteHash(@Header(TOKEN_FIELD) token: String, @Query("hash") inviteHash: String): Call<RemoteEvent>
+
 }

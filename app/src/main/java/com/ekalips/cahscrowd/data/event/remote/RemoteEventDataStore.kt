@@ -78,4 +78,24 @@ class RemoteEventDataStore @Inject constructor(private val api: Api) {
         }
     }
 
+    fun acceptInviteCode(token: String, inviteCode: String): Single<Event> {
+        return Single.fromCallable {
+            val result = api.acceptInviteCode(token, inviteCode).execute()
+            if (result.isSuccessful) {
+                return@fromCallable result.body()!!
+            }
+            throw ServerError(result.code())
+        }
+    }
+
+    fun acceptInviteHash(token: String, inviteHash: String): Single<Event> {
+        return Single.fromCallable {
+            val result = api.acceptInviteHash(token, inviteHash).execute()
+            if (result.isSuccessful) {
+                return@fromCallable result.body()!!
+            }
+            throw ServerError(result.code())
+        }
+    }
+
 }

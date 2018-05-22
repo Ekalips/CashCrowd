@@ -23,6 +23,20 @@
         <activity android:name=".main.mvvm.view.MainActivity" />
         <activity android:name=".create_event.mvvm.view.CreateEventActivity" />
         <activity android:name=".event.mvvm.view.EventActivity" />
+        <activity android:name=".deep.DeepLinkCatcherActivity"
+            android:theme="@style/AppTheme.Transparent">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="http"
+                    android:host="cashcr.tech"
+                    android:path="/invite" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

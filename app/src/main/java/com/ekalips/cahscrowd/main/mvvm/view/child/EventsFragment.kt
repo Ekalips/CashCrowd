@@ -1,14 +1,19 @@
 package com.ekalips.cahscrowd.main.mvvm.view.child
 
+import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.Observer
+import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.RecyclerView
 import android.util.TypedValue
+import android.view.LayoutInflater
 import android.view.View
 import com.ekalips.base.stuff.getBottomNavBarHeight
 import com.ekalips.cahscrowd.BR
 import com.ekalips.cahscrowd.R
 import com.ekalips.cahscrowd.data.event.Event
+import com.ekalips.cahscrowd.databinding.DialogEnterInviteCodeBinding
 import com.ekalips.cahscrowd.databinding.FragmentEventsBinding
 import com.ekalips.cahscrowd.main.mvvm.model.EventsRecyclerViewAdapter
 import com.ekalips.cahscrowd.main.mvvm.vm.MainScreenViewModel
@@ -92,6 +97,24 @@ class EventsFragment : CCFragment<EventsFragmentViewModel, MainScreenViewModel, 
         binding?.addFab?.visibility = if (show) View.VISIBLE else View.INVISIBLE
     }
 
+    private fun showEnterInviteCodeDialog() {
+        context?.let {
+            val binding = DataBindingUtil.inflate<DialogEnterInviteCodeBinding>(LayoutInflater.from(it), R.layout.dialog_enter_invite_code, null, false)
+            val dialog = AlertDialog.Builder(it)
+                    .setView(binding.root)
+                    .show()
+
+            val code = MediatorLiveData<String>()
+            binding.code =  code
+            binding.onAccept = Runnable {
+                if (viewModel.acceptInviteCode(code.value))
+                    dialog.dismiss()
+            }
+            binding.onCancel = Runnable { dialog.dismiss() }
+
+        }
+    }
+
     private val fragmentCallback = object : FabExpandingDialog.Callback {
 
         override fun onDialogOpen() {
@@ -107,7 +130,7 @@ class EventsFragment : CCFragment<EventsFragmentViewModel, MainScreenViewModel, 
         }
 
         override fun onSecondOptionSelected() {
-            //todo implement this
+            showEnterInviteCodeDialog()
         }
     }
 

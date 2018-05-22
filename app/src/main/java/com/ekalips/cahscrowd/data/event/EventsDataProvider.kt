@@ -9,6 +9,7 @@ import com.ekalips.cahscrowd.data.event.remote.RemoteEventDataStore
 import com.ekalips.cahscrowd.data.user.UserDataProvider
 import com.ekalips.cahscrowd.data.user.model.BaseUser
 import com.ekalips.cahscrowd.stuff.ErrorHandler
+import com.ekalips.cahscrowd.stuff.ServerError
 import com.ekalips.cahscrowd.stuff.data.Listing
 import com.ekalips.cahscrowd.stuff.paging.NetworkState
 import com.ekalips.cahscrowd.stuff.utils.wrap
@@ -110,6 +111,17 @@ class EventsDataProvider @Inject constructor(private val userDataProvider: UserD
         Completable.fromCallable {
             localEventsDataStore.saveEvents(events, clear)
         }.wrap(errorHandler.getHandler()).subscribe()
+    }
+
+    fun acceptInvite(code: String? = null, hash: String? = null): Single<Event> {
+        val request = if (!code.isNullOrBlank())
+            userDataProvider.getAccessToken().flatMap { remoteEventDataStore.acceptInviteCode(it, code!!) }
+        else if (!hash.isNullOrBlank()) {
+            userDataProvider.getAccessToken().flatMap { remoteEventDataStore.acceptInviteHash(it, hash!!) }
+        } else Single.error<Event>(ServerError(400))
+
+        return request.doOnSuccess { saveEvents(listOf(it), false) }
+                .wrap(errorHandler.getHandler())
     }
 
 }

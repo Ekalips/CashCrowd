@@ -3,6 +3,7 @@ package com.ekalips.cahscrowd.di.modules
 
 import com.ekalips.cahscrowd.auth.mvvm.view.AuthActivity
 import com.ekalips.cahscrowd.create_event.mvvm.view.CreateEventActivity
+import com.ekalips.cahscrowd.deep.DeepLinkCatcherActivity
 import com.ekalips.cahscrowd.di.scopes.ActivityScope
 import com.ekalips.cahscrowd.event.di.EventFragmentsProvider
 import com.ekalips.cahscrowd.event.mvvm.view.EventActivity
@@ -38,4 +39,8 @@ abstract class ActivityBuilderModule {
     @ActivityScope
     @ContributesAndroidInjector(modules = [EventFragmentsProvider::class])
     internal abstract fun eventActivtiy() : EventActivity
+
+    @ActivityScope
+    @ContributesAndroidInjector
+    internal abstract fun deepLinkActivity(): DeepLinkCatcherActivity
 }

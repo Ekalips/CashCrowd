@@ -6,6 +6,7 @@ import com.ekalips.cahscrowd.data.user.model.ThisUser
 import com.ekalips.cahscrowd.data.user.remote.RemoteUserDataSource
 import com.ekalips.cahscrowd.stuff.ErrorHandler
 import com.ekalips.cahscrowd.stuff.utils.wrap
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import javax.inject.Inject
@@ -22,6 +23,19 @@ class UserDataProvider @Inject constructor(private val localUserDataSource: Loca
 
     fun getAccessToken(): Single<String> {
         return localUserDataSource.getMyToken()
+    }
+
+    fun checkUser(): Completable {
+        return localUserDataSource.getMyToken().flatMapCompletable { token ->
+            Completable.create {
+                if (it.isDisposed) return@create
+                if (token.isBlank()) {
+                    it.onError(RuntimeException("Authentication error"))
+                } else {
+                    it.onComplete()
+                }
+            }
+        }
     }
 
     fun getUser(id: String): Observable<BaseUser> {
