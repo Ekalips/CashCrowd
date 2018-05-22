@@ -11,6 +11,7 @@ import android.support.constraint.ConstraintLayout
 import android.support.constraint.ConstraintSet
 import android.support.transition.*
 import android.support.v4.app.DialogFragment
+import android.text.InputFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,7 +40,6 @@ class FabExpandingDialog : DialogFragment() {
 
     private var fabBottomMargin = 0f
     private var fabEndMargin = 0f
-    private var firstActionName: String = ""
 
     private var fragmentCallback: Reference<Callback>? = null
 
@@ -73,8 +73,6 @@ class FabExpandingDialog : DialogFragment() {
 
             fabBottomMargin = args.getFloat(ARG_INITIAL_BOTTOM_MARGIN)
             fabEndMargin = args.getFloat(ARG_INITIAL_END_MARGIN)
-
-            firstActionName = binding.firstBtn.text.toString()
         }
     }
 
@@ -124,7 +122,7 @@ class FabExpandingDialog : DialogFragment() {
         constraintSet.applyTo(binding.parentLayout)
 
         binding.firstBtnContainer.radius = fabSize / 2F
-        binding.firstBtn.text = ""
+        binding.firstBtn.filters = arrayOf(InputFilter.LengthFilter(0))
     }
 
     private fun expandView() {
@@ -152,7 +150,7 @@ class FabExpandingDialog : DialogFragment() {
         val createContainerLP = binding.firstBtnContainer.layoutParams as ConstraintLayout.LayoutParams
         createContainerLP.width = ConstraintLayout.LayoutParams.WRAP_CONTENT
         binding.firstBtnContainer.requestLayout()
-        binding.firstBtn.text = firstActionName
+        binding.firstBtn.filters = arrayOf(InputFilter.LengthFilter(Int.MAX_VALUE))
         binding.firstBtnContainer.radius = resources.getDimension(R.dimen.d_4)
     }
 
