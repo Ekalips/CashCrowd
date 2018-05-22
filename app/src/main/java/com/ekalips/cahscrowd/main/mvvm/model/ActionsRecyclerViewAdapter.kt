@@ -43,15 +43,7 @@ class ActionsRecyclerViewAdapter : BindingRecyclerViewAdapter<ViewDataBinding, A
     companion object {
         val DIFF_COMPARATOR = object : DiffUtil.ItemCallback<Action>() {
             override fun areItemsTheSame(oldItem: Action?, newItem: Action?): Boolean = oldItem?.id == newItem?.id
-
-            override fun areContentsTheSame(oldItem: Action?, newItem: Action?): Boolean {
-                return oldItem?.name == newItem?.name &&
-                        oldItem?.userId == newItem?.userId &&
-                        oldItem?.amount == newItem?.amount &&
-                        oldItem?.eventId == newItem?.eventId &&
-                        oldItem?.user == newItem?.user &&
-                        oldItem?.newAction == newItem?.newAction
-            }
+            override fun areContentsTheSame(oldItem: Action?, newItem: Action?): Boolean = Action.compare(oldItem, newItem)
         }
     }
 }

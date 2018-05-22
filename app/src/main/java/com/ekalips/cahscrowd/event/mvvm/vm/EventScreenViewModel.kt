@@ -10,11 +10,12 @@ import com.ekalips.cahscrowd.data.event.Event
 import com.ekalips.cahscrowd.data.event.EventsDataProvider
 import com.ekalips.cahscrowd.providers.ResourceProvider
 import com.ekalips.cahscrowd.stuff.base.CCViewModel
+import com.ekalips.cahscrowd.stuff.navigation.Place
 import com.firebase.ui.auth.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
 enum class EventScreenPages {
-    ACTIONS
+    ACTIONS, PARTICIPANTS
 }
 
 class EventScreenViewState(val eventId: MutableLiveData<String>,
@@ -45,7 +46,16 @@ class EventScreenViewModel @Inject constructor(private val eventsDataProvider: E
     fun executePageAction() {
         when (state.currentPage.value) {
             EventScreenPages.ACTIONS -> state.addActionTrigger.call()
+            EventScreenPages.PARTICIPANTS -> shareEvent()
             else -> println(state.currentPage.value)
+        }
+    }
+
+    private fun shareEvent() {
+        state.eventId.value?.let {
+            eventsDataProvider.getEventShareLink(it).subscribe({
+                navigate(Place.SHARE, resourceProvider.getString(R.string.event_share_string, it.second, it.first))
+            }, { it.printStackTrace() })
         }
     }
 

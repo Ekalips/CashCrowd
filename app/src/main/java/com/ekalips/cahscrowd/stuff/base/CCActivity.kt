@@ -7,6 +7,7 @@ import android.view.MenuItem
 import com.ekalips.base.activity.BaseActivity
 import com.ekalips.base.state.BaseViewState
 import com.ekalips.cahscrowd.providers.GlobalNavigationProvider
+import com.ekalips.cahscrowd.providers.ShareProvider
 import com.ekalips.cahscrowd.stuff.navigation.Place
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -18,6 +19,8 @@ abstract class CCActivity<VM : CCViewModel<BaseViewState>, DataBinding : ViewDat
 
     @Inject
     lateinit var navigator: GlobalNavigationProvider
+    @Inject
+    lateinit var shareProvider: ShareProvider
 
     protected val disposer: CompositeDisposable = CompositeDisposable()
 
@@ -48,7 +51,10 @@ abstract class CCActivity<VM : CCViewModel<BaseViewState>, DataBinding : ViewDat
                 else -> handleNavigation(place, payload)
             }
         } else {
-            handleNavigation(place, payload)
+            if (place == Place.SHARE) {
+                shareProvider.shareText(this, payload.toString())
+            } else
+                handleNavigation(place, payload)
         }
     }
 

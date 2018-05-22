@@ -39,4 +39,5 @@
     <string name="add_action_income_accept">Put</string>
     <string name="error_create_action">Error creating action</string>
     <string name="success_create_action">You successfully created action</string>
+    <string name="event_share_string">Here is event invite code: %s. Or you can simply click this link %s</string>
 </resources>

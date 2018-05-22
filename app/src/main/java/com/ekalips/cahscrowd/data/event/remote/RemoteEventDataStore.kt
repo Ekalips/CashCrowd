@@ -1,6 +1,7 @@
 package com.ekalips.cahscrowd.data.event.remote
 
 import com.ekalips.cahscrowd.data.event.Event
+import com.ekalips.cahscrowd.data.user.model.BaseUser
 import com.ekalips.cahscrowd.network.Api
 import com.ekalips.cahscrowd.network.body.CreateEventBody
 import com.ekalips.cahscrowd.stuff.ServerError
@@ -36,9 +37,40 @@ class RemoteEventDataStore @Inject constructor(private val api: Api) {
         }
     }
 
+    fun getEvent(token: String, eventId: String): Single<Event> {
+        return Single.fromCallable {
+            val result = api.getEvent(token, eventId).execute()
+            if (result.isSuccessful) {
+                return@fromCallable result.body()!!
+            }
+            throw ServerError(result.code())
+        }
+    }
+
+    fun getEventShareLink(token: String, eventId: String): Single<Pair<String, String>> {
+        return Single.fromCallable {
+            val result = api.getEventInviteLink(token, eventId).execute()
+            if (result.isSuccessful) {
+                val res = result.body()!!
+                return@fromCallable res.url to res.code
+            }
+            throw ServerError(result.code())
+        }
+    }
+
     fun crateEvent(token: String, title: String, description: String): Single<Event> {
         return Single.fromCallable {
             val result = api.createEvent(token, CreateEventBody(title, description)).execute()
+            if (result.isSuccessful) {
+                return@fromCallable result.body()!!
+            }
+            throw ServerError(result.code())
+        }
+    }
+
+    fun getEventParticipants(token: String, eventId: String): Single<List<BaseUser>> {
+        return Single.fromCallable {
+            val result = api.getEventParticipants(token, eventId).execute()
             if (result.isSuccessful) {
                 return@fromCallable result.body()!!
             }

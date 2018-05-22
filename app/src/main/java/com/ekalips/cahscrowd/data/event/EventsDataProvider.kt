@@ -3,9 +3,11 @@ package com.ekalips.cahscrowd.data.event
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
+import android.util.Log
 import com.ekalips.cahscrowd.data.event.local.LocalEventsDataStore
 import com.ekalips.cahscrowd.data.event.remote.RemoteEventDataStore
 import com.ekalips.cahscrowd.data.user.UserDataProvider
+import com.ekalips.cahscrowd.data.user.model.BaseUser
 import com.ekalips.cahscrowd.stuff.ErrorHandler
 import com.ekalips.cahscrowd.stuff.data.Listing
 import com.ekalips.cahscrowd.stuff.paging.NetworkState
@@ -13,6 +15,7 @@ import com.ekalips.cahscrowd.stuff.utils.wrap
 import com.firebase.ui.auth.viewmodel.SingleLiveEvent
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,6 +27,7 @@ class EventsDataProvider @Inject constructor(private val userDataProvider: UserD
 
     companion object {
         private const val DEFAULT_NETWORK_PAGE_SIZE = 30
+        private const val TAG = "EventsDataProvider"
     }
 
 //    fun getEventsListing(): PagedListing<Event> {
@@ -59,6 +63,12 @@ class EventsDataProvider @Inject constructor(private val userDataProvider: UserD
         return Listing(data = data, networkState = networkState, refresh = { refreshTrigger.call() }, retry = { refreshTrigger.call() })
     }
 
+    fun getEventParticipants(eventId: String): Single<List<BaseUser>> {
+        return userDataProvider.getAccessToken().flatMap { remoteEventDataStore.getEventParticipants(it, eventId) }
+                .doAfterSuccess { userDataProvider.saveUsers(*it.toTypedArray()) }
+                .wrap(errorHandler.getHandler())
+    }
+
     fun createEvent(title: String, description: String): Completable {
         return userDataProvider.getAccessToken().flatMap { remoteEventDataStore.crateEvent(it, title, description) }
                 .doOnSuccess { saveEvents(listOf(it), false) }
@@ -67,13 +77,21 @@ class EventsDataProvider @Inject constructor(private val userDataProvider: UserD
     }
 
     fun getEvent(eventId: String): LiveData<Event> {
+        userDataProvider.getAccessToken().flatMap { remoteEventDataStore.getEvent(it, eventId) }
+                .wrap(errorHandler.getHandler())
+                .subscribe({ saveEvents(listOf(it)) }, { Log.e(TAG, "Error loading event: $eventId", it) })
         return localEventsDataStore.getEvent(eventId)
+    }
+
+    fun getEventShareLink(eventId: String): Single<Pair<String, String>> {
+        return userDataProvider.getAccessToken().flatMap { remoteEventDataStore.getEventShareLink(it, eventId) }
+                .wrap(errorHandler.getHandler())
     }
 
     private fun refresh(): LiveData<NetworkState> {
         val state = MutableLiveData<NetworkState>()
         state.value = NetworkState.LOADING
-        fetchEventsRemotely(null)
+        fetchEventsRemotely()
                 .subscribe({
                     saveEvents(it, true)
                     state.postValue(NetworkState.LOADED)
@@ -82,7 +100,7 @@ class EventsDataProvider @Inject constructor(private val userDataProvider: UserD
     }
 
 
-    private fun fetchEventsRemotely(afterEventId: String?): Observable<List<Event>> {
+    private fun fetchEventsRemotely(): Observable<List<Event>> {
         return userDataProvider.getAccessToken().flatMap { remoteEventDataStore.getEvents(it) }
                 .wrap(errorHandler.getHandler())
                 .toObservable()

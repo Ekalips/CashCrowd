@@ -36,13 +36,6 @@ class UserDataProvider @Inject constructor(private val localUserDataSource: Loca
                 .wrap(errorHandler.getHandler())
     }
 
-    fun getUsers(vararg userIds: String): Observable<List<BaseUser>> {
-        return Observable.fromIterable(userIds.toList())
-                .switchMap { getUser(it) }
-                .map { it.also { localUserDataSource.saveUser(it) } }
-                .wrap(errorHandler.getHandler()).toList().toObservable()
-    }
-
     fun getUsersSmart(vararg userIds: String): Observable<List<BaseUser>> {
         val localRequest = Observable.fromIterable(userIds.toList())
                 .switchMap { t -> localUserDataSource.getUser(t).toObservable() }
@@ -53,9 +46,18 @@ class UserDataProvider @Inject constructor(private val localUserDataSource: Loca
                     if (users.isEmpty()) {
                         Observable.empty<List<BaseUser>>()
                     } else
-                        getAccessToken().flatMap { remoteUserDataSource.getUsers(it, *users.map { it.id }.toTypedArray()) }.toObservable()
+                        getAccessToken().flatMap {
+                            remoteUserDataSource.getUsers(it, *users.map { it.id }.toTypedArray())
+                                    .doOnSuccess { saveUsers(*it.toTypedArray()) }
+                        }.toObservable()
                 }))
                 .wrap(errorHandler.getHandler())
+
+    }
+
+    fun saveUsers(vararg users: BaseUser) {
+        Observable.fromIterable(users.toList())
+                .subscribe({ localUserDataSource.saveUser(it) }, { println("Error saving user"); it.printStackTrace() })
 
     }
 

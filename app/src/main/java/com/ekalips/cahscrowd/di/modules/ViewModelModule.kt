@@ -8,6 +8,7 @@ import com.ekalips.cahscrowd.auth.mvvm.vm.AuthScreenViewModel
 import com.ekalips.cahscrowd.create_event.mvvm.vm.CreateEventScreenViewModel
 import com.ekalips.cahscrowd.event.mvvm.vm.EventScreenViewModel
 import com.ekalips.cahscrowd.event.mvvm.vm.child.EventActionsViewModel
+import com.ekalips.cahscrowd.event.mvvm.vm.child.EventParticipantsViewModel
 import com.ekalips.cahscrowd.main.mvvm.vm.MainScreenViewModel
 import com.ekalips.cahscrowd.main.mvvm.vm.child.EventsFragmentViewModel
 import com.ekalips.cahscrowd.welcome.mvvm.vm.SplashScreenViewModel
@@ -56,6 +57,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(value = EventActionsViewModel::class)
     internal abstract fun bindEventActionsVM(eventActionsViewModel: EventActionsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(value = EventParticipantsViewModel::class)
+    internal abstract fun bindEventParticipantsVM(eventParticipantsViewModel: EventParticipantsViewModel): ViewModel
 
     @Binds
     internal abstract fun bindViewModelFactory(factory: BaseViewModelFactory): ViewModelProvider.Factory
