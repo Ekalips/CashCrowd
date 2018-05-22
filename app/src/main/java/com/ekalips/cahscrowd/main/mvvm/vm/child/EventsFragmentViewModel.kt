@@ -10,6 +10,7 @@ import com.ekalips.cahscrowd.data.user.UserDataProvider
 import com.ekalips.cahscrowd.data.user.model.BaseUser
 import com.ekalips.cahscrowd.stuff.base.CCViewModel
 import com.ekalips.cahscrowd.stuff.paging.NetworkState
+import com.ekalips.cahscrowd.stuff.paging.Status
 import com.ekalips.cahscrowd.stuff.utils.disposeBy
 import com.ekalips.cahscrowd.stuff.utils.wrap
 import com.firebase.ui.auth.viewmodel.SingleLiveEvent
@@ -20,7 +21,6 @@ class EventsFragmentViewState : BaseViewState() {
 
     val events = MediatorLiveData<List<Event>>()
     val error = MediatorLiveData<String>()
-    val refreshing = MediatorLiveData<Boolean>()
 
     val addEventTrigger = SingleLiveEvent<Void>()
     val updateTrigger = SingleLiveEvent<Void>()
@@ -40,6 +40,11 @@ class EventsFragmentViewModel @Inject constructor(private val eventsDataProvider
     init {
         state.events.addSource(listing.data, { state.events.postValue(it) })
         state.loading.addSource(listing.networkState, { state.loading.postValue(it == NetworkState.LOADING) })
+        state.error.addSource(listing.networkState, {
+            if (it?.status == Status.FAILED) {
+                state.error.postValue(it.msg)
+            }
+        })
 
         state.events.observeForever(eventsObserver)
         requiredUsers.observeForever(fetchUsersObserver)
