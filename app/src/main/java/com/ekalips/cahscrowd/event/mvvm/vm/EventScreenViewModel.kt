@@ -49,10 +49,6 @@ class EventScreenViewModel @Inject constructor(private val eventsDataProvider: E
         }
     }
 
-    fun validateActionAmountString(value: String?, negative: Boolean): Boolean {
-        return value?.toDoubleOrNull() != null
-    }
-
     fun createAction(value: String?, negative: Boolean): Boolean {
         val amount = value?.toDoubleOrNull()
         return if (amount != null) {
