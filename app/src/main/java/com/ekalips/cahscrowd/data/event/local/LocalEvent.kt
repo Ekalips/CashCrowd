@@ -2,6 +2,7 @@ package com.ekalips.cahscrowd.data.event.local
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
 import com.ekalips.cahscrowd.data.action.Action
 import com.ekalips.cahscrowd.data.event.Event
@@ -15,7 +16,7 @@ open class LocalEvent(
         override var name: String,
         @ColumnInfo(name = "eventDescription")
         override var description: String,
-        @Transient override var actions: List<Action>?) : Event {
+        @Ignore override var actions: List<Action>?) : Event {
 
     constructor() : this("", "", "", emptyList())
 
