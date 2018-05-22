@@ -50,7 +50,10 @@ class UserDataProvider @Inject constructor(private val localUserDataSource: Loca
 
         return Observable.concatDelayError(Observable.just(localRequest.filter { it.loaded }.toList().toObservable(),
                 localRequest.filter { !it.loaded }.toList().toObservable().flatMap { users ->
-                    getAccessToken().flatMap { remoteUserDataSource.getUsers(it, *users.map { it.id }.toTypedArray()) }.toObservable()
+                    if (users.isEmpty()) {
+                        Observable.empty<List<BaseUser>>()
+                    } else
+                        getAccessToken().flatMap { remoteUserDataSource.getUsers(it, *users.map { it.id }.toTypedArray()) }.toObservable()
                 }))
                 .wrap(errorHandler.getHandler())
 

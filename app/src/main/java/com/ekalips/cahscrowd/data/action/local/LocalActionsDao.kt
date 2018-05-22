@@ -10,7 +10,7 @@ interface LocalActionsDao {
     fun getActionsForEvent(eventId: String): List<LocalAction>
 
     @Query("SELECT * FROM actions INNER JOIN users ON actions.relatedUserId = users.userId WHERE relatedEventId = :eventId")
-    fun getActionsForEventLiveData(eventId: String): LiveData<LocalAction>
+    fun getActionsForEventLiveData(eventId: String): LiveData<List<LocalAction>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(vararg actions: LocalAction)
