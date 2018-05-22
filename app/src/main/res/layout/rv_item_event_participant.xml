@@ -18,7 +18,7 @@
         android:paddingRight="16dp"
         android:paddingTop="8dp">
 
-        <ImageView
+        <com.ekalips.cahscrowd.stuff.views.SimpleCicleImageView
             android:id="@+id/userIv"
             android:layout_width="52dp"
             android:layout_height="52dp"
