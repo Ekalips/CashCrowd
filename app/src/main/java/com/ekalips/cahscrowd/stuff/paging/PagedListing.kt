@@ -3,7 +3,7 @@ package com.ekalips.cahscrowd.stuff.paging
 import android.arch.lifecycle.LiveData
 import android.arch.paging.PagedList
 
-data class Listing<T>(
+data class PagedListing<T>(
         // the LiveData of paged lists for the UI to observe
         val pagedList: LiveData<PagedList<T>>,
         // represents the network request status to show to the user

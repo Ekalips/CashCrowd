@@ -37,12 +37,13 @@ class RemoteEventDataStore @Inject constructor(private val api: Api) {
         }
     }
 
-    fun crateEvent(token: String, title: String, description: String): Completable {
-        return Completable.fromAction {
+    fun crateEvent(token: String, title: String, description: String): Single<Event> {
+        return Single.fromCallable {
             val result = api.createEvent(token, CreateEventBody(title, description)).execute()
-            if (!result.isSuccessful) {
-                throw ServerError(result.code())
+            if (result.isSuccessful) {
+                return@fromCallable result.body()!!
             }
+            throw ServerError(result.code())
         }
     }
 

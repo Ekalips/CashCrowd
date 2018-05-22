@@ -9,6 +9,7 @@ import com.ekalips.cahscrowd.data.event.EventsDataProvider
 import com.ekalips.cahscrowd.data.user.UserDataProvider
 import com.ekalips.cahscrowd.data.user.model.BaseUser
 import com.ekalips.cahscrowd.stuff.base.CCViewModel
+import com.ekalips.cahscrowd.stuff.paging.NetworkState
 import com.ekalips.cahscrowd.stuff.utils.disposeBy
 import com.ekalips.cahscrowd.stuff.utils.wrap
 import com.firebase.ui.auth.viewmodel.SingleLiveEvent
@@ -29,23 +30,19 @@ class EventsFragmentViewState : BaseViewState() {
 class EventsFragmentViewModel @Inject constructor(private val eventsDataProvider: EventsDataProvider,
                                                   private val userDataProvider: UserDataProvider) : CCViewModel<EventsFragmentViewState>() {
     override val state: EventsFragmentViewState = EventsFragmentViewState()
-    //    private val listing = eventsDataProvider.getEventsListing()
+
+    private val listing = eventsDataProvider.getEventsListing()
+
     private val requiredUsers = MutableLiveData<List<String>>()
     private val eventsObserver = Observer<List<Event>> { checkForEventUsers(it) }
     private val fetchUsersObserver = Observer<List<String>> { getUsersAndFillList(it) }
 
     init {
-        fetchEvents()
+        state.events.addSource(listing.data, { state.events.postValue(it) })
+        state.loading.addSource(listing.networkState, { state.loading.postValue(it == NetworkState.LOADING) })
 
         state.events.observeForever(eventsObserver)
         requiredUsers.observeForever(fetchUsersObserver)
-    }
-
-    private fun fetchEvents() {
-        eventsDataProvider.getEvents()
-                .doOnSubscribe { state.loading.postValue(true) }
-                .doOnComplete { state.loading.postValue(false) }
-                .subscribe({ state.events.value = it }, { it.printStackTrace() })
     }
 
     private fun checkForEventUsers(events: List<Event>?) {
@@ -82,7 +79,7 @@ class EventsFragmentViewModel @Inject constructor(private val eventsDataProvider
     }
 
     fun refresh() {
-        fetchEvents()
+        listing.refresh()
     }
 
     fun onAddClick() {

@@ -25,6 +25,8 @@ class LocalEventsDataStore @Inject constructor(private val cashDB: CashDB,
 
     fun getEvents() = Observable.fromCallable { eventsDao.getEvents() } as Observable<List<Event>>
 
+    fun getEventsLiveData() = eventsDao.getEventsLiveData() as LiveData<List<Event>>
+
     fun saveEvents(events: List<Event>?, clear: Boolean = false) {
         events?.let { Log.d(javaClass.simpleName, "Save Events: $it") }
         events?.let {
