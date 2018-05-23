@@ -28,6 +28,8 @@ class EventAccountingViewModel @Inject constructor(private val eventsDataProvide
 
     private fun requestStatisticForEvent(eventId: String) {
         eventsDataProvider.getEventStatistics(eventId)
+                .doOnSubscribe { state.loading.postValue(true) }
+                .doAfterTerminate { state.loading.postValue(false) }
                 .subscribe({ state.statistic.postValue(it) }, { handleError(it) })
     }
 

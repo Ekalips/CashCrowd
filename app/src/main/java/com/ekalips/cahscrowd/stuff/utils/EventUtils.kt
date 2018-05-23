@@ -9,7 +9,7 @@ import kotlin.collections.HashMap
 
 object EventUtils {
 
-    private val numberFormat = NumberFormat.getCurrencyInstance().also {
+    private val numberFormat = NumberFormat.getCurrencyInstance(Locale("ua_UA")).also {
         it.currency = Currency.getInstance("UAH")
     }
 
