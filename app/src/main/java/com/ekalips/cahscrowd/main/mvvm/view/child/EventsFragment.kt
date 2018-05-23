@@ -4,6 +4,7 @@ import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.Observer
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.os.Handler
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.RecyclerView
 import android.util.TypedValue
@@ -21,6 +22,12 @@ import com.ekalips.cahscrowd.main.mvvm.vm.child.EventsFragmentViewModel
 import com.ekalips.cahscrowd.stuff.base.CCFragment
 import com.ekalips.cahscrowd.stuff.navigation.Place
 import com.ekalips.cahscrowd.stuff.other.FabExpandingDialog
+import com.ekalips.cahscrowd.stuff.utils.disposeBy
+import com.ekalips.cahscrowd.stuff.utils.wrap
+import io.reactivex.Observable
+import io.reactivex.ObservableEmitter
+import io.reactivex.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 
 class EventsFragment : CCFragment<EventsFragmentViewModel, MainScreenViewModel, FragmentEventsBinding>() {
     override val vmClass: Class<EventsFragmentViewModel> = EventsFragmentViewModel::class.java
@@ -35,16 +42,31 @@ class EventsFragment : CCFragment<EventsFragmentViewModel, MainScreenViewModel, 
         }
     }
 
+    private lateinit var eventEmitter: ObservableEmitter<List<Event>>
+    private val eventsObservable: Observable<List<Event>> = PublishSubject.create {
+        eventEmitter = it
+    }
+    private val uiHandler = Handler()
+
     init {
         adapter = EventsRecyclerViewAdapter(adapterCallbacks)
+        eventsObservable
+                .wrap()
+                .debounce(200, TimeUnit.MILLISECONDS)
+                .subscribe {
+                    uiHandler.post { adapter.submitList(it) }
+                }.disposeBy(disposer)
     }
 
     private var appBarElevationThreshold: Float = 0F
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appBarElevationThreshold = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2F, resources.displayMetrics)
-        viewModel.state.events.observe(this, Observer { adapter.submitList(it) })
+        viewModel.state.events.observe(this, Observer {
+            it?.let { eventEmitter.onNext(it) }
+        })
         viewModel.state.addEventTrigger.observe(this, Observer { openAddEventDialog() })
     }
 
@@ -105,7 +127,7 @@ class EventsFragment : CCFragment<EventsFragmentViewModel, MainScreenViewModel, 
                     .show()
 
             val code = MediatorLiveData<String>()
-            binding.code =  code
+            binding.code = code
             binding.onAccept = Runnable {
                 if (viewModel.acceptInviteCode(code.value))
                     dialog.dismiss()
