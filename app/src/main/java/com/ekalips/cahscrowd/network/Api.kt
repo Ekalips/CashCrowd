@@ -57,6 +57,6 @@ interface Api {
     @POST("invites")
     fun acceptInviteHash(@Header(TOKEN_FIELD) token: String, @Query("hash") inviteHash: String): Call<RemoteEvent>
 
-    @POST("events/{event_id}/calculate")
+    @GET("events/{event_id}/calculate")
     fun getEventStatistics(@Header(TOKEN_FIELD) token: String, @Path("event_id") eventId: String): Call<RemoteStatisticData>
 }

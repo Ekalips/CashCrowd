@@ -2,15 +2,16 @@ package com.ekalips.cahscrowd.data.statistics
 
 import com.ekalips.cahscrowd.data.user.model.BaseUser
 import com.ekalips.cahscrowd.data.user.remote.model.RemoteBaseUser
+import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class RemoteStatisticData(override var totalAmount: Double,
-                               override var totalTurnover: Double,
-                               override var actionsCount: Int,
-                               override var participants: Int,
+data class RemoteStatisticData(@Json(name = "totalAmount") override var totalAmount: Double,
+                               @Json(name = "totalTurnover") override var totalTurnover: Double,
+                               @Json(name = "actions") override var actionsCount: Int,
+                               @Json(name = "participants") override var participants: Int,
                                @Transient override var debts: List<DebtData> = emptyList()) : StatisticData {
-    var remoteDebts: List<RemoteDebtData> = emptyList()
+    @Json(name = "debts") var remoteDebts: List<RemoteDebtData> = emptyList()
         set(value) {
             debts = value
         }

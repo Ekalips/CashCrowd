@@ -15,13 +15,16 @@ object EventUtils {
 
     private val formattedCache: MutableMap<Double, String> = HashMap()
 
-    private fun formatCurrency(amount: Double): String {
-        return if (formattedCache.containsKey(amount))
-            formattedCache[amount]!!
-        else {
-            val formatted = numberFormat.format(amount)
-            formattedCache[amount] = formatted
-            formatted
+    @JvmStatic
+    fun formatCurrency(amount: Double?): String {
+        return when {
+            amount == null -> ""
+            formattedCache.containsKey(amount) -> formattedCache[amount]!!
+            else -> {
+                val formatted = numberFormat.format(amount)
+                formattedCache[amount] = formatted
+                formatted
+            }
         }
     }
 

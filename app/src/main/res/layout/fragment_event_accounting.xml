@@ -4,6 +4,8 @@
 
     <data>
 
+        <import type="com.ekalips.cahscrowd.stuff.utils.EventUtils" />
+
         <variable
             name="vm"
             type="com.ekalips.cahscrowd.event.mvvm.vm.child.EventAccountingViewModel" />
@@ -29,7 +31,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Total amount"
+                    android:text="@string/total_amount"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                     app:layout_constraintBottom_toTopOf="@+id/totalAmountCountTv"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -42,14 +44,18 @@
                     android:id="@+id/totalAmountCountTv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:autoSizeTextType="uniform"
                     android:gravity="center"
-                    android:text="1400 $"
+                    android:maxLines="2"
+                    android:text="@{EventUtils.formatCurrency(vm.state.statistic.totalAmount)}"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    app:autoSizeTextType="uniform"
                     app:layout_constraintBottom_toBottomOf="@+id/verticalGuideline"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toLeftOf="@+id/centerGuideline"
-                    app:layout_constraintTop_toBottomOf="@+id/totalAmountTv" />
+                    app:layout_constraintTop_toBottomOf="@+id/totalAmountTv"
+                    tools:text="1400 $" />
 
                 <View
                     android:id="@+id/centerGuideline"
@@ -67,7 +73,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Total turnover"
+                    android:text="@string/total_turnover"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                     app:layout_constraintBottom_toTopOf="@+id/totalTurnoverAmountTv"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -80,14 +86,18 @@
                     android:id="@+id/totalTurnoverAmountTv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:autoSizeTextType="uniform"
                     android:gravity="center"
-                    android:text="3200 $"
+                    android:maxLines="2"
+                    android:text="@{EventUtils.formatCurrency(vm.state.statistic.totalTurnover)}"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    app:autoSizeTextType="uniform"
                     app:layout_constraintBottom_toBottomOf="@+id/verticalGuideline"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/centerGuideline"
-                    app:layout_constraintTop_toBottomOf="@+id/totalTurnoverTv" />
+                    app:layout_constraintTop_toBottomOf="@+id/totalTurnoverTv"
+                    tools:text="3200 $" />
 
                 <View
                     android:id="@+id/verticalGuideline"
@@ -105,7 +115,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Participants"
+                    android:text="@string/participants"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                     app:layout_constraintBottom_toTopOf="@+id/participantsCountTv"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -118,14 +128,18 @@
                     android:id="@+id/participantsCountTv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:autoSizeTextType="uniform"
                     android:gravity="center"
-                    android:text="50"
+                    android:maxLines="2"
+                    android:text="@{String.valueOf(vm.state.statistic.participants)}"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    app:autoSizeTextType="uniform"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toLeftOf="@+id/centerGuideline2"
-                    app:layout_constraintTop_toBottomOf="@+id/participantsTv" />
+                    app:layout_constraintTop_toBottomOf="@+id/participantsTv"
+                    tools:text="50" />
 
                 <View
                     android:id="@+id/centerGuideline2"
@@ -143,7 +157,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Actions"
+                    android:text="@string/actions"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                     app:layout_constraintBottom_toTopOf="@+id/actionsCountTv"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -156,14 +170,18 @@
                     android:id="@+id/actionsCountTv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:autoSizeTextType="uniform"
                     android:gravity="center"
-                    android:text="200"
+                    android:maxLines="2"
+                    android:text="@{String.valueOf(vm.state.statistic.actionsCount)}"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    app:autoSizeTextType="uniform"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/centerGuideline2"
-                    app:layout_constraintTop_toBottomOf="@+id/actionsTv" />
+                    app:layout_constraintTop_toBottomOf="@+id/actionsTv"
+                    tools:text="200" />
 
 
             </android.support.constraint.ConstraintLayout>
