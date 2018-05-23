@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:text="@{EventUtils.getEventActionInfo(context, action)}"
-            android:textColor="@color/black"
+            android:textColor="?android:textColorPrimary"
             android:textStyle="normal"
             android:visibility="@{expanded}"
             app:highlightStyle="bold"

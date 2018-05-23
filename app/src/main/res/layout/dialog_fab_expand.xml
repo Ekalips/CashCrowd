@@ -78,6 +78,7 @@
                 android:paddingRight="16dp"
                 android:textAllCaps="false"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
+                android:textColor="@color/secondaryTextColor"
                 tools:text="Second Action" />
         </android.support.v7.widget.CardView>
 
