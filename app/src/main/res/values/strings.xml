@@ -61,4 +61,5 @@
     <string name="total_turnover">Total turnover</string>
     <string name="participants">Participants</string>
     <string name="actions">Actions</string>
+    <string name="user_balance">Balance: %s</string>
 </resources>

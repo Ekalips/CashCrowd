@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.ekalips.cahscrowd.stuff.utils.EventUtils" />
+
+        <import type="com.ekalips.cahscrowd.R" />
+
+        <variable
+            name="item"
+            type="com.ekalips.cahscrowd.data.statistics.DebtData" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp">
+
+        <com.ekalips.cahscrowd.stuff.views.SimpleCicleImageView
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:background="@drawable/circle_background"
+            android:backgroundTint="@color/gray"
+            app:src="@{item.user.avatar}"
+            app:text="@{item.user.name}"
+            tools:src="@drawable/ic_person" />
+
+        <Space
+            android:layout_width="16dp"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{item.user.name}"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                tools:text="User Name" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{context.getString(R.string.user_balance, EventUtils.formatCurrency(item.amount))}"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                tools:text="Balance: $1488" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

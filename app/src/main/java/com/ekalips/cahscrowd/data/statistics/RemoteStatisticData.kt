@@ -11,15 +11,17 @@ data class RemoteStatisticData(@Json(name = "totalAmount") override var totalAmo
                                @Json(name = "actions") override var actionsCount: Int,
                                @Json(name = "participants") override var participants: Int,
                                @Transient override var debts: List<DebtData> = emptyList()) : StatisticData {
-    @Json(name = "debts") var remoteDebts: List<RemoteDebtData> = emptyList()
+    @Json(name = "debts")
+    var remoteDebts: List<RemoteDebtData> = emptyList()
         set(value) {
             debts = value
         }
 }
 
 @JsonClass(generateAdapter = true)
-data class RemoteDebtData(override var amount: Double,
+data class RemoteDebtData(@Json(name = "amount") override var amount: Double,
                           @Transient override var user: BaseUser? = null) : DebtData {
+    @Json(name = "user")
     var remoteUser: RemoteBaseUser? = null
         set(value) {
             value?.let { user = it }

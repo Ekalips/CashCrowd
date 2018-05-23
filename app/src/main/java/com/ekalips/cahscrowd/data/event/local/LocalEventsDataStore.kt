@@ -31,7 +31,7 @@ class LocalEventsDataStore @Inject constructor(private val cashDB: CashDB,
         })
         val result = MediatorLiveData<List<Event>>()
 
-        fun validateData(){
+        fun validateData() {
             val data = stuff.value?.map { it.value }
             result post data?.filterNotNull()
         }
@@ -67,7 +67,10 @@ class LocalEventsDataStore @Inject constructor(private val cashDB: CashDB,
 
 
             cashDB.runInTransaction {
-                clear.ifThen { eventsDao.deleteAll() }
+                clear.ifThen {
+                    eventsDao.deleteAll()
+                    actionsDao.deleteAll()
+                }
                 eventsDao.insert(*mappedEvents.toTypedArray())
                 actionsDao.insert(*actions.toTypedArray())
                 usersDao.insert(*absentUserIds.map { LocalBaseUser(it, "", null, false) }.toTypedArray())
