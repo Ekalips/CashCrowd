@@ -1,5 +1,6 @@
 package com.ekalips.cahscrowd.data.user.local
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import com.ekalips.cahscrowd.data.user.local.model.LocalBaseUser
 import io.reactivex.Flowable
@@ -8,6 +9,9 @@ import io.reactivex.Flowable
 interface LocalUserDao {
     @Query("SELECT * FROM users")
     fun getUsers(): List<LocalBaseUser>
+
+    @Query("SELECT * FROM users WHERE users.userId IN(:ids)")
+    fun getUsers(vararg ids: String): LiveData<List<LocalBaseUser>>
 
     @Query("SELECT * FROM users")
     fun getUsersAsync(): Flowable<List<LocalBaseUser>>

@@ -1,11 +1,14 @@
 package com.ekalips.cahscrowd.data.action.local
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MediatorLiveData
+import android.arch.lifecycle.Transformations
 import com.ekalips.base.stuff.ifThen
 import com.ekalips.cahscrowd.data.action.Action
 import com.ekalips.cahscrowd.data.db.CashDB
 import com.ekalips.cahscrowd.data.user.local.LocalUserDao
 import com.ekalips.cahscrowd.data.user.local.model.LocalBaseUser
+import com.ekalips.cahscrowd.data.user.model.BaseUser
 import io.reactivex.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -36,9 +39,34 @@ class LocalActionsDataSource @Inject constructor(private val cashDB: CashDB,
 
     }
 
-    fun getActionsForEventLiveData(eventId: String): LiveData<List<Action>>{
-        return actionsDao.getActionsForEventLiveData(eventId) as LiveData<List<Action>>
+    fun getActionsForEventLiveData(eventId: String): LiveData<List<Action>> {
+        val actionsLiveData = actionsDao.getActionsForEventLiveData(eventId)
+        val usersLiveData = Transformations.switchMap(actionsLiveData, {
+            val userIds = it.map { it.userId }
+            usersDao.getUsers(*userIds.toTypedArray())
+        })
+        val result = MediatorLiveData<List<Action>>()
 
+        fun mapUsersToActions(actions: List<Action>?, users: List<BaseUser>?): List<Action>? {
+            println("mapUsersToActions_Actions: $actions")
+            println("mapUsersToActions_Users: $users")
+            return if (actions == null) {
+                null
+            } else {
+                actions.forEach { action ->
+                    action.user = users?.find { it.id == action.userId }
+                }
+                actions
+            }
+        }
+
+        result.addSource(actionsLiveData, {
+            result.postValue(mapUsersToActions(actionsLiveData.value, usersLiveData.value))
+        })
+        result.addSource(usersLiveData, {
+            result.postValue(mapUsersToActions(actionsLiveData.value, usersLiveData.value))
+        })
+        return result
     }
 
 

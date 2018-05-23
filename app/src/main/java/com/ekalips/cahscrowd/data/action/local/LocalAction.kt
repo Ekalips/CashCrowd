@@ -7,21 +7,19 @@ import com.ekalips.cahscrowd.data.user.local.model.LocalBaseUser
 import com.ekalips.cahscrowd.data.user.local.model.toLocal
 import com.ekalips.cahscrowd.data.user.model.BaseUser
 
-@Entity(tableName = "actions", foreignKeys = arrayOf(
-        ForeignKey(
-                entity = LocalBaseUser::class,
-                onUpdate = ForeignKey.CASCADE,
-                onDelete = ForeignKey.CASCADE,
-                parentColumns = arrayOf("userId"),
-                childColumns = arrayOf("relatedUserId"),
-                deferred = true),
-        ForeignKey(entity = LocalEvent::class,
-                onUpdate = ForeignKey.CASCADE,
-                onDelete = ForeignKey.CASCADE,
-                parentColumns = arrayOf("eventId"),
-                childColumns = arrayOf("relatedEventId"),
-                deferred = true)),
-        indices = arrayOf(Index("relatedUserId"), Index("relatedEventId")))
+@Entity(tableName = "actions", foreignKeys = [
+    (ForeignKey(
+            entity = LocalBaseUser::class,
+            onUpdate = ForeignKey.CASCADE,
+            parentColumns = arrayOf("userId"),
+            childColumns = arrayOf("relatedUserId"),
+            deferred = true)),
+    (ForeignKey(entity = LocalEvent::class,
+            onUpdate = ForeignKey.CASCADE,
+            parentColumns = arrayOf("eventId"),
+            childColumns = arrayOf("relatedEventId"),
+            deferred = true))],
+        indices = [(Index("relatedUserId")), (Index("relatedEventId"))])
 data class LocalAction(@PrimaryKey
                        @ColumnInfo(name = "actionId")
                        override var id: String,

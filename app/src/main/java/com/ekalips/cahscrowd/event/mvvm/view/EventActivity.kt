@@ -17,7 +17,6 @@ import com.ekalips.cahscrowd.BR
 import com.ekalips.cahscrowd.R
 import com.ekalips.cahscrowd.databinding.ActivityEventBinding
 import com.ekalips.cahscrowd.databinding.DialogAddActionBinding
-import com.ekalips.cahscrowd.event.mvvm.model.EventActionsRecyclerViewAdapter
 import com.ekalips.cahscrowd.event.mvvm.view.child.EventActionsFragment
 import com.ekalips.cahscrowd.event.mvvm.view.child.EventParticipantsFragment
 import com.ekalips.cahscrowd.event.mvvm.vm.EventScreenPages
@@ -41,8 +40,7 @@ class EventActivity : CCActivity<EventScreenViewModel, ActivityEventBinding>() {
 
         binding?.appBar?.setPadding(0, getStatusBarHeight(), 0, 0)
 
-        val adapter = EventActionsRecyclerViewAdapter()
-        viewModel.state.event.observe(this, Observer { adapter.submitList(it?.actions) })
+        viewModel.state.event.observe(this, Observer { it?.actions })
         viewModel.state.currentPage.observe(this, Observer { it?.let { onStatePageChangeListener(it) } })
         viewModel.state.addActionTrigger.observe(this, Observer { showAddActionSelectorDialog() })
         initViewPager()

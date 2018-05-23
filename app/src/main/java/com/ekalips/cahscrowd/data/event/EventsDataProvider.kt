@@ -50,13 +50,6 @@ class EventsDataProvider @Inject constructor(private val userDataProvider: UserD
 //                refreshState = refreshState)
 //    }
 
-    fun getEvents(): Observable<List<Event>> {
-        return Observable.concatDelayError(Observable.just(localEventsDataStore.getEvents(),
-                userDataProvider.getAccessToken().flatMap { remoteEventDataStore.getEvents(it) }.toObservable()
-                        .doOnNext({ saveEvents(it) })))
-                .wrap(errorHandler.getHandler())
-    }
-
     fun getEventsListing(): Listing<Event> {
         val data = localEventsDataStore.getEventsLiveData()
         val refreshTrigger = SingleLiveEvent<Void>()
@@ -66,7 +59,7 @@ class EventsDataProvider @Inject constructor(private val userDataProvider: UserD
 
     fun getEventParticipants(eventId: String): Single<List<BaseUser>> {
         return userDataProvider.getAccessToken().flatMap { remoteEventDataStore.getEventParticipants(it, eventId) }
-//                .doAfterSuccess { userDataProvider.saveUsers(*it.toTypedArray()) }
+                .doOnSuccess { userDataProvider.saveUsers(*it.toTypedArray()) }
                 .wrap(errorHandler.getHandler())
     }
 

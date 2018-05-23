@@ -10,7 +10,7 @@ interface LocalActionsDao {
     @Transaction
     fun getActionsForEvent(eventId: String): List<LocalAction>
 
-    @Query("SELECT * FROM actions LEFT JOIN users ON actions.relatedUserId = users.userId WHERE relatedEventId = :eventId")
+    @Query("SELECT * FROM actions WHERE relatedEventId = :eventId")
     @Transaction
     fun getActionsForEventLiveData(eventId: String): LiveData<List<LocalAction>>
 

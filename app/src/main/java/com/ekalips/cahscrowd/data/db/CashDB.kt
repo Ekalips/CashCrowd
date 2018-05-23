@@ -11,7 +11,7 @@ import com.ekalips.cahscrowd.data.event.local.LocalEventsDao
 import com.ekalips.cahscrowd.data.user.local.LocalUserDao
 import com.ekalips.cahscrowd.data.user.local.model.LocalBaseUser
 
-@Database(version = 10,
+@Database(version = 11,
         exportSchema = false,
         entities = [LocalAction::class, LocalEvent::class, LocalBaseUser::class])
 abstract class CashDB : RoomDatabase() {
