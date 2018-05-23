@@ -13,6 +13,9 @@ interface LocalUserDao {
     @Query("SELECT * FROM users WHERE userId = :uId")
     fun getUser(uId: String): LocalBaseUser?
 
+    @Query("SELECT * FROM users WHERE users.userId = :userId")
+    fun getUserLiveData(userId: String): LiveData<LocalBaseUser>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(vararg users: LocalBaseUser)
 

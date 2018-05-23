@@ -31,7 +31,7 @@ class RemoteUserDataSource @Inject constructor(private val api: Api) {
         }
     }
 
-    fun getMe(token: String): Single<ThisUser> {
+    fun getMe(token: String): Single<BaseUser> {
         return Single.fromCallable {
             val response = api.getMe(token).execute()
             if (response.isSuccessful) {

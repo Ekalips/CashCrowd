@@ -3,8 +3,9 @@ package com.ekalips.cahscrowd.main.di
 import android.support.v4.app.FragmentManager
 import com.ekalips.cahscrowd.di.scopes.ActivityScope
 import com.ekalips.cahscrowd.di.scopes.FragmentScope
-import com.ekalips.cahscrowd.main.mvvm.view.child.EventsFragment
 import com.ekalips.cahscrowd.main.mvvm.view.MainActivity
+import com.ekalips.cahscrowd.main.mvvm.view.child.EventsFragment
+import com.ekalips.cahscrowd.main.mvvm.view.child.ProfileFragment
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
@@ -23,6 +24,10 @@ class MainFragmentsProvider {
         @FragmentScope
         @ContributesAndroidInjector
         fun eventsFragment(): EventsFragment
+
+        @FragmentScope
+        @ContributesAndroidInjector
+        fun profileFragment(): ProfileFragment
     }
 
 }

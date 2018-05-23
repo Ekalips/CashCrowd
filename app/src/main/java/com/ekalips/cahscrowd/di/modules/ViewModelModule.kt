@@ -12,6 +12,7 @@ import com.ekalips.cahscrowd.event.mvvm.vm.child.EventActionsViewModel
 import com.ekalips.cahscrowd.event.mvvm.vm.child.EventParticipantsViewModel
 import com.ekalips.cahscrowd.main.mvvm.vm.MainScreenViewModel
 import com.ekalips.cahscrowd.main.mvvm.vm.child.EventsFragmentViewModel
+import com.ekalips.cahscrowd.main.mvvm.vm.child.ProfileFragmentViewModel
 import com.ekalips.cahscrowd.welcome.mvvm.vm.SplashScreenViewModel
 import dagger.Binds
 import dagger.Module
@@ -68,6 +69,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(value = DeepLinkViewModel::class)
     internal abstract fun bindDeepLinkViewModel(deepLinkViewModel: DeepLinkViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(value = ProfileFragmentViewModel::class)
+    internal abstract fun bindProfileVM(profileFragmentViewModel: ProfileFragmentViewModel): ViewModel
 
     @Binds
     internal abstract fun bindViewModelFactory(factory: BaseViewModelFactory): ViewModelProvider.Factory

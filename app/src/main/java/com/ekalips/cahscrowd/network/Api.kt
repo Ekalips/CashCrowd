@@ -24,7 +24,7 @@ interface Api {
     fun getUser(@Header(TOKEN_FIELD) token: String, @Path("user_id") id: String): Call<RemoteBaseUser>
 
     @GET("me")
-    fun getMe(@Header(TOKEN_FIELD) token: String): Call<RemoteThisUser>
+    fun getMe(@Header(TOKEN_FIELD) token: String): Call<RemoteBaseUser>
 
     @GET("events")
     fun getEvents(@Header(TOKEN_FIELD) token: String): Call<List<RemoteEvent>>

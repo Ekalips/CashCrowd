@@ -4,7 +4,7 @@ ext {
 
     appCompatVersion = "27.1.1"
     rxJavaVersion = "2.1.9"
-    rxAndroidVersion = "2.0.1"
+    rxAndroidVersion = "2.0.2"
     daggerVersion = "2.15"
     archComponentsVersion = "1.1.1"
     archPagingVersion = "1.0.0"

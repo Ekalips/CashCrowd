@@ -5,6 +5,7 @@ import com.ekalips.base.navigation.BaseFragmentNavigator
 import com.ekalips.cahscrowd.R
 import com.ekalips.cahscrowd.di.scopes.ActivityScope
 import com.ekalips.cahscrowd.main.mvvm.view.child.EventsFragment
+import com.ekalips.cahscrowd.main.mvvm.view.child.ProfileFragment
 import javax.inject.Inject
 
 @ActivityScope
@@ -36,7 +37,8 @@ class MainActivityNavigator @Inject constructor(fragmentManager: FragmentManager
 
     private fun navigateToProfileScreen() {
         if (compareWithCurrentAndApply(MainActivityPlace.PROFILE)) {
-            clearCurrentFragment()
+            val newFragment = getFragment("ProfileFragment") ?: ProfileFragment.newInstance()
+            replaceFragment(newFragment, "ProfileFragment")
         }
     }
 

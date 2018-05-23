@@ -47,4 +47,7 @@
     <string name="success_accept_invite">Hooray, you accepted invite!</string>
     <string name="error_auth_required">You are not authenticated in the application</string>
     <string name="error_handle_deep_link">Error handling deep link</string>
+    <string name="log_out">Log out</string>
+    <string name="dialog_logout_title">Log out?</string>
+    <string name="dialog_logout_body">Are you sure that you want to log out?</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.ekalips.cahscrowd.data.user
 
+import android.arch.lifecycle.LiveData
 import com.ekalips.cahscrowd.data.user.local.LocalUserDataSource
 import com.ekalips.cahscrowd.data.user.model.BaseUser
 import com.ekalips.cahscrowd.data.user.model.ThisUser
@@ -44,29 +45,19 @@ class UserDataProvider @Inject constructor(private val localUserDataSource: Loca
                 .wrap(errorHandler.getHandler())
     }
 
-    fun getMe(): Observable<ThisUser> {
-        return Observable.concatDelayError(Observable.just(localUserDataSource.getMyUser().toObservable(),
-                getAccessToken().flatMap { remoteUserDataSource.getMe(it) }.toObservable()))
+    fun getUserLiveData(id: String): LiveData<BaseUser> {
+        getAccessToken().flatMap { remoteUserDataSource.getUser(it, id) }
                 .wrap(errorHandler.getHandler())
+                .subscribe({ saveUsers(it) }, { it.printStackTrace() })
+        return localUserDataSource.getUserLiveData(id)
     }
 
-    fun getUsersSmart(vararg userIds: String): Observable<List<BaseUser>> {
-        val localRequest = Observable.fromIterable(userIds.toList())
-                .switchMap { t -> localUserDataSource.getUser(t).toObservable() }
-                .share()
-
-        return Observable.concatDelayError(Observable.just(localRequest.filter { it.loaded }.toList().toObservable(),
-                localRequest.filter { !it.loaded }.toList().toObservable().flatMap { users ->
-                    if (users.isEmpty()) {
-                        Observable.empty<List<BaseUser>>()
-                    } else
-                        getAccessToken().flatMap {
-                            remoteUserDataSource.getUsers(it, *users.map { it.id }.toTypedArray())
-                                    .doOnSuccess { saveUsers(*it.toTypedArray()) }
-                        }.toObservable()
-                }))
+    fun getMeLiveData(): LiveData<ThisUser> {
+        getAccessToken().flatMap { remoteUserDataSource.getMe(it) }
+                .doOnSuccess { localUserDataSource.saveUser(it) }
                 .wrap(errorHandler.getHandler())
-
+                .subscribe({  }, { it.printStackTrace() })
+        return localUserDataSource.getMyUserLiveData()
     }
 
     fun saveUsers(vararg users: BaseUser) {
