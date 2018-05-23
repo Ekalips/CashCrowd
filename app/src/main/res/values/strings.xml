@@ -54,4 +54,7 @@
     <string name="event_page_participants">Participants</string>
     <string name="event_page_accounting">Accounting</string>
     <string name="cancel">Cancel</string>
+    <string name="error_fetching_event_accounting">Error fetching event accounting</string>
+    <string name="error_fetching_event_actions">Error fetching event actions</string>
+    <string name="error_fetching_event_participants">Error fetching event participants</string>
 </resources>

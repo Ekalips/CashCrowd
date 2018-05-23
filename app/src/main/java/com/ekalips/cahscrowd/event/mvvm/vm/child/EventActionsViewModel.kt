@@ -3,10 +3,13 @@ package com.ekalips.cahscrowd.event.mvvm.vm.child
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import com.ekalips.base.state.BaseViewState
+import com.ekalips.cahscrowd.R
 import com.ekalips.cahscrowd.data.action.Action
 import com.ekalips.cahscrowd.data.action.ActionsDataProvider
+import com.ekalips.cahscrowd.providers.ResourceProvider
 import com.ekalips.cahscrowd.stuff.base.CCViewModel
 import com.ekalips.cahscrowd.stuff.data.Listing
+import com.ekalips.cahscrowd.stuff.other.post
 import com.ekalips.cahscrowd.stuff.paging.NetworkState
 import com.ekalips.cahscrowd.stuff.paging.Status
 import javax.inject.Inject
@@ -17,7 +20,8 @@ class EventActionsViewState : BaseViewState() {
     val error = MediatorLiveData<String>()
 }
 
-class EventActionsViewModel @Inject constructor(private val actionsDataProvider: ActionsDataProvider) : CCViewModel<EventActionsViewState>() {
+class EventActionsViewModel @Inject constructor(private val actionsDataProvider: ActionsDataProvider,
+                                                private val resourceProvider: ResourceProvider) : CCViewModel<EventActionsViewState>() {
     override val state = EventActionsViewState()
 
     init {
@@ -33,6 +37,7 @@ class EventActionsViewModel @Inject constructor(private val actionsDataProvider:
         state.loading.addSource(listing.networkState, { state.loading.postValue(it == NetworkState.LOADING) })
         state.error.addSource(listing.networkState, {
             if (it?.status == Status.FAILED) {
+                state.toast post resourceProvider.getString(R.string.error_fetching_event_actions)
                 state.error.postValue(it.msg)
             }
         })
