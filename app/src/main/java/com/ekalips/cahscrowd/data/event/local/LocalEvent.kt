@@ -16,10 +16,14 @@ open class LocalEvent(
         override var name: String,
         @ColumnInfo(name = "eventDescription")
         override var description: String,
+        @ColumnInfo(name = "lastUpdate")
+        override var lastUpdate: Long,
+        @ColumnInfo(name = "totalAmount")
+        override var totalAmount: Double,
         @Ignore override var actions: List<Action>?) : Event {
 
-    constructor() : this("", "", "", emptyList())
+    constructor() : this("", "", "", 0, 0.0, emptyList())
 
 }
 
-fun Event.toLocal() = LocalEvent(id, name, description, actions)
+fun Event.toLocal() = LocalEvent(id, name, description, lastUpdate, totalAmount, actions)

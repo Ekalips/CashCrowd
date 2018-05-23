@@ -23,6 +23,10 @@ class ActionsRecyclerViewAdapter : BindingRecyclerViewAdapter<RvItemEventActionC
         holder.binding.executePendingBindings()
     }
 
+    override fun getItemCount(): Int {
+        return if (!useLarge) Math.min(super.getItemCount(), MAX_COUNT_IN_COLLAPSED) else super.getItemCount()
+    }
+
     fun changeMode(useLarge: Boolean) {
         if (this.useLarge != useLarge) {
             this.useLarge = useLarge
@@ -30,6 +34,7 @@ class ActionsRecyclerViewAdapter : BindingRecyclerViewAdapter<RvItemEventActionC
     }
 
     companion object {
+        val MAX_COUNT_IN_COLLAPSED = 5
         val DIFF_COMPARATOR = object : DiffUtil.ItemCallback<Action>() {
             override fun areItemsTheSame(oldItem: Action?, newItem: Action?): Boolean = oldItem?.id == newItem?.id
             override fun areContentsTheSame(oldItem: Action?, newItem: Action?): Boolean = false

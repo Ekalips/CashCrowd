@@ -64,9 +64,10 @@ class EventsRecyclerViewAdapter(callback: AdapterCallbacks? = null) : BindingRec
         }
         val manager = holder.binding.actionsRv.layoutManager as LinearLayoutManager
         manager.orientation = if (collapse) LinearLayoutManager.HORIZONTAL else LinearLayoutManager.VERTICAL
-        holder.binding.lastActionTimeTv.visibility = if (collapse) View.VISIBLE else View.GONE
+//        holder.binding.lastActionTimeTv.visibility = if (collapse) View.VISIBLE else View.GONE
         holder.binding.actionsCounterContainer.visibility = if (collapse) View.VISIBLE else View.GONE
         (holder.binding.actionsRv.adapter as ActionsRecyclerViewAdapter).changeMode(!collapse)
+        holder.binding.expanded = !collapse
         changeArrow(holder, collapse, animate)
     }
 

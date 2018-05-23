@@ -7,6 +7,8 @@ interface Event {
     var id: String
     var name: String
     var description: String
+    var lastUpdate: Long
+    var totalAmount: Double
     var actions: List<Action>?
 
 }

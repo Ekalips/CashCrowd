@@ -25,7 +25,7 @@
 
         <variable
             name="onEventClick"
-            type="Runnable"/>
+            type="Runnable" />
     </data>
 
     <FrameLayout
@@ -44,10 +44,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:clickable="true"
                 android:focusable="true"
                 android:onClick="@{onEventClick}"
+                android:orientation="vertical"
                 android:paddingBottom="10dp"
                 android:paddingTop="16dp">
 
@@ -89,7 +89,6 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
-                        android:visibility="@{event.actions.size() > 0}"
                         android:background="?selectableItemBackgroundBorderless"
                         android:clickable="true"
                         android:focusable="true"
@@ -97,7 +96,8 @@
                         android:paddingEnd="16dp"
                         android:paddingStart="16dp"
                         android:paddingTop="8dp"
-                        android:src="@drawable/ic_arrow_up_down" />
+                        android:src="@drawable/ic_arrow_up_down"
+                        android:visibility="@{event.actions.size() > 0}" />
 
                 </RelativeLayout>
 
@@ -131,7 +131,7 @@
                         android:id="@+id/actionsCounterContainer"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.3"
+                        android:layout_weight="0.2"
                         android:gravity="center">
 
                         <ImageView
@@ -144,12 +144,13 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:maxLength="3"
                             android:maxLines="1"
                             android:paddingLeft="4dp"
                             android:paddingRight="4dp"
                             android:text='@{newCount > 0 ? ("+" + newCount) : String.valueOf(event.actions.size())}'
                             android:textColor="@{newCount > 0 ? @color/colorAccent : @color/black}"
-                            tools:text="+1" />
+                            tools:text="+15" />
                     </LinearLayout>
 
 
@@ -162,17 +163,17 @@
                         app:layoutManager="android.support.v7.widget.LinearLayoutManager"
                         tools:listitem="@layout/rv_item_event_action_collapsible" />
 
-                    <TextView
-                        android:id="@+id/lastActionTimeTv"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.3"
-                        android:alpha="0.3"
-                        android:gravity="center"
-                        android:text="@{lastActionTime}"
-                        android:textColor="#000000"
-                        android:visibility="@{lastActionTime == null ? View.INVISIBLE : View.VISIBLE}"
-                        tools:text="May 24" />
+                    <!--<TextView-->
+                    <!--android:id="@+id/lastActionTimeTv"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_weight="0.3"-->
+                    <!--android:alpha="0.3"-->
+                    <!--android:gravity="center"-->
+                    <!--android:text="@{lastActionTime}"-->
+                    <!--android:textColor="#000000"-->
+                    <!--android:visibility="@{lastActionTime == null ? View.INVISIBLE : View.VISIBLE}"-->
+                    <!--tools:text="May 24" />-->
 
 
                 </LinearLayout>

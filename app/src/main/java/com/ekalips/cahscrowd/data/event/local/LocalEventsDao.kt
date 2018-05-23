@@ -6,7 +6,7 @@ import android.arch.persistence.room.*
 @Dao
 interface LocalEventsDao {
 
-    @Query("SELECT * FROM events")
+    @Query("SELECT * FROM events ORDER BY events.lastUpdate DESC")
     fun getEvents(): List<LocalEvent>
 
     @Query("DELETE FROM events")
@@ -20,6 +20,6 @@ interface LocalEventsDao {
     fun getEvent(eventId: String): LiveData<LocalEvent>
 
     @Transaction
-    @Query("SELECT * FROM events")
+    @Query("SELECT * FROM events ORDER BY events.lastUpdate DESC")
     fun getEventsLiveData(): LiveData<List<LocalEvent>>
 }

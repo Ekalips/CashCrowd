@@ -48,8 +48,6 @@ class LocalActionsDataSource @Inject constructor(private val cashDB: CashDB,
         val result = MediatorLiveData<List<Action>>()
 
         fun mapUsersToActions(actions: List<Action>?, users: List<BaseUser>?): List<Action>? {
-            println("mapUsersToActions_Actions: $actions")
-            println("mapUsersToActions_Users: $users")
             return if (actions == null) {
                 null
             } else {
