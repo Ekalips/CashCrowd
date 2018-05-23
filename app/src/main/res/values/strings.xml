@@ -14,7 +14,7 @@
     <string name="events_screen_title">Events</string>
     <string name="create_event_btn_text">Yes, let\'s go!</string>
     <string name="join_event_btn_text">No, I just got invited</string>
-    <string name="create_event_title">Lest create new event?</string>
+    <string name="create_event_title">Lets create new event?</string>
     <string name="hint_event_title">Event title</string>
     <string name="hint_event_description">Event description</string>
     <string name="create_event_screen_title">Create event</string>
