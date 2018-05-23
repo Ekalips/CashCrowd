@@ -50,4 +50,8 @@
     <string name="log_out">Log out</string>
     <string name="dialog_logout_title">Log out?</string>
     <string name="dialog_logout_body">Are you sure that you want to log out?</string>
+    <string name="event_page_actions">Actions</string>
+    <string name="event_page_participants">Participants</string>
+    <string name="event_page_accounting">Accounting</string>
+    <string name="cancel">Cancel</string>
 </resources>

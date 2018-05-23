@@ -8,6 +8,7 @@ import com.ekalips.cahscrowd.auth.mvvm.vm.AuthScreenViewModel
 import com.ekalips.cahscrowd.create_event.mvvm.vm.CreateEventScreenViewModel
 import com.ekalips.cahscrowd.deep.DeepLinkViewModel
 import com.ekalips.cahscrowd.event.mvvm.vm.EventScreenViewModel
+import com.ekalips.cahscrowd.event.mvvm.vm.child.EventAccountingViewModel
 import com.ekalips.cahscrowd.event.mvvm.vm.child.EventActionsViewModel
 import com.ekalips.cahscrowd.event.mvvm.vm.child.EventParticipantsViewModel
 import com.ekalips.cahscrowd.main.mvvm.vm.MainScreenViewModel
@@ -74,6 +75,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(value = ProfileFragmentViewModel::class)
     internal abstract fun bindProfileVM(profileFragmentViewModel: ProfileFragmentViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(value = EventAccountingViewModel::class)
+    internal abstract fun bindEventAccountingViewModel(vm: EventAccountingViewModel): ViewModel
 
     @Binds
     internal abstract fun bindViewModelFactory(factory: BaseViewModelFactory): ViewModelProvider.Factory

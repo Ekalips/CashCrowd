@@ -6,6 +6,7 @@ import android.arch.lifecycle.Transformations
 import android.util.Log
 import com.ekalips.cahscrowd.data.event.local.LocalEventsDataStore
 import com.ekalips.cahscrowd.data.event.remote.RemoteEventDataStore
+import com.ekalips.cahscrowd.data.statistics.StatisticData
 import com.ekalips.cahscrowd.data.user.UserDataProvider
 import com.ekalips.cahscrowd.data.user.model.BaseUser
 import com.ekalips.cahscrowd.stuff.ErrorHandler
@@ -117,4 +118,8 @@ class EventsDataProvider @Inject constructor(private val userDataProvider: UserD
                 .wrap(errorHandler.getHandler())
     }
 
+    fun getEventStatistics(eventId: String): Single<StatisticData> {
+        return userDataProvider.getAccessToken().flatMap { remoteEventDataStore.getEventStatistics(it, eventId) }
+                .wrap(errorHandler.getHandler())
+    }
 }

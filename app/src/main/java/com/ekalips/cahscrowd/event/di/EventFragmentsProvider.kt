@@ -4,6 +4,7 @@ import android.support.v4.app.FragmentManager
 import com.ekalips.cahscrowd.di.scopes.ActivityScope
 import com.ekalips.cahscrowd.di.scopes.FragmentScope
 import com.ekalips.cahscrowd.event.mvvm.view.EventActivity
+import com.ekalips.cahscrowd.event.mvvm.view.child.EventAccountingFragment
 import com.ekalips.cahscrowd.event.mvvm.view.child.EventActionsFragment
 import com.ekalips.cahscrowd.event.mvvm.view.child.EventParticipantsFragment
 import dagger.Module
@@ -28,6 +29,10 @@ class EventFragmentsProvider {
         @FragmentScope
         @ContributesAndroidInjector
         fun participantsFragment(): EventParticipantsFragment
+
+        @FragmentScope
+        @ContributesAndroidInjector
+        fun accountingFragment(): EventAccountingFragment
     }
 
 }

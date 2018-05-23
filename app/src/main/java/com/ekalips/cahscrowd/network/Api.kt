@@ -2,6 +2,7 @@ package com.ekalips.cahscrowd.network
 
 import com.ekalips.cahscrowd.data.action.remote.RemoteAction
 import com.ekalips.cahscrowd.data.event.remote.RemoteEvent
+import com.ekalips.cahscrowd.data.statistics.RemoteStatisticData
 import com.ekalips.cahscrowd.data.user.remote.model.RemoteBaseUser
 import com.ekalips.cahscrowd.data.user.remote.model.RemoteThisUser
 import com.ekalips.cahscrowd.network.body.CreateActionBody
@@ -56,4 +57,6 @@ interface Api {
     @POST("invites")
     fun acceptInviteHash(@Header(TOKEN_FIELD) token: String, @Query("hash") inviteHash: String): Call<RemoteEvent>
 
+    @POST("events/{event_id}/calculate")
+    fun getEventStatistics(@Header(TOKEN_FIELD) token: String, @Path("event_id") eventId: String): Call<RemoteStatisticData>
 }

@@ -1,6 +1,7 @@
 package com.ekalips.cahscrowd.data.event.remote
 
 import com.ekalips.cahscrowd.data.event.Event
+import com.ekalips.cahscrowd.data.statistics.StatisticData
 import com.ekalips.cahscrowd.data.user.model.BaseUser
 import com.ekalips.cahscrowd.network.Api
 import com.ekalips.cahscrowd.network.body.CreateEventBody
@@ -91,6 +92,16 @@ class RemoteEventDataStore @Inject constructor(private val api: Api) {
     fun acceptInviteHash(token: String, inviteHash: String): Single<Event> {
         return Single.fromCallable {
             val result = api.acceptInviteHash(token, inviteHash).execute()
+            if (result.isSuccessful) {
+                return@fromCallable result.body()!!
+            }
+            throw ServerError(result.code())
+        }
+    }
+
+    fun getEventStatistics(token: String, eventId: String): Single<StatisticData>{
+        return Single.fromCallable {
+            val result = api.getEventStatistics(token, eventId).execute()
             if (result.isSuccessful) {
                 return@fromCallable result.body()!!
             }

@@ -16,14 +16,15 @@ class CreateEventScreenViewState : BaseViewState() {
     val eventTitle = MutableLiveData<String>()
     val eventDescription = MutableLiveData<String>()
     val guests = MutableLiveData<List<GuestUserWrap>>()
+    val createInProgres = MutableLiveData<Boolean>()
 
     val addGuestTrigger = SingleLiveEvent<Void>()
-
 }
 
 class CreateEventScreenViewModel @Inject constructor(private val resourceProvider: ResourceProvider,
                                                      private val eventsDataProvider: EventsDataProvider) : CCViewModel<CreateEventScreenViewState>() {
     override val state = CreateEventScreenViewState()
+
 
     fun onAddGuestClicked() {
         state.addGuestTrigger.call()
@@ -57,16 +58,19 @@ class CreateEventScreenViewModel @Inject constructor(private val resourceProvide
 
     fun createEvent() {
         synchronized(lock) {
-            if (state.eventTitle.value.isNullOrBlank() || state.eventDescription.value.isNullOrBlank()) {
+            if (state.createInProgres.value == true || state.eventTitle.value.isNullOrBlank() || state.eventDescription.value.isNullOrBlank()) {
                 return
             }
         }
-        eventsDataProvider.createEvent(state.eventTitle.value!!, state.eventDescription.value!!).subscribe({
-            state.toast.postValue(resourceProvider.getString(R.string.success_event_create))
-            goBack()
-        }, {
-            it.printStackTrace()
-            state.toast.postValue(resourceProvider.getString(R.string.error_event_create))
-        })
+        eventsDataProvider.createEvent(state.eventTitle.value!!, state.eventDescription.value!!)
+                .doOnSubscribe { state.createInProgres.postValue(true) }
+                .doOnTerminate { state.createInProgres.postValue(false) }
+                .subscribe({
+                    state.toast.postValue(resourceProvider.getString(R.string.success_event_create))
+                    goBack()
+                }, {
+                    it.printStackTrace()
+                    state.toast.postValue(resourceProvider.getString(R.string.error_event_create))
+                })
     }
 }

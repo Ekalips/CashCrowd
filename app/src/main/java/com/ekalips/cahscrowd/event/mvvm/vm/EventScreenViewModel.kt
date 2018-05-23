@@ -15,7 +15,7 @@ import com.firebase.ui.auth.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
 enum class EventScreenPages {
-    ACTIONS, PARTICIPANTS
+    ACTIONS, PARTICIPANTS, ACCOUNTING
 }
 
 class EventScreenViewState(val eventId: MutableLiveData<String>,
@@ -23,6 +23,7 @@ class EventScreenViewState(val eventId: MutableLiveData<String>,
     val currentPage = MutableLiveData<EventScreenPages>()
 
     val addActionTrigger = SingleLiveEvent<Void>()
+    val refreshStatisticsTrigger = SingleLiveEvent<Void>()
 }
 
 class EventScreenViewModel @Inject constructor(private val eventsDataProvider: EventsDataProvider,
@@ -47,6 +48,7 @@ class EventScreenViewModel @Inject constructor(private val eventsDataProvider: E
         when (state.currentPage.value) {
             EventScreenPages.ACTIONS -> state.addActionTrigger.call()
             EventScreenPages.PARTICIPANTS -> shareEvent()
+            EventScreenPages.ACCOUNTING -> state.refreshStatisticsTrigger.call()
             else -> println(state.currentPage.value)
         }
     }

@@ -17,6 +17,7 @@ import com.ekalips.cahscrowd.BR
 import com.ekalips.cahscrowd.R
 import com.ekalips.cahscrowd.databinding.ActivityEventBinding
 import com.ekalips.cahscrowd.databinding.DialogAddActionBinding
+import com.ekalips.cahscrowd.event.mvvm.view.child.EventAccountingFragment
 import com.ekalips.cahscrowd.event.mvvm.view.child.EventActionsFragment
 import com.ekalips.cahscrowd.event.mvvm.view.child.EventParticipantsFragment
 import com.ekalips.cahscrowd.event.mvvm.vm.EventScreenPages
@@ -59,8 +60,9 @@ class EventActivity : CCActivity<EventScreenViewModel, ActivityEventBinding>() {
 
         for (page in viewModel.availablePages) {
             when (page) {
-                EventScreenPages.ACTIONS -> viewPagerAdapter.addItem("Actions" to EventActionsFragment.newInstance())
-                EventScreenPages.PARTICIPANTS -> viewPagerAdapter.addItem("Participants" to EventParticipantsFragment.newInstance())
+                EventScreenPages.ACTIONS -> viewPagerAdapter.addItem(getString(R.string.event_page_actions) to EventActionsFragment.newInstance())
+                EventScreenPages.PARTICIPANTS -> viewPagerAdapter.addItem(getString(R.string.event_page_participants) to EventParticipantsFragment.newInstance())
+                EventScreenPages.ACCOUNTING -> viewPagerAdapter.addItem(getString(R.string.event_page_accounting) to EventAccountingFragment.newInstance())
             }
         }
 
@@ -90,6 +92,7 @@ class EventActivity : CCActivity<EventScreenViewModel, ActivityEventBinding>() {
         when (page) {
             EventScreenPages.ACTIONS -> binding?.actionFab?.setImageResource(R.drawable.ic_attach_money)
             EventScreenPages.PARTICIPANTS -> binding?.actionFab?.setImageResource(R.drawable.ic_share)
+            EventScreenPages.ACCOUNTING -> binding?.actionFab?.setImageResource(R.drawable.ic_refresh)
         }
     }
 
