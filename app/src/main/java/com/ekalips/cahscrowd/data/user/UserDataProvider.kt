@@ -22,6 +22,8 @@ class UserDataProvider @Inject constructor(private val localUserDataSource: Loca
         return remoteUserDataSource.authenticate(idToken, deviceToken).map { it.also { localUserDataSource.saveMyUser(it) } }.wrap(errorHandler.getHandler())
     }
 
+    fun getAllLiveData() = localUserDataSource.getAllLiveData()
+
     fun getAccessToken(): Single<String> {
         return localUserDataSource.getMyToken()
     }
@@ -56,7 +58,7 @@ class UserDataProvider @Inject constructor(private val localUserDataSource: Loca
         getAccessToken().flatMap { remoteUserDataSource.getMe(it) }
                 .doOnSuccess { localUserDataSource.saveUser(it) }
                 .wrap(errorHandler.getHandler())
-                .subscribe({  }, { it.printStackTrace() })
+                .subscribe({ }, { it.printStackTrace() })
         return localUserDataSource.getMyUserLiveData()
     }
 
@@ -65,6 +67,13 @@ class UserDataProvider @Inject constructor(private val localUserDataSource: Loca
                 .wrap(errorHandler.getHandler())
                 .subscribe({ "${users.size} users saved" }, { println("Error saving user"); it.printStackTrace() })
 
+    }
+
+    fun loadUsers(vararg ids: String): Completable {
+        return getAccessToken().flatMap { remoteUserDataSource.getUsers(it, *ids) }
+                .doOnSuccess { localUserDataSource.saveUsers(*it.toTypedArray()) }
+                .wrap(errorHandler.getHandler())
+                .toCompletable()
     }
 
 }

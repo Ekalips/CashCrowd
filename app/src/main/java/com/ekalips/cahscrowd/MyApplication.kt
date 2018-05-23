@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.app.Service
 import com.ekalips.cahscrowd.di.app.DaggerAppComponent
+import com.ekalips.cahscrowd.providers.UserLoadingProvider
 import com.ekalips.cahscrowd.stuff.ErrorHandler
 import com.ekalips.cahscrowd.stuff.InsignificantError
 import dagger.android.AndroidInjector
@@ -26,6 +27,9 @@ class MyApplication : Application(), HasActivityInjector, HasServiceInjector {
     @Inject
     lateinit var errorHandler: ErrorHandler
 
+    @Inject
+    lateinit var userLoadingProvider: UserLoadingProvider
+
     override fun onCreate() {
         super.onCreate()
 
@@ -35,6 +39,7 @@ class MyApplication : Application(), HasActivityInjector, HasServiceInjector {
                 .inject(this)
 
         setUpErrorHandlers()
+        userLoadingProvider.start()
     }
 
     private fun setUpErrorHandlers() {

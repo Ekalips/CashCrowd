@@ -79,4 +79,8 @@ class EventScreenViewModel @Inject constructor(private val eventsDataProvider: E
                             { state.toast.postValue(resourceProvider.getString(R.string.error_create_action)) })
         }
     }
+
+    fun onExtraButtonClick(){
+        state.currentPage.value = EventScreenPages.ACCOUNTING
+    }
 }

@@ -12,5 +12,5 @@ interface StatisticData {
 
 interface DebtData {
     var amount: Double
-    var user: BaseUser
+    var user: BaseUser?
 }

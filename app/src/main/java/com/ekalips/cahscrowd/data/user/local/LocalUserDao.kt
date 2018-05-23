@@ -22,6 +22,9 @@ interface LocalUserDao {
     @Query("SELECT * FROM users")
     fun getAllUsers(): List<LocalBaseUser>
 
+    @Query("SELECT * FROM users")
+    fun getAllUsersLiveData(): LiveData<List<LocalBaseUser>>
+
     @Query("DELETE FROM users")
     fun deleteAll()
 

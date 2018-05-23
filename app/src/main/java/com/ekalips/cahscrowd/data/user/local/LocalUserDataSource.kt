@@ -21,6 +21,8 @@ class LocalUserDataSource @Inject constructor(private val cashDB: CashDB,
     private val userSharedPrefs = sharedPreferencesProvider.getNamedPreferences(USER_PREFS_NAME)
 
 
+    fun getAllLiveData() = userDao.getAllUsersLiveData() as LiveData<List<BaseUser>>
+
     fun getMyToken(): Single<String> = Single.fromCallable { userSharedPrefs.getString(PREF_USER_ACCESS_TOKEN, "") }
 
     fun getMyUser(): Single<ThisUser> {
