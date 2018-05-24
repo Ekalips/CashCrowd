@@ -44,6 +44,7 @@ class EventActivity : CCActivity<EventScreenViewModel, ActivityEventBinding>() {
         viewModel.state.event.observe(this, Observer { it?.actions })
         viewModel.state.currentPage.observe(this, Observer { it?.let { onStatePageChangeListener(it) } })
         viewModel.state.addActionTrigger.observe(this, Observer { showAddActionSelectorDialog() })
+        viewModel.state.showDescriptionTrigger.observe(this, Observer { showEventDescription() })
         initViewPager()
         extractEventId(intent)?.let {
             viewModel.init(it)
@@ -148,6 +149,17 @@ class EventActivity : CCActivity<EventScreenViewModel, ActivityEventBinding>() {
             if (created) dialog.dismiss()
         }
         dialogBinding.onCancel = Runnable { dialog.dismiss() }
+    }
+
+    private fun showEventDescription() {
+        val eventText = viewModel.state.event.value?.description
+                ?: getString(R.string.no_description)
+
+        AlertDialog.Builder(this)
+                .setTitle(R.string.event_description)
+                .setMessage(eventText)
+                .setPositiveButton(R.string.ok, null)
+                .show()
     }
 
     companion object {

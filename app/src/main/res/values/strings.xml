@@ -62,4 +62,7 @@
     <string name="participants">Participants</string>
     <string name="actions">Actions</string>
     <string name="user_balance">Balance: %s</string>
+    <string name="no_description">Owner didn\'t provide description</string>
+    <string name="event_description">Event decription</string>
+    <string name="ok">OK</string>
 </resources>

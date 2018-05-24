@@ -24,6 +24,7 @@ class EventScreenViewState(val eventId: MutableLiveData<String>,
 
     val addActionTrigger = SingleLiveEvent<Void>()
     val refreshStatisticsTrigger = SingleLiveEvent<Void>()
+    val showDescriptionTrigger = SingleLiveEvent<Void>()
 }
 
 class EventScreenViewModel @Inject constructor(private val eventsDataProvider: EventsDataProvider,
@@ -81,6 +82,6 @@ class EventScreenViewModel @Inject constructor(private val eventsDataProvider: E
     }
 
     fun onExtraButtonClick(){
-        state.currentPage.value = EventScreenPages.ACCOUNTING
+        state.showDescriptionTrigger.call()
     }
 }
