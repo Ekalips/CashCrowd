@@ -4,6 +4,7 @@ import android.support.v4.app.FragmentManager
 import com.ekalips.base.navigation.BaseFragmentNavigator
 import com.ekalips.cahscrowd.R
 import com.ekalips.cahscrowd.di.scopes.ActivityScope
+import com.ekalips.cahscrowd.main.mvvm.view.child.AccountingFragment
 import com.ekalips.cahscrowd.main.mvvm.view.child.EventsFragment
 import com.ekalips.cahscrowd.main.mvvm.view.child.ProfileFragment
 import javax.inject.Inject
@@ -31,7 +32,8 @@ class MainActivityNavigator @Inject constructor(fragmentManager: FragmentManager
 
     private fun navigateToAccountingScreen() {
         if (compareWithCurrentAndApply(MainActivityPlace.ACCOUNTING)) {
-            clearCurrentFragment()
+            val newFragment = getFragment("AccountingFragment") ?: AccountingFragment.newInstance()
+            replaceFragment(newFragment, "AccountingFragment")
         }
     }
 
