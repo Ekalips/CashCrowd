@@ -4,6 +4,7 @@ import android.text.format.DateUtils
 import android.util.Log
 import com.ekalips.cahscrowd.data.user.UserDataProvider
 import com.ekalips.cahscrowd.data.user.model.BaseUser
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class UserLoadingProvider @Inject constructor(private val userDataProvider: UserDataProvider) {
@@ -12,7 +13,9 @@ class UserLoadingProvider @Inject constructor(private val userDataProvider: User
     private val lock = Any()
 
     fun start() {
-        userDataProvider.getAllLiveData().observeForever { onUsersUpdateTriggered(it) }
+        userDataProvider.getAllFlowable()
+                .subscribeOn(Schedulers.io())
+                .subscribe({ onUsersUpdateTriggered(it) }, { it.printStackTrace() })
     }
 
     private fun onUsersUpdateTriggered(users: List<BaseUser>?) {

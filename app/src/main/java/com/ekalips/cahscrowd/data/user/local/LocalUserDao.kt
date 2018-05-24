@@ -3,6 +3,7 @@ package com.ekalips.cahscrowd.data.user.local
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import com.ekalips.cahscrowd.data.user.local.model.LocalBaseUser
+import io.reactivex.Flowable
 
 @Dao
 interface LocalUserDao {
@@ -24,6 +25,9 @@ interface LocalUserDao {
 
     @Query("SELECT * FROM users")
     fun getAllUsersLiveData(): LiveData<List<LocalBaseUser>>
+
+    @Query("SELECT * FROM users")
+    fun getAllUsersFlowable(): Flowable<List<LocalBaseUser>>
 
     @Query("DELETE FROM users")
     fun deleteAll()

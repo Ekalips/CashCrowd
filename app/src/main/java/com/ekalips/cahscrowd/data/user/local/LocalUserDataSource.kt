@@ -11,6 +11,7 @@ import com.ekalips.cahscrowd.data.user.model.BaseUser
 import com.ekalips.cahscrowd.data.user.model.ThisUser
 import com.ekalips.cahscrowd.providers.SharedPreferencesProvider
 import com.ekalips.cahscrowd.stuff.utils.wrap
+import io.reactivex.Flowable
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -22,6 +23,8 @@ class LocalUserDataSource @Inject constructor(private val cashDB: CashDB,
 
 
     fun getAllLiveData() = userDao.getAllUsersLiveData() as LiveData<List<BaseUser>>
+
+    fun getAllUsersFlowable(): Flowable<List<LocalBaseUser>> = userDao.getAllUsersFlowable()
 
     fun getMyToken(): Single<String> = Single.fromCallable { userSharedPrefs.getString(PREF_USER_ACCESS_TOKEN, "") }
 

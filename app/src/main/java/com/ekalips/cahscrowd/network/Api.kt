@@ -7,6 +7,7 @@ import com.ekalips.cahscrowd.data.user.remote.model.RemoteBaseUser
 import com.ekalips.cahscrowd.data.user.remote.model.RemoteThisUser
 import com.ekalips.cahscrowd.network.body.CreateActionBody
 import com.ekalips.cahscrowd.network.body.CreateEventBody
+import com.ekalips.cahscrowd.network.body.GetUsersBody
 import com.ekalips.cahscrowd.network.request.AuthBody
 import com.ekalips.cahscrowd.network.response.GetEventShareLinkResponse
 import retrofit2.Call
@@ -34,7 +35,7 @@ interface Api {
     fun createEvent(@Header(TOKEN_FIELD) token: String, @Body body: CreateEventBody): Call<RemoteEvent>
 
     @POST("users")
-    fun batchGetUsers(@Header(TOKEN_FIELD) token: String, @Body body: List<String>): Call<List<RemoteBaseUser>>
+    fun batchGetUsers(@Header(TOKEN_FIELD) token: String, @Body body: GetUsersBody): Call<List<RemoteBaseUser>>
 
     @GET("events/{event_id}/actions")
     fun getEventActions(@Header(TOKEN_FIELD) token: String, @Path("event_id") id: String): Call<List<RemoteAction>>

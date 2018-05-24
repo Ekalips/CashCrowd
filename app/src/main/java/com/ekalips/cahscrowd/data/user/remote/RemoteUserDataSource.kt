@@ -3,6 +3,7 @@ package com.ekalips.cahscrowd.data.user.remote
 import com.ekalips.cahscrowd.data.user.model.BaseUser
 import com.ekalips.cahscrowd.data.user.model.ThisUser
 import com.ekalips.cahscrowd.network.Api
+import com.ekalips.cahscrowd.network.body.GetUsersBody
 import com.ekalips.cahscrowd.network.request.AuthBody
 import com.ekalips.cahscrowd.stuff.ServerError
 import io.reactivex.Single
@@ -23,8 +24,8 @@ class RemoteUserDataSource @Inject constructor(private val api: Api) {
 
     fun getUsers(token: String, vararg id: String): Single<List<BaseUser>> {
         return Single.fromCallable {
-            val response = api.batchGetUsers(token, id.asList()).execute()
-            if (response.isSuccessful){
+            val response = api.batchGetUsers(token, GetUsersBody(id.asList())).execute()
+            if (response.isSuccessful) {
                 return@fromCallable response.body()!!
             }
             throw ServerError(response.code())

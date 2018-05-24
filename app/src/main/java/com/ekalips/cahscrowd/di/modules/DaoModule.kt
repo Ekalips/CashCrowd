@@ -27,7 +27,7 @@ class DaoModule {
 
     @Provides
     @Singleton
-    fun proivdeEventsDao(cashDB: CashDB) =
+    fun provideEventsDao(cashDB: CashDB) =
             cashDB.events()
 
 }

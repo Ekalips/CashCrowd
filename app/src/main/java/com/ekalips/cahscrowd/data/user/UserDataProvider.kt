@@ -2,12 +2,14 @@ package com.ekalips.cahscrowd.data.user
 
 import android.arch.lifecycle.LiveData
 import com.ekalips.cahscrowd.data.user.local.LocalUserDataSource
+import com.ekalips.cahscrowd.data.user.local.model.LocalBaseUser
 import com.ekalips.cahscrowd.data.user.model.BaseUser
 import com.ekalips.cahscrowd.data.user.model.ThisUser
 import com.ekalips.cahscrowd.data.user.remote.RemoteUserDataSource
 import com.ekalips.cahscrowd.stuff.ErrorHandler
 import com.ekalips.cahscrowd.stuff.utils.wrap
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 import javax.inject.Inject
@@ -23,6 +25,8 @@ class UserDataProvider @Inject constructor(private val localUserDataSource: Loca
     }
 
     fun getAllLiveData() = localUserDataSource.getAllLiveData()
+
+    fun getAllFlowable(): Flowable<List<LocalBaseUser>> = localUserDataSource.getAllUsersFlowable()
 
     fun getAccessToken(): Single<String> {
         return localUserDataSource.getMyToken()
